@@ -1,5 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
+const morgan = require('morgan')
+
 const connectDb = require('./config/db')
 const {notFound,errorHandler} = require('./middlewear/errorMiddlewear')
 
@@ -9,6 +11,12 @@ const app = express()
 
 //IMPORT ROUTES
 const campgroundRoutes = require('./routes/campgroundRoutes')
+
+//MIDDLEWEARS
+app.use(express.json())
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
 
 app.get('/', (req,res) => {
     res.send("API is running")
