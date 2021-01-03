@@ -2,8 +2,16 @@ import {createStore,applyMiddleware,combineReducers} from 'redux'
 import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
-const reducer = combineReducers({
+import {
+    placeListReducer,
+    placeListDetailReducer,
+    placeAddReducer
+} from './reducers/campgroundReducer'
 
+const reducer = combineReducers({
+    placeList: placeListReducer,
+    placeDetail: placeListDetailReducer,
+    placeAdd: placeAddReducer
 })
 
 const initialState = {}

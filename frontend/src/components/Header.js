@@ -13,10 +13,15 @@ const Header = () => {
           </LinkContainer> 
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='ml-auto'>
-                <LinkContainer to='/cart'>
+            <Nav>
+                <LinkContainer to='/' exact>
                     <Nav.Link>
-                        Home
+                        <i class="fas fa-home"></i> Home
+                    </Nav.Link>
+                </LinkContainer>
+                <LinkContainer  to='/newcampground'>
+                    <Nav.Link>
+                      <i class="fas fa-plus-square"></i> New Place
                     </Nav.Link>
                 </LinkContainer>
             </Nav>

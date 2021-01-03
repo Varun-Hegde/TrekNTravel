@@ -24,6 +24,11 @@ const CampgroundSchema = new Schema({
     location: {
         type: String,
         required: true
+    },
+    image:{
+        type: String,
+        required: true,
+        default: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ruyoaxgf72nzpi4y6cdi.png'
     }
 });
 

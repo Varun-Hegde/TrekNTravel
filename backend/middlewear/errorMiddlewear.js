@@ -9,6 +9,7 @@ module.exports.notFound = (req,res,next) => {
 //ERROR HANDLER
 module.exports.errorHandler = (err,req,res,next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode
+    console.log(res.statusCode);
     res.status(statusCode)
     res.json({
         message: err.message,
