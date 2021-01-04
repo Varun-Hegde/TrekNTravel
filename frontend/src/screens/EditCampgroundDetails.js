@@ -1,17 +1,25 @@
 import React,{useState,useEffect} from 'react'
+import {useSelector,useDispatch} from 'react-redux'
 import {Link} from 'react-router-dom'
 import FormContainer from '../components/FormContainer'
 import { Button } from 'react-bootstrap';
 import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
-import {useSelector,useDispatch} from 'react-redux'
 import Zoom from 'react-reveal/Zoom';
-import {addPlace} from '../actions/campgroundActions'
-import {PLACE_CREATE_RESET} from '../constants/campgroundConstants'
 import Message from '../components/Message'
+import {editPlace} from '../actions/campgroundActions'
+import {PLACE_EDIT_RESET,} from '../constants/campgroundConstants'
 import Loader from '../components/Loader'
 
+const EditCampgroundDetails = ({history,match}) => {
+    const placeId = match.params.id
 
-const AddNewCampground = ({history}) => {
+    const placeDetail = useSelector(state => state.placeDetail)
+    const {loading,place,error} = placeDetail
+    const dispatch = useDispatch()
+
+    const placeEdit = useSelector(state => state.placeEdit)
+    const {loading:loadingEdit,success:successEdit,error:errorEdit} = placeEdit
+
     const [title,setTitle] = useState('')
     const [price,setPrice] = useState();
     const [description,setDescription] = useState('')
@@ -23,31 +31,23 @@ const AddNewCampground = ({history}) => {
     const [touchedDescription,setTouchedDescription] = useState(false)
     const [touchedLocation,setTouchedLocation] = useState(false)
     const [touchedImage,setTouchedImage] = useState(false)
- 
-    const placeAdd = useSelector(state => state.placeAdd)
-    const {loading: loadingAdd,error: errorAdd, success: successAdd} = placeAdd
-    const dispatch = useDispatch()
 
-    useEffect(() => {
-        if(successAdd){
-            dispatch({type:PLACE_CREATE_RESET})
-            history.push('/')
+    useEffect(()=>{
+        if(!place.title){
+            history.push(`/${placeId}`)
         }
-    },[dispatch,successAdd])
+        if(successEdit){
+            dispatch({type: PLACE_EDIT_RESET,})
+            history.push(`/${placeId}`)
+        }
+        setTitle(place.title)
+        setImage(place.image)
+        setDescription(place.description)
+        setPrice(place.price)
+        setLocation(place.location)
+    },[dispatch,match,history,placeId,place,successEdit])
 
-   const submitHandler = (e) => {
-       e.preventDefault()
-        const campgroundDetails = {
-            title,
-            price,
-            description,
-            location,
-            image
-        }
-        dispatch(addPlace(campgroundDetails))
-   }
-   
-   function validate() {
+    function validate() {
         const errors = {
             title: '',
             price: '',
@@ -87,15 +87,28 @@ const AddNewCampground = ({history}) => {
     }
     
     const errors = validate(title);
+
+    const submitHandler = (e) => {
+       e.preventDefault()
+        const campgroundDetails = {
+            title,
+            price,
+            description,
+            location,
+            image,
+            
+        }
+      dispatch(editPlace(campgroundDetails,placeId))
+   }
+
     return (
         <Zoom bottom>
-            <Link to='/' className='btn btn-light my-3'>
+            <Link to={`/${placeId}`} className='btn btn-light my-3'>
                 Go Back
             </Link>
             <FormContainer>
-            <h1>New Campground</h1>
-            {loadingAdd ? <Loader /> : null}
-            {errorAdd ? <Message variant='danger'>{errorAdd}</Message> : null}
+            <h1>Edit Campground</h1>
+            {loadingEdit ? <Loader /> : errorEdit ? <Message variant='danger'>{errorEdit}</Message> : null}
             <Form onSubmit={submitHandler}>
                 <FormGroup>
                     <Label htmlFor="title">Title</Label>
@@ -172,7 +185,7 @@ const AddNewCampground = ({history}) => {
                     disabled = {errors.title || errors.price || errors.location
                         || errors.image || errors.desc || !title || !image || !price || !location || !description}
                 >
-                    Add new campground
+                    Edit campground
                 </Button>
             </Form>
 
@@ -182,4 +195,4 @@ const AddNewCampground = ({history}) => {
     )
 }
 
-export default AddNewCampground
+export default EditCampgroundDetails

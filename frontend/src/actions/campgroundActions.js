@@ -8,7 +8,11 @@ import {
     PLACE_CREATE_FAIL,
     PLACE_CREATE_REQUEST,
     PLACE_CREATE_SUCCESS,
-    PLACE_LIST_ADDED_PLACE
+    PLACE_LIST_ADDED_PLACE,
+    PLACE_EDIT_FAIL,
+    PLACE_EDIT_REQUEST,
+    PLACE_EDIT_SUCCESS,
+    PLACE_DETAIL_EDITED_PLACE
 } from '../constants/campgroundConstants'
 
 import axios from 'axios'
@@ -81,6 +85,37 @@ export const addPlace = (campground) =>async (dispatch) => {
     }catch(error){
         dispatch({   
             type:PLACE_CREATE_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//EDIT PLACE
+export const editPlace = (campground,id) =>async (dispatch) => {
+    try{
+        dispatch({
+            type:PLACE_EDIT_REQUEST
+        })
+
+        const config = {
+            headers : {
+                'Content-Type' :'application/json'
+            }
+        }
+        const {data} = await axios.put(`/api/campgrounds/${id}`,campground,config)
+
+        dispatch({
+            type:PLACE_EDIT_SUCCESS,
+            payload: data
+        })
+        dispatch({
+            type: PLACE_DETAIL_EDITED_PLACE
+        })
+
+    }catch(error){
+        dispatch({   
+            type:PLACE_EDIT_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

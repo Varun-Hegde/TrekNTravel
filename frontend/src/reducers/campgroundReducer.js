@@ -10,7 +10,13 @@ import {
     PLACE_CREATE_SUCCESS,
     PLACE_CREATE_RESET,
     PLACE_LIST_ADDED_PLACE,
-    PLACE_LIST_ADDED_PLACE_REMOVE
+    PLACE_LIST_ADDED_PLACE_REMOVE,
+    PLACE_EDIT_FAIL,
+    PLACE_EDIT_REQUEST,
+    PLACE_EDIT_RESET,
+    PLACE_EDIT_SUCCESS,
+    PLACE_DETAIL_EDITED_PLACE,
+    PLACE_DETAIL_EDITED_PLACE_REMOVE
 } from '../constants/campgroundConstants'
 
 //SET THE DETAILS ABOUT ALL THE PLACES
@@ -47,6 +53,7 @@ export const placeListReducer = (state={places:[],addedPlace:false} , action) =>
                 ...state,
                 addedPlace: false
             }
+        
         default: return state
     }
 }
@@ -68,6 +75,16 @@ export const placeListDetailReducer = (state={place:{}} , action) => {
             return{
                 error:action.payload,
                 loading: false
+            }
+        case PLACE_DETAIL_EDITED_PLACE:
+            return {
+                ...state,
+                editedPlace: true
+            }
+        case PLACE_DETAIL_EDITED_PLACE_REMOVE:
+            return {
+                ...state,
+                editedPlace: false
             }
         default: return state
     }
@@ -93,6 +110,31 @@ export const placeAddReducer = (state={} , action) => {
                 success: false
             }
         case PLACE_CREATE_RESET:
+            return {}
+        default: return state
+    }
+}
+
+//EDIT A PLACE
+export const editPlaceReducer = (state={} , action) => {
+    switch(action.type){
+        case PLACE_EDIT_REQUEST:
+            return {
+                loading: true,
+            }
+        case PLACE_EDIT_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                place: action.payload
+            }
+        case PLACE_EDIT_FAIL:
+            return{
+                error:action.payload,
+                loading: false,
+                success: false
+            }
+        case PLACE_EDIT_RESET:
             return {}
         default: return state
     }

@@ -9,6 +9,7 @@ import Footer from './components/Footer'
 import HomeScreen from './screens/HomeScreen'
 import PlaceDetailScreen from './screens/PlaceDetailScreen'
 import AddNewCampground from './screens/AddNewCampground'
+import EditCampgroundDetails from './screens/EditCampgroundDetails'
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
       <main className = 'py-3'>
         <Container>
         <Switch>
-          <Route path='/newcampground' component={AddNewCampground}  /> 
-          <Route path='/:id' component={PlaceDetailScreen}  />  
-           <Route path='/' component={HomeScreen} exact />  
+          <Route path='/newcampground' component={AddNewCampground}  />
+          <Route path='/:id/edit' component={EditCampgroundDetails} />  
+          <Route path='/:id' component={PlaceDetailScreen} exact />  
+          <Route path='/' component={HomeScreen} exact />  
         </Switch>    
         </Container>  
       </main>

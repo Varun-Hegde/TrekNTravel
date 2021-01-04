@@ -15,7 +15,7 @@ const HomeScreen = ({history}) => {
 
     const dispatch = useDispatch()
     const placeList = useSelector(state => state.placeList)
-    const {loading,error,places,addedPlace} = placeList
+    const {loading,error,places,addedPlace,editedPlace} = placeList
     
     useEffect(()=>{
         dispatch(listPlaces())
@@ -31,6 +31,7 @@ const HomeScreen = ({history}) => {
             });
             dispatch({type:PLACE_LIST_ADDED_PLACE_REMOVE})
         }
+        
         
     },[dispatch,addedPlace])
 

@@ -14,7 +14,12 @@ router.get(
     '/',
     asyncHandler(async(req,res) => {
         const campgrounds = await Campground.find({})
-        res.json(campgrounds)
+        if(campgrounds)
+            res.json(campgrounds)
+        else{
+            res.status(404)
+            throw new Error("No Campgrounds found")
+        }
     })        
 )
 

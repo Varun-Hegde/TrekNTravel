@@ -5,13 +5,15 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import {
     placeListReducer,
     placeListDetailReducer,
-    placeAddReducer
+    placeAddReducer,
+    editPlaceReducer
 } from './reducers/campgroundReducer'
 
 const reducer = combineReducers({
     placeList: placeListReducer,
     placeDetail: placeListDetailReducer,
-    placeAdd: placeAddReducer
+    placeAdd: placeAddReducer,
+    placeEdit: editPlaceReducer
 })
 
 const initialState = {}
