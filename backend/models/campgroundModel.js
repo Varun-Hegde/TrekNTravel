@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const reviewModel = require('./reviewModel');
 const Schema = mongoose.Schema;
 
 const CampgroundSchema = new Schema({
@@ -29,7 +30,19 @@ const CampgroundSchema = new Schema({
         type: String,
         required: true,
         default: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ruyoaxgf72nzpi4y6cdi.png'
-    }
+    },
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
+
+CampgroundSchema.post('findOneAndDelete',async (campground) => {
+    if(campground){
+        await reviewModel.deleteMany({_id: {$in : campground.reviews}})
+    }
+})
 
 module.exports = mongoose.model('Campground',CampgroundSchema)

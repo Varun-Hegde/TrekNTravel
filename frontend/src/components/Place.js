@@ -5,7 +5,7 @@ import './Place.css'
 const Place = ({place,history}) => {
 
     const clickhandler = () => {
-        history.push(`/${place._id}`)
+        history.push(`/campground/${place._id}`)
     }
 
     return(

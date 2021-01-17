@@ -59,7 +59,7 @@ export const placeListReducer = (state={places:[],addedPlace:false} , action) =>
 }
 
 //SET THE DETAILS ABOUT A PARTICULAR PLACE
-export const placeListDetailReducer = (state={place:{}} , action) => {
+export const placeListDetailReducer = (state={place:{reviews:[]}}, action) => {
     switch(action.type){
         case PLACE_DETAIL_REQUEST:
             return {

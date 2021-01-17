@@ -15,3 +15,5 @@ const connectDB = async () => {
 }
 
 module.exports = connectDB
+
+//mongodb+srv://varun:varun@cluster0.t7npb.mongodb.net/test

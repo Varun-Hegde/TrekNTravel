@@ -34,11 +34,11 @@ const EditCampgroundDetails = ({history,match}) => {
 
     useEffect(()=>{
         if(!place.title){
-            history.push(`/${placeId}`)
+            history.push(`/campground/${placeId}`)
         }
         if(successEdit){
             dispatch({type: PLACE_EDIT_RESET,})
-            history.push(`/${placeId}`)
+            history.push(`/campground/${placeId}`)
         }
         setTitle(place.title)
         setImage(place.image)

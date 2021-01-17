@@ -16,7 +16,7 @@ const HomeScreen = ({history}) => {
     const dispatch = useDispatch()
     const placeList = useSelector(state => state.placeList)
     const {loading,error,places,addedPlace,editedPlace} = placeList
-    
+    console.log("HELLO WORLD")
     useEffect(()=>{
         dispatch(listPlaces())
         if(addedPlace){

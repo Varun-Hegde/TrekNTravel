@@ -19,8 +19,8 @@ function App() {
         <Container>
         <Switch>
           <Route path='/newcampground' component={AddNewCampground}  />
-          <Route path='/:id/edit' component={EditCampgroundDetails} />  
-          <Route path='/:id' component={PlaceDetailScreen} exact />  
+          <Route path='/campground/:id/edit' component={EditCampgroundDetails} />  
+          <Route path='/campground/:id' component={PlaceDetailScreen} exact />  
           <Route path='/' component={HomeScreen} exact />  
         </Switch>    
         </Container>  

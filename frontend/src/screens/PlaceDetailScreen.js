@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useState,useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import {placeDetails} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
@@ -13,6 +13,9 @@ const PlaceDetailScreen = ({match}) => {
     const placeDetail = useSelector(state => state.placeDetail)
     const {loading,place,error,editedPlace} = placeDetail 
     const dispatch = useDispatch()
+
+    const [rating,setRating] = useState(0)
+    const [comment,setComment] = useState('')
 
     useEffect(() => {
         dispatch(placeDetails(match.params.id))
@@ -30,14 +33,18 @@ const PlaceDetailScreen = ({match}) => {
         }
     },[match,dispatch])
 
+    const reviewSubmithandler = () => {
+
+    }
+
     return (
         <div>
             <Link className='btn btn-light my-3' to='/'>
                 Go Back
             </Link>
-            <Link className='btn btn-light my-3' to={`/${match.params.id}/edit`}>
+            {!error && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
-            </Link>
+            </Link>}
             <ToastContainer
             position="top-center"
             autoClose={3000}
@@ -50,12 +57,40 @@ const PlaceDetailScreen = ({match}) => {
             pauseOnHover
             />
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
+                <>
                 <Row>
                     <Col md={5}>
                         <Image src={place.image} alt={place.name} fluid />
                         <h1>{place.title}</h1>
                     </Col>
+                    
                 </Row>
+                <Row>
+                   <Col>
+                    <h3>Reviews</h3>
+                    <div>
+                        Rating
+                    <input type='text' value={rating} onChange={(e) => setRating(e.target.value)} />
+                    </div>
+                    <div><p>Comment</p> <input type='text' value={comment} onChange={(e) => setComment(e.target.value)} />
+                    </div>
+                   
+                    <button onClick = {reviewSubmithandler}>Submit</button>
+                </Col>
+                </Row>
+                <Row>
+                    <h3>Reviews</h3>
+                    {place.reviews.map(review => {
+                        return (
+                            <Col md={12}>
+                                {review.body}
+                                {review.rating}
+                            </Col>
+                        )
+                        }
+                    )}
+                </Row>
+                </>
             )}
         </div>
     )

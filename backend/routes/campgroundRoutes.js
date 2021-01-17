@@ -1,93 +1,46 @@
 const express = require('express')
-const mongoose = require('mongoose')
-const asyncHandler = require('express-async-handler')
 
-const Campground = require('../models/campgroundModel')
+const {validateCampground,validateReview} = require('../validations/campgroundValidation')
+const CampgroundController = require('../controllers/campgroundControllers')
 
 const router = express.Router()
-
 
 //   @desc   Get all Campgrounds
 //   @route  GET api/campgrounds
 //   @access Public
-router.get(
-    '/',
-    asyncHandler(async(req,res) => {
-        const campgrounds = await Campground.find({})
-        if(campgrounds)
-            res.json(campgrounds)
-        else{
-            res.status(404)
-            throw new Error("No Campgrounds found")
-        }
-    })        
-)
+router.get('/',CampgroundController.getAllCampgrounds)
 
 
 //   @desc   Get a particular Campground
 //   @route  GET api/campgrounds/:id
 //   @access Public
-router.get(
-    '/:id',
-    asyncHandler(async(req,res) => {
-        const campground = await Campground.findById(req.params.id)
-        if(campground)
-            res.json(campground)
-        else{
-            res.status(404)
-            throw new Error("Campground not found")
-        }     
-    })        
-)
+router.get('/:id',CampgroundController.getParticularCampground)
 
 //   @desc   Post a new Campground
 //   @route  POST api/campgrounds/
 //   @access Public
-router.post(
-    '/',
-    asyncHandler(async(req,res) => {
-        const campground = new Campground(req.body)
-        await campground.save()
-        res.status(201)
-        res.json(campground)
-    })
-)
+router.post('/',validateCampground,CampgroundController.postNewCampground)
 
 //   @desc   Edit a particular Campground
 //   @route  PUT api/campgrounds/:id
 //   @access Public
-router.put(
-    '/:id',
-    asyncHandler( async (req,res) => {
-        if(!req.body)
-            req.body = {}
-
-        const campground = await Campground.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
-        
-        if(!campground){
-            res.status(404)
-            throw new Error("Campground not found")
-        }
-        res.status(200).json(campground)
-    })
-)
+router.put('/:id',validateCampground,CampgroundController.updateCampground)
 
 
 //   @desc   Delete a particular Campground
 //   @route  DELETE api/campgrounds/:id
 //   @access Public
-router.delete(
-    '/:id',
-    asyncHandler(async (req,res) => {
-        const campground = await Campground.findByIdAndDelete(req.params.id)
-        if(!campground){
-            res.status(404)
-            throw new Error("Campground not found")
-        }
-        res.status(200).json(campground)
-    }) 
-)
+router.delete('/:id',CampgroundController.deleteCampground)
+
+//   @desc   POST a new review
+//   @route  POST api/campgrounds/:id/reviews
+//   @access Public
+router.post('/:id/reviews',validateReview,CampgroundController.postNewReview)
 
 
+//   @desc   Delete a review
+//   @route  DELETE api/campgrounds/:id/reviews/:reviewId
+//   @access Public
+router.delete('/:id/reviews/:reviewId',CampgroundController.deleteReview)
 
 module.exports = router
