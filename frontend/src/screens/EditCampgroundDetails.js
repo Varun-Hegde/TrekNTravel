@@ -103,7 +103,7 @@ const EditCampgroundDetails = ({history,match}) => {
 
     return (
         <Zoom bottom>
-            <Link to={`/${placeId}`} className='btn btn-light my-3'>
+            <Link to={`/campground/${placeId}`} className='btn btn-light my-3'>
                 Go Back
             </Link>
             <FormContainer>

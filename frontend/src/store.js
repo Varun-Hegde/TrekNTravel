@@ -9,11 +9,22 @@ import {
     editPlaceReducer
 } from './reducers/campgroundReducer'
 
+import {
+    signUpReducer,
+    statusReducer,
+    signInReducer,
+    signOutReducer
+} from './reducers/userReducer'
+
 const reducer = combineReducers({
     placeList: placeListReducer,
     placeDetail: placeListDetailReducer,
     placeAdd: placeAddReducer,
-    placeEdit: editPlaceReducer
+    placeEdit: editPlaceReducer,
+    signUp: signUpReducer,
+    signIn: signInReducer,
+    signOut: signOutReducer,
+    status: statusReducer
 })
 
 const initialState = {}

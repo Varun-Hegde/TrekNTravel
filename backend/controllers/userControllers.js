@@ -38,7 +38,10 @@ module.exports.signIn = asyncHandler(async(req,res,next) => {
 module.exports.status = asyncHandler(async(req,res,next) => {
     res.json({
         loggedIn: true,
-        user: req.user
+        user: {
+            _id: req.user._id,
+            email:req.user.email
+        }
     })
 })
 
