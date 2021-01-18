@@ -15,6 +15,11 @@ import {
     USER_SIGNOUT_SUCCESS
 } from '../constants/userConstants'
 
+import {
+    USER_SIGNEDIN,
+    USER_SIGNEDUP
+} from '../constants/appConstants'
+
 //SIGN UP
 export const signup = (email,password) => async (dispatch) => {
     try{
@@ -28,7 +33,9 @@ export const signup = (email,password) => async (dispatch) => {
             type: USER_SIGNUP_SUCCESS,
             payload: data
         })
-        console.log(data);
+        dispatch({
+            type: USER_SIGNEDUP
+        })
         /* const newData = {
             loggedIn: true,
             user: {
@@ -85,6 +92,9 @@ export const signin = (email,password) => async (dispatch) => {
         dispatch({
             type: USER_SIGNIN_SUCCESS,
             payload: data
+        })
+        dispatch({
+            type: USER_SIGNEDIN
         })
     }catch(error){
         dispatch({   

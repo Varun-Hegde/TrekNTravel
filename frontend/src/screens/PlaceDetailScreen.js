@@ -5,13 +5,11 @@ import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import {Row,Col,Image} from 'react-bootstrap'
-import { ToastContainer, toast } from 'react-toastify';
-import {PLACE_DETAIL_EDITED_PLACE_REMOVE} from '../constants/campgroundConstants'
 
 const PlaceDetailScreen = ({match}) => {
 
     const placeDetail = useSelector(state => state.placeDetail)
-    const {loading,place,error,editedPlace} = placeDetail 
+    const {loading,place,error} = placeDetail 
     const dispatch = useDispatch()
 
     const [rating,setRating] = useState(0)
@@ -19,18 +17,6 @@ const PlaceDetailScreen = ({match}) => {
 
     useEffect(() => {
         dispatch(placeDetails(match.params.id))
-        if(editedPlace){
-            toast.success('Updated campground', {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            });
-            dispatch({type:PLACE_DETAIL_EDITED_PLACE_REMOVE})
-        }
     },[match,dispatch])
 
     const reviewSubmithandler = () => {
@@ -45,7 +31,7 @@ const PlaceDetailScreen = ({match}) => {
             {!error && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
             </Link>}
-            <ToastContainer
+            {/* <ToastContainer
             position="top-center"
             autoClose={3000}
             hideProgressBar={false}
@@ -55,7 +41,7 @@ const PlaceDetailScreen = ({match}) => {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            />
+            /> */}
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <>
                 <Row>

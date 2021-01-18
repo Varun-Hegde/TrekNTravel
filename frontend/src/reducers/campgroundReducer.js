@@ -9,15 +9,13 @@ import {
     PLACE_CREATE_REQUEST,
     PLACE_CREATE_SUCCESS,
     PLACE_CREATE_RESET,
-    PLACE_LIST_ADDED_PLACE,
-    PLACE_LIST_ADDED_PLACE_REMOVE,
     PLACE_EDIT_FAIL,
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_RESET,
     PLACE_EDIT_SUCCESS,
-    PLACE_DETAIL_EDITED_PLACE,
-    PLACE_DETAIL_EDITED_PLACE_REMOVE
+
 } from '../constants/campgroundConstants'
+
 
 //SET THE DETAILS ABOUT ALL THE PLACES
 export const placeListReducer = (state={places:[],addedPlace:false} , action) => {
@@ -43,17 +41,6 @@ export const placeListReducer = (state={places:[],addedPlace:false} , action) =>
                 loading: false,
                 places:[]
             }
-        case PLACE_LIST_ADDED_PLACE:
-            return{
-                ...state,
-                addedPlace: true
-            }
-        case PLACE_LIST_ADDED_PLACE_REMOVE:
-            return{
-                ...state,
-                addedPlace: false
-            }
-        
         default: return state
     }
 }
@@ -76,16 +63,7 @@ export const placeListDetailReducer = (state={place:{reviews:[]}}, action) => {
                 error:action.payload,
                 loading: false
             }
-        case PLACE_DETAIL_EDITED_PLACE:
-            return {
-                ...state,
-                editedPlace: true
-            }
-        case PLACE_DETAIL_EDITED_PLACE_REMOVE:
-            return {
-                ...state,
-                editedPlace: false
-            }
+        
         default: return state
     }
 }

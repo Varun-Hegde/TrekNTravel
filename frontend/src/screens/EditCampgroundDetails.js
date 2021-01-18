@@ -9,12 +9,13 @@ import Message from '../components/Message'
 import {editPlace} from '../actions/campgroundActions'
 import {PLACE_EDIT_RESET,} from '../constants/campgroundConstants'
 import Loader from '../components/Loader'
+import {PLACE_DETAIL_EDITED_PLACE} from '../constants/appConstants'
 
 const EditCampgroundDetails = ({history,match}) => {
     const placeId = match.params.id
 
     const placeDetail = useSelector(state => state.placeDetail)
-    const {loading,place,error} = placeDetail
+    const {place} = placeDetail
     const dispatch = useDispatch()
 
     const placeEdit = useSelector(state => state.placeEdit)
@@ -38,6 +39,7 @@ const EditCampgroundDetails = ({history,match}) => {
         }
         if(successEdit){
             dispatch({type: PLACE_EDIT_RESET,})
+            dispatch({type:PLACE_DETAIL_EDITED_PLACE})
             history.push(`/campground/${placeId}`)
         }
         setTitle(place.title)

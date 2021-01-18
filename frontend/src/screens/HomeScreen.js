@@ -15,11 +15,10 @@ const HomeScreen = ({history}) => {
 
     const dispatch = useDispatch()
     const placeList = useSelector(state => state.placeList)
-    const {loading,error,places,addedPlace,editedPlace} = placeList
-    console.log("HELLO WORLD")
+    const {loading,error,places,addedPlace} = placeList
     useEffect(()=>{
         dispatch(listPlaces())
-        if(addedPlace){
+        /* if(addedPlace){
             toast.success('Added new campground', {
             position: "top-center",
             autoClose: 3000,
@@ -30,7 +29,7 @@ const HomeScreen = ({history}) => {
             progress: undefined,
             });
             dispatch({type:PLACE_LIST_ADDED_PLACE_REMOVE})
-        }
+        } */
         
         
     },[dispatch,addedPlace])
@@ -40,7 +39,7 @@ const HomeScreen = ({history}) => {
     return (
         <>
             <h1>Welcome to Trek-N-Travel</h1>
-            <ToastContainer
+            {/* <ToastContainer
             position="top-center"
             autoClose={3000}
             hideProgressBar={false}
@@ -50,7 +49,7 @@ const HomeScreen = ({history}) => {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            />
+            /> */}
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <Row>
                     {places.length>0 ? places.map(place => (

@@ -11,7 +11,8 @@ import {
     USER_SIGNOUT_FAIL,
     USER_SIGNOUT_REQUEST,
     USER_SIGNOUT_SUCCESS,
-    USER_SIGNIN_RESET
+    USER_SIGNIN_RESET,
+    USER_SIGNUP_RESET
 } from '../constants/userConstants'
 
 
@@ -35,6 +36,8 @@ export const signUpReducer = (state = {},action) => {
                 success: false,
                 error: action.payload
             }
+        case USER_SIGNUP_RESET:
+            return {}
         default: 
             return state
     }

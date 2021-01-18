@@ -8,7 +8,6 @@ import { Button } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNIN_RESET} from '../constants/userConstants'
 import {signin,status} from '../actions/userActions'
-
 const SignInScreen = ({location,history}) => {
 
     const redirect = location.search ? location.search.split('=')[1] : '/'
@@ -31,12 +30,15 @@ const SignInScreen = ({location,history}) => {
     }
 
     useEffect(() => {
+
+        
         if(userInfo || userStatus || success || isLoggedIn){
+            
             dispatch(status())
             dispatch({type:USER_SIGNIN_RESET})
             history.push(redirect)
         }
-    },[success,history,redirect,userInfo,isLoggedIn])
+    },[success,history,redirect,userInfo,isLoggedIn,dispatch,userStatus])
 
     function validate(){
         const errors = {

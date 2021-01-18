@@ -33,7 +33,7 @@ const AddNewCampground = ({history}) => {
             dispatch({type:PLACE_CREATE_RESET})
             history.push('/')
         }
-    },[dispatch,successAdd])
+    },[dispatch,successAdd,history])
 
    const submitHandler = (e) => {
        e.preventDefault()

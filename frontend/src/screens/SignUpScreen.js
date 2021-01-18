@@ -6,7 +6,7 @@ import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
 import FormContainer from '../components/FormContainer';
 import { Button } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
-
+import {USER_SIGNUP_RESET} from '../constants/userConstants'
 import {signup,status} from '../actions/userActions'
 
 const SignUpScreen = ({location,history}) => {
@@ -24,18 +24,22 @@ const SignUpScreen = ({location,history}) => {
 
     const statusState = useSelector(state => state.status)
     const {userInfo: userStatus,isLoggedIn} = statusState
-    console.log("STATUS STATE IS",statusState);
+
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(signup(email,password))
     }
 
     useEffect(() => {
-        if(userInfo || userStatus || success || isLoggedIn){
-            dispatch(status())
+        if(isLoggedIn){
             history.push(redirect)
         }
-    },[success,history,redirect,userInfo,isLoggedIn])
+        if(userInfo || userStatus || success || isLoggedIn){
+            dispatch(status())
+            dispatch({type:USER_SIGNUP_RESET})
+            history.push(redirect)
+        }
+    },[success,history,redirect,userInfo,isLoggedIn,dispatch,userStatus])
 
     function validate(){
         const errors = {

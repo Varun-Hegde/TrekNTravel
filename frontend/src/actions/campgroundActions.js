@@ -8,12 +8,15 @@ import {
     PLACE_CREATE_FAIL,
     PLACE_CREATE_REQUEST,
     PLACE_CREATE_SUCCESS,
-    PLACE_LIST_ADDED_PLACE,
     PLACE_EDIT_FAIL,
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_SUCCESS,
-    PLACE_DETAIL_EDITED_PLACE
 } from '../constants/campgroundConstants'
+
+import {
+    PLACE_LIST_ADDED_PLACE,
+    PLACE_DETAIL_EDITED_PLACE
+} from '../constants/appConstants'
 
 import axios from 'axios'
 
@@ -92,7 +95,7 @@ export const addPlace = (campground) =>async (dispatch) => {
 }
 
 //EDIT PLACE
-export const editPlace = (campground,id) =>async (dispatch) => {
+export const editPlace = (campground,id) => async (dispatch) => {
     try{
         dispatch({
             type:PLACE_EDIT_REQUEST
@@ -110,7 +113,7 @@ export const editPlace = (campground,id) =>async (dispatch) => {
             payload: data
         })
         dispatch({
-            type: PLACE_DETAIL_EDITED_PLACE
+            type:PLACE_DETAIL_EDITED_PLACE
         })
 
     }catch(error){

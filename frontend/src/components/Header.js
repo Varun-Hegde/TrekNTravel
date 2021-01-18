@@ -1,5 +1,4 @@
 import React,{useEffect} from 'react'
-import {Route} from 'react-router-dom'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 import {useDispatch,useSelector} from 'react-redux'
@@ -11,11 +10,11 @@ const Header = () => {
   const {userInfo} = userStatus
 
   const signOutDetails = useSelector(state => state.signOut)
-  const {loading,success,error} = signOutDetails
+  const {success,error} = signOutDetails
 
   useEffect(() => {
     dispatch(status())
-  },[success,error])
+  },[success,error,dispatch])
 
   const logoutHandler = () => {
     dispatch(signout())

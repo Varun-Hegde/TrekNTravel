@@ -16,6 +16,10 @@ import {
     signOutReducer
 } from './reducers/userReducer'
 
+import {
+    app
+} from './reducers/appReducer'
+
 const reducer = combineReducers({
     placeList: placeListReducer,
     placeDetail: placeListDetailReducer,
@@ -24,7 +28,8 @@ const reducer = combineReducers({
     signUp: signUpReducer,
     signIn: signInReducer,
     signOut: signOutReducer,
-    status: statusReducer
+    status: statusReducer,
+    appDetails: app
 })
 
 const initialState = {}
