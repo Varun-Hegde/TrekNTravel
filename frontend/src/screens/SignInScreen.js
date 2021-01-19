@@ -11,6 +11,7 @@ import {signin,status} from '../actions/userActions'
 const SignInScreen = ({location,history}) => {
 
     const redirect = location.search ? location.search.split('=')[1] : '/'
+    
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     
@@ -29,16 +30,18 @@ const SignInScreen = ({location,history}) => {
         dispatch(signin(email,password))
     }
 
-    useEffect(() => {
-
+    useEffect(async () => {
+        if(isLoggedIn){
+            history.push(redirect)
+        }
         
-        if(userInfo || userStatus || success || isLoggedIn){
+        else if(userInfo || userStatus || success || isLoggedIn){
             
-            dispatch(status())
+            await dispatch(status())
             dispatch({type:USER_SIGNIN_RESET})
             history.push(redirect)
         }
-    },[success,history,redirect,userInfo,isLoggedIn,dispatch,userStatus])
+    },[success,history,userInfo,isLoggedIn,dispatch,userStatus,redirect])
 
     function validate(){
         const errors = {

@@ -19,6 +19,7 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(signout())
   }
+  
   return (
     <header>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
@@ -44,7 +45,7 @@ const Header = () => {
               
 
               {userInfo ? (
-              <NavDropdown title={userInfo.user.email} id='username'>
+              <NavDropdown title={userInfo.user.username} id='username'>
                 <LinkContainer to='/profile'>
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>

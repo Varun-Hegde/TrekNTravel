@@ -9,6 +9,7 @@ import {addPlace} from '../actions/campgroundActions'
 import {PLACE_CREATE_RESET} from '../constants/campgroundConstants'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import {USER_LOGIN_REQUIRED} from '../constants/appConstants'
 
 
 const AddNewCampground = ({history}) => {
@@ -28,12 +29,38 @@ const AddNewCampground = ({history}) => {
     const {loading: loadingAdd,error: errorAdd, success: successAdd} = placeAdd
     const dispatch = useDispatch()
 
+    const statusState = useSelector(state => state.status)
+    const {userInfo: userStatus,isLoggedIn} = statusState
+    console.log("HEY THERE")
+    console.log("USER STATUS FROM NEW CAMPGROUND:",isLoggedIn);
+    /* useEffect(() => {
+        console.log("IAM BEING CALLED");
+        if(!isLoggedIn){
+            dispatch({type:USER_LOGIN_REQUIRED})
+            history.push('/')
+        }
+    },[])
+
     useEffect(() => {
+        
         if(successAdd){
             dispatch({type:PLACE_CREATE_RESET})
             history.push('/')
         }
-    },[dispatch,successAdd,history])
+    },[dispatch,successAdd,history]) */
+
+
+    useEffect(() => {
+        if(!isLoggedIn){
+            dispatch({type:USER_LOGIN_REQUIRED})
+            history.push('/signin?redirect=newcampground')
+        }
+
+        if(successAdd){
+            dispatch({type:PLACE_CREATE_RESET})
+            history.push('/')
+        }
+    },[dispatch,successAdd,history,userStatus,isLoggedIn])
 
    const submitHandler = (e) => {
        e.preventDefault()
@@ -44,6 +71,7 @@ const AddNewCampground = ({history}) => {
             location,
             image
         }
+        console.log("IAM BEING CALLED");
         dispatch(addPlace(campgroundDetails))
    }
    

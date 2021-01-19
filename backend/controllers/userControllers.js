@@ -13,7 +13,7 @@ const signToken = (user) => {
 }
 
 module.exports.signUp = asyncHandler(async(req,res,next) => {
-    const {email,password} = req.body 
+    const {email,password,username} = req.body 
     let foundUser = await User.findOne({email})
     if(foundUser){
         res.status(400);
@@ -21,7 +21,8 @@ module.exports.signUp = asyncHandler(async(req,res,next) => {
     }
     const newUser = new User({
         email,
-        password
+        password,
+        username
     })
     const createdUser = await newUser.save();
     const token = signToken(createdUser)
@@ -40,7 +41,8 @@ module.exports.status = asyncHandler(async(req,res,next) => {
         loggedIn: true,
         user: {
             _id: req.user._id,
-            email:req.user.email
+            email:req.user.email,
+            username: req.user.username
         }
     })
 })

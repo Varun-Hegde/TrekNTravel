@@ -5,9 +5,7 @@ import Place from '../components/Place'
 import {listPlaces} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Fade from 'react-reveal/Fade';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {PLACE_LIST_ADDED_PLACE_REMOVE} from '../constants/campgroundConstants'
+
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
@@ -15,41 +13,18 @@ const HomeScreen = ({history}) => {
 
     const dispatch = useDispatch()
     const placeList = useSelector(state => state.placeList)
-    const {loading,error,places,addedPlace} = placeList
+    const {loading,error,places} = placeList
+    
     useEffect(()=>{
         dispatch(listPlaces())
-        /* if(addedPlace){
-            toast.success('Added new campground', {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            });
-            dispatch({type:PLACE_LIST_ADDED_PLACE_REMOVE})
-        } */
-        
-        
-    },[dispatch,addedPlace])
+    },[dispatch])
 
 
 
     return (
         <>
             <h1>Welcome to Trek-N-Travel</h1>
-            {/* <ToastContainer
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            /> */}
+            
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <Row>
                     {places.length>0 ? places.map(place => (

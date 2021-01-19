@@ -1,9 +1,13 @@
 const express = require('express')
+const passport = require('passport')
 
 const {validateCampground,validateReview} = require('../validations/campgroundValidation')
 const CampgroundController = require('../controllers/campgroundControllers')
 
 const router = express.Router()
+
+const passportJWT = passport.authenticate('jwt', { session: false });
+
 
 //   @desc   Get all Campgrounds
 //   @route  GET api/campgrounds
@@ -19,7 +23,7 @@ router.get('/:id',CampgroundController.getParticularCampground)
 //   @desc   Post a new Campground
 //   @route  POST api/campgrounds/
 //   @access Public
-router.post('/',validateCampground,CampgroundController.postNewCampground)
+router.post('/',validateCampground,passportJWT,CampgroundController.postNewCampground)
 
 //   @desc   Edit a particular Campground
 //   @route  PUT api/campgrounds/:id

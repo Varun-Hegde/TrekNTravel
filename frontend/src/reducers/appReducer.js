@@ -6,7 +6,11 @@ import {
     PLACE_DETAIL_EDITED_PLACE,
     PLACE_DETAIL_EDITED_PLACE_REMOVE,
     USER_SIGNEDUP,
-    USER_SIGNEDUP_RESET
+    USER_SIGNEDUP_RESET,
+    USER_SIGNOUT,
+    USER_SIGNOUT_RESET,
+    USER_LOGIN_REQUIRED,
+    USER_LOGIN_REQUIRED_RESET
 } from '../constants/appConstants'
 
 
@@ -52,6 +56,26 @@ export const app = (state={},action) => {
             return {
                 ...state,
                 signUpPopUp : false
+            }
+        case USER_SIGNOUT:
+            return{
+                ...state,
+                signOutPopUp:true
+            }
+        case USER_SIGNOUT_RESET:
+            return{
+                ...state,
+                signOutPopUp:false
+            }
+        case USER_LOGIN_REQUIRED:
+            return{
+                ...state,
+                userLoginPopUp:true
+            }
+        case USER_LOGIN_REQUIRED_RESET:
+            return{
+                ...state,
+                userLoginPopUp:false
             }
         default: return state
     }    

@@ -32,6 +32,8 @@ const reducer = combineReducers({
     appDetails: app
 })
 
+
+
 const initialState = {}
 
 const middlewear = [thunk]

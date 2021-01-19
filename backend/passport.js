@@ -27,7 +27,7 @@ passport.use(new JwtStrategy({
         }
         req.user = user
         done(null,user)
-    }catch(error){
+    }catch( error){
         done(error,false);
     }
 }))

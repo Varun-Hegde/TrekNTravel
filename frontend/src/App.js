@@ -11,13 +11,15 @@ import AddNewCampground from './screens/AddNewCampground'
 import EditCampgroundDetails from './screens/EditCampgroundDetails'
 import SignUpScreen from './screens/SignUpScreen'
 import SignInScreen from './screens/SignInScreen'
-import {ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import PopUp from './components/PopUp'
 import {
   USER_SIGNEDIN_RESET,
   PLACE_LIST_ADDED_PLACE_REMOVE,
   PLACE_DETAIL_EDITED_PLACE_REMOVE,
-  USER_SIGNEDUP_RESET
+  USER_SIGNEDUP_RESET,
+  USER_SIGNOUT_RESET,
+  USER_LOGIN_REQUIRED_RESET
 
 } from './constants/appConstants'
 import {status} from './actions/userActions'
@@ -26,12 +28,19 @@ function App() {
 
   const dispatch = useDispatch()
   const appDetail = useSelector(state => state.appDetails)
-  const {signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp} = appDetail
+  const {
+    signInPopUp,
+    addedPlacePopup,
+    editedPlacePopup,
+    signUpPopUp,
+    signOutPopUp,
+    userLoginPopUp
+  } = appDetail
   
   useEffect(() => {
+    console.log("THIS IS FROM APP.JS");
     dispatch(status())
-    // eslint-disable-next-line
-  },[])
+  },[dispatch])
 
   const popUpMsg = (displayText) => {
     toast.success(displayText, {
@@ -64,7 +73,15 @@ function App() {
       popUpMsg('Successfully created an account')
       dispatch({type: USER_SIGNEDUP_RESET})
     }
-  },[signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp,dispatch])
+    if(signOutPopUp){
+      popUpMsg('Successfully logged out')
+      dispatch({type: USER_SIGNOUT_RESET})
+    }
+    if(userLoginPopUp){
+      popUpMsg('You need to Login to perform this action')
+      dispatch({type: USER_LOGIN_REQUIRED_RESET})
+    }
+  },[signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp,signOutPopUp,userLoginPopUp,dispatch])
 
   return (
     <Router>

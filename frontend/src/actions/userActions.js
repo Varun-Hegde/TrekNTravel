@@ -12,22 +12,23 @@ import {
     USER_STATUS_SUCCESS,
     USER_SIGNOUT_FAIL,
     USER_SIGNOUT_REQUEST,
-    USER_SIGNOUT_SUCCESS
+    USER_SIGNOUT_SUCCESS,
 } from '../constants/userConstants'
 
 import {
     USER_SIGNEDIN,
-    USER_SIGNEDUP
+    USER_SIGNEDUP,
+    USER_SIGNOUT
 } from '../constants/appConstants'
 
 //SIGN UP
-export const signup = (email,password) => async (dispatch) => {
+export const signup = (email,password,username) => async (dispatch) => {
     try{
         dispatch({
             type: USER_SIGNUP_REQUEST
         })
 
-        const {data} = await axios.post('/api/users/signup',{email,password})
+        const {data} = await axios.post('/api/users/signup',{email,password,username})
 
         dispatch({
             type: USER_SIGNUP_SUCCESS,
@@ -40,7 +41,8 @@ export const signup = (email,password) => async (dispatch) => {
             loggedIn: true,
             user: {
                 _id: data.createdUser._id,
-                email: data.createdUser.email
+                email: data.createdUser.email,
+                username: data.createdUser.username
             }
         }
         dispatch({
@@ -90,11 +92,11 @@ export const signin = (email,password) => async (dispatch) => {
         const {data} = await axios.post('/api/users/signin',{email,password})
 
         dispatch({
-            type: USER_SIGNIN_SUCCESS,
-            payload: data
+            type: USER_SIGNEDIN
         })
         dispatch({
-            type: USER_SIGNEDIN
+            type: USER_SIGNIN_SUCCESS,
+            payload: data
         })
     }catch(error){
         dispatch({   
@@ -121,8 +123,7 @@ export const signout = () => async (dispatch) => {
             payload: data
         })
         dispatch({
-            type: USER_STATUS_SUCCESS,
-            payload: {}
+            type: USER_SIGNOUT,
         })
     }catch(error){
         dispatch({   

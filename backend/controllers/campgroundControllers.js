@@ -14,17 +14,22 @@ module.exports.getAllCampgrounds = asyncHandler(async(req,res) => {
 }) 
 
 module.exports.getParticularCampground = asyncHandler(async(req,res,next) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews')
+    let campground = await Campground.findById(req.params.id).populate('reviews').populate('author','username email')
+    console.log(campground.author._id);
+    console.log(campground);
+    campground.authorId = "LOO"
+    console.log(campground);
     if(campground)
         res.json(campground)
     else{
         res.status(404)
         throw new Error("Campground not found ")
-    }     
+    }
 })
 
 module.exports.postNewCampground = asyncHandler(async(req,res) => {        
     const campground = new Campground(req.body)
+    campground.author = req.user
     await campground.save()
     res.status(201)
     res.json(campground)

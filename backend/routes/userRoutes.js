@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const passportConf = require('../passport')
-const {validateUser} = require('../validations/userValidations')
+const {validateUserSignIn,validateUserSignUp} = require('../validations/userValidations')
 const UserController = require('../controllers/userControllers')
 
 const passportLocal = passport.authenticate('local', { session: false });
@@ -11,12 +11,12 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 //   @desc   SignUp a new user
 //   @route  POST api/users/signup
 //   @access Public
-router.post('/signup',validateUser,UserController.signUp)
+router.post('/signup',validateUserSignUp,UserController.signUp)
 
 //   @desc   SignUp a new user
 //   @route  POST api/users/signup
 //   @access Public
-router.post('/signin',validateUser,passportLocal,UserController.signIn)
+router.post('/signin',validateUserSignIn,passportLocal,UserController.signIn)
 
 //   @desc   Get login Status 
 //   @route  GET api/users/status

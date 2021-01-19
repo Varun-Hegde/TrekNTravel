@@ -14,9 +14,11 @@ const SignUpScreen = ({location,history}) => {
     const redirect = location.search ? location.search.split('=')[1] : '/'
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
-    
+    const [username,setUserName] = useState('')
+
     const [touchedEmail,setTouchedEmail] = useState(false)
     const [touchedPassword,setTouchedPassword] = useState(false)
+    const [touchedUsername,setTouchedUsername] = useState(false)
 
     const dispatch = useDispatch()
     const userSignUp = useSelector(state => state.signUp)
@@ -27,24 +29,25 @@ const SignUpScreen = ({location,history}) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(signup(email,password))
+        dispatch(signup(email,password,username))
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         if(isLoggedIn){
             history.push(redirect)
         }
-        if(userInfo || userStatus || success || isLoggedIn){
-            dispatch(status())
+        else if(userInfo || userStatus || success || isLoggedIn){
+            await dispatch(status())
             dispatch({type:USER_SIGNUP_RESET})
             history.push(redirect)
         }
-    },[success,history,redirect,userInfo,isLoggedIn,dispatch,userStatus])
+    },[success,history,userInfo,isLoggedIn,dispatch,userStatus,redirect])
 
     function validate(){
         const errors = {
             email: '',
-            password: ''
+            password: '',
+            username: ''
         }
         function validateEmail(elementValue){      
             var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -55,6 +58,9 @@ const SignUpScreen = ({location,history}) => {
         }
         if(touchedPassword && password.length < 1){
             errors.password = 'Password should be >= 1 characters'
+        }
+        if(touchedUsername && username.length<1){
+            errors.username = 'Password should be >= 1 characters'
         }
         return errors;
     }
@@ -69,6 +75,20 @@ const SignUpScreen = ({location,history}) => {
                 <h1>Sign Up</h1>
                 
                 <Form onSubmit={submitHandler}>
+
+                    <FormGroup>
+                        <Label htmlFor="username">Username</Label>
+                        <Input type="input" id="username" name="username"
+                            placeholder="John Doe"
+                            value={username}
+                            onChange={(e) => setUserName(e.target.value)} 
+                            onBlur = {() => setTouchedUsername(true)}
+                            valid={ errors.username==='' && username.length>=1}
+                            invalid={errors.username !== ''}
+                        />
+                        <FormFeedback>{errors.username}</FormFeedback>
+                    </FormGroup>
+
                     <FormGroup>
                         <Label htmlFor="email">Email</Label>
                         <Input type="email" id="email" name="email"
