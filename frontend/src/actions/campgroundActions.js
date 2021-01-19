@@ -11,6 +11,9 @@ import {
     PLACE_EDIT_FAIL,
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_SUCCESS,
+    PLACE_REVIEW_ADD_FAIL,
+    PLACE_REVIEW_ADD_REQUEST,
+    PLACE_REVIEW_ADD_SUCCESS
 } from '../constants/campgroundConstants'
 
 import {
@@ -119,6 +122,34 @@ export const editPlace = (campground,id) => async (dispatch) => {
     }catch(error){
         dispatch({   
             type:PLACE_EDIT_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//ADD NEW REVIEW TO A PLACE
+export const addReview = (body,rating,campId) =>async (dispatch) => {
+    try{
+        dispatch({
+            type: PLACE_REVIEW_ADD_REQUEST
+        })
+
+        const config = {
+            headers : {
+                'Content-Type' :'application/json'
+            }
+        }
+        const {data} = await axios.post(`/api/campgrounds/${campId}/reviews`,{body,rating},config)
+
+        dispatch({
+            type: PLACE_REVIEW_ADD_SUCCESS,
+            payload: data
+        })
+       
+    }catch(error){
+        dispatch({   
+            type:PLACE_REVIEW_ADD_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

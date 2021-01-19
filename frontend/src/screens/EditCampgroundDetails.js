@@ -10,17 +10,22 @@ import {editPlace} from '../actions/campgroundActions'
 import {PLACE_EDIT_RESET,} from '../constants/campgroundConstants'
 import Loader from '../components/Loader'
 import {PLACE_DETAIL_EDITED_PLACE} from '../constants/appConstants'
+import {USER_NO_PERMISSION} from '../constants/appConstants'
+
 
 const EditCampgroundDetails = ({history,match}) => {
     const placeId = match.params.id
 
     const placeDetail = useSelector(state => state.placeDetail)
-    const {place} = placeDetail
+    const {place,loading:loadingPlace} = placeDetail
     const dispatch = useDispatch()
 
     const placeEdit = useSelector(state => state.placeEdit)
     const {loading:loadingEdit,success:successEdit,error:errorEdit} = placeEdit
 
+    const statusState = useSelector(state => state.status)
+    const {userInfo: userStatus,isLoggedIn} = statusState
+    console.log(statusState);
     const [title,setTitle] = useState('')
     const [price,setPrice] = useState();
     const [description,setDescription] = useState('')
@@ -34,6 +39,13 @@ const EditCampgroundDetails = ({history,match}) => {
     const [touchedImage,setTouchedImage] = useState(false)
 
     useEffect(()=>{
+        
+        
+        if(!isLoggedIn){
+            dispatch({type:USER_NO_PERMISSION})
+                history.push(`/campground/${placeId}`)
+        } 
+        
         if(!place.title){
             history.push(`/campground/${placeId}`)
         }
@@ -47,7 +59,7 @@ const EditCampgroundDetails = ({history,match}) => {
         setDescription(place.description)
         setPrice(place.price)
         setLocation(place.location)
-    },[dispatch,match,history,placeId,place,successEdit])
+    },[dispatch,match,history,placeId,place,successEdit,isLoggedIn])
 
     function validate() {
         const errors = {

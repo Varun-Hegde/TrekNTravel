@@ -31,8 +31,6 @@ const AddNewCampground = ({history}) => {
 
     const statusState = useSelector(state => state.status)
     const {userInfo: userStatus,isLoggedIn} = statusState
-    console.log("HEY THERE")
-    console.log("USER STATUS FROM NEW CAMPGROUND:",isLoggedIn);
     /* useEffect(() => {
         console.log("IAM BEING CALLED");
         if(!isLoggedIn){

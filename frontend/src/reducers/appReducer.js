@@ -10,7 +10,9 @@ import {
     USER_SIGNOUT,
     USER_SIGNOUT_RESET,
     USER_LOGIN_REQUIRED,
-    USER_LOGIN_REQUIRED_RESET
+    USER_LOGIN_REQUIRED_RESET,
+    USER_NO_PERMISSION,
+    USER_NO_PERMISSION_RESET
 } from '../constants/appConstants'
 
 
@@ -76,6 +78,16 @@ export const app = (state={},action) => {
             return{
                 ...state,
                 userLoginPopUp:false
+            }
+        case USER_NO_PERMISSION:
+            return {
+                ...state,
+                userNoPermission: true
+            }
+        case USER_NO_PERMISSION_RESET:
+            return{
+                ...state,
+                userNoPermission: false
             }
         default: return state
     }    

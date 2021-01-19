@@ -8,7 +8,7 @@ const router = express.Router()
 
 const passportJWT = passport.authenticate('jwt', { session: false });
 
-
+const {isCampgroundOwner,isReviewOwner} = require('../middlewear/campgroundMiddlewear')
 //   @desc   Get all Campgrounds
 //   @route  GET api/campgrounds
 //   @access Public
@@ -28,23 +28,23 @@ router.post('/',validateCampground,passportJWT,CampgroundController.postNewCampg
 //   @desc   Edit a particular Campground
 //   @route  PUT api/campgrounds/:id
 //   @access Public
-router.put('/:id',validateCampground,CampgroundController.updateCampground)
+router.put('/:id',validateCampground,passportJWT,isCampgroundOwner,CampgroundController.updateCampground)
 
 
 //   @desc   Delete a particular Campground
 //   @route  DELETE api/campgrounds/:id
 //   @access Public
-router.delete('/:id',CampgroundController.deleteCampground)
+router.delete('/:id',passportJWT,isCampgroundOwner,CampgroundController.deleteCampground)
 
 //   @desc   POST a new review
 //   @route  POST api/campgrounds/:id/reviews
 //   @access Public
-router.post('/:id/reviews',validateReview,CampgroundController.postNewReview)
+router.post('/:id/reviews',passportJWT,validateReview,CampgroundController.postNewReview)
 
 
 //   @desc   Delete a review
 //   @route  DELETE api/campgrounds/:id/reviews/:reviewId
 //   @access Public
-router.delete('/:id/reviews/:reviewId',CampgroundController.deleteReview)
+router.delete('/:id/reviews/:reviewId',passportJWT,isReviewOwner,CampgroundController.deleteReview)
 
 module.exports = router

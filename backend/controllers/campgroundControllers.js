@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Campground = require('../models/campgroundModel')
+const { populate } = require('../models/reviewModel')
 const Review = require('../models/reviewModel')
 
 
@@ -14,14 +15,16 @@ module.exports.getAllCampgrounds = asyncHandler(async(req,res) => {
 }) 
 
 module.exports.getParticularCampground = asyncHandler(async(req,res,next) => {
-    let campground = await Campground.findById(req.params.id).populate('reviews').populate('author','username email')
-    console.log(campground.author._id);
-    console.log(campground);
-    campground.authorId = "LOO"
-    console.log(campground);
+    let campground = await Campground.findById(req.params.id).populate({
+        path:'reviews',
+        populate : { 
+            path:'author',  
+            select: '-password'
+        }
+    }).populate('author','username email')
     if(campground)
         res.json(campground)
-    else{
+    else{ 
         res.status(404)
         throw new Error("Campground not found ")
     }
@@ -65,6 +68,8 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
         throw new Error('Campground not found')
     }
     const review = new Review(req.body);
+    review.author = req.user
+    console.log(review);
     campground.reviews.push(review)
     await review.save()
     await campground.save()
@@ -84,6 +89,7 @@ module.exports.deleteReview = asyncHandler( async (req,res) => {
         res.status(404)
         throw new Error('Review not found')
     }
+    
     await Campground.findByIdAndUpdate(id,{$pull : {reviews:reviewId}},{new:true,runValidators:true})
     const deletedReview = await Review.findByIdAndDelete(reviewId) 
     res.status(200).json(deletedReview)

@@ -6,7 +6,8 @@ import {
     placeListReducer,
     placeListDetailReducer,
     placeAddReducer,
-    editPlaceReducer
+    editPlaceReducer,
+    reviewAddReducer
 } from './reducers/campgroundReducer'
 
 import {
@@ -29,7 +30,8 @@ const reducer = combineReducers({
     signIn: signInReducer,
     signOut: signOutReducer,
     status: statusReducer,
-    appDetails: app
+    appDetails: app,
+    newReview: reviewAddReducer
 })
 
 

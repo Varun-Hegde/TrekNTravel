@@ -19,7 +19,8 @@ import {
   PLACE_DETAIL_EDITED_PLACE_REMOVE,
   USER_SIGNEDUP_RESET,
   USER_SIGNOUT_RESET,
-  USER_LOGIN_REQUIRED_RESET
+  USER_LOGIN_REQUIRED_RESET,
+  USER_NO_PERMISSION_RESET
 
 } from './constants/appConstants'
 import {status} from './actions/userActions'
@@ -34,7 +35,8 @@ function App() {
     editedPlacePopup,
     signUpPopUp,
     signOutPopUp,
-    userLoginPopUp
+    userLoginPopUp,
+    userNoPermission
   } = appDetail
   
   useEffect(() => {
@@ -81,7 +83,11 @@ function App() {
       popUpMsg('You need to Login to perform this action')
       dispatch({type: USER_LOGIN_REQUIRED_RESET})
     }
-  },[signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp,signOutPopUp,userLoginPopUp,dispatch])
+    if(userNoPermission){
+      popUpMsg('You do not have permission to do this')
+      dispatch({type: USER_NO_PERMISSION_RESET})
+    }
+  },[signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp,signOutPopUp,userLoginPopUp,userNoPermission,dispatch])
 
   return (
     <Router>

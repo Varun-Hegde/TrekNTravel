@@ -13,7 +13,9 @@ import {
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_RESET,
     PLACE_EDIT_SUCCESS,
-
+    PLACE_REVIEW_ADD_FAIL,
+    PLACE_REVIEW_ADD_REQUEST,
+    PLACE_REVIEW_ADD_SUCCESS
 } from '../constants/campgroundConstants'
 
 
@@ -46,7 +48,7 @@ export const placeListReducer = (state={places:[],addedPlace:false} , action) =>
 }
 
 //SET THE DETAILS ABOUT A PARTICULAR PLACE
-export const placeListDetailReducer = (state={place:{reviews:[]}}, action) => {
+export const placeListDetailReducer = (state={place:{reviews:[],author:{}}}, action) => {
     switch(action.type){
         case PLACE_DETAIL_REQUEST:
             return {
@@ -114,6 +116,31 @@ export const editPlaceReducer = (state={} , action) => {
             }
         case PLACE_EDIT_RESET:
             return {}
+        default: return state
+    }
+}
+
+
+//ADD NEW REVIEW
+export const reviewAddReducer = (state={} , action) => {
+    switch(action.type){
+        case PLACE_REVIEW_ADD_REQUEST:
+            return {
+                loading: true,
+                success:false
+            }
+        case PLACE_REVIEW_ADD_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                place: action.payload
+            }
+        case PLACE_REVIEW_ADD_FAIL:
+            return{
+                error:action.payload,
+                loading: false,
+                success: false
+            }
         default: return state
     }
 }
