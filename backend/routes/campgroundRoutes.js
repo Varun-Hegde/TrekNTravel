@@ -1,6 +1,5 @@
 const express = require('express')
 const passport = require('passport')
-
 const {validateCampground,validateReview} = require('../validations/campgroundValidation')
 const CampgroundController = require('../controllers/campgroundControllers')
 
@@ -9,6 +8,8 @@ const router = express.Router()
 const passportJWT = passport.authenticate('jwt', { session: false });
 
 const {isCampgroundOwner,isReviewOwner} = require('../middlewear/campgroundMiddlewear')
+
+
 //   @desc   Get all Campgrounds
 //   @route  GET api/campgrounds
 //   @access Public

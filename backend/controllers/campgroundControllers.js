@@ -36,6 +36,7 @@ module.exports.postNewCampground = asyncHandler(async(req,res) => {
     await campground.save()
     res.status(201)
     res.json(campground)
+   
 })
 
 module.exports.updateCampground = asyncHandler( async (req,res) => {

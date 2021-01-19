@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
+const path = require('path')
 
 const connectDb = require('./config/db')
 const {notFound,errorHandler} = require('./middlewear/errorMiddlewear')
@@ -14,6 +15,7 @@ const app = express()
 //IMPORT ROUTES
 const campgroundRoutes = require('./routes/campgroundRoutes')
 const userRoutes = require('./routes/userRoutes')
+const uploadRoutes = require('./routes/uploadRoutes')
 
 //MIDDLEWEARS
 app.use(express.json())
@@ -22,6 +24,9 @@ if(process.env.NODE_ENV === 'development'){
 }
 app.use(cookieParser())
 /* app.use(passport.initialize()) */
+app.use(express.urlencoded())
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
 
 
 //ROUTES
@@ -34,6 +39,10 @@ app.use('/api/campgrounds',campgroundRoutes)
 
 //CAMPGROUND ROUTES
 app.use('/api/users',userRoutes)
+
+//UPLOAD ROUTES
+app.use('/api/upload',uploadRoutes)
+
 
 //PAGE NOT FOUND
 app.use(notFound)

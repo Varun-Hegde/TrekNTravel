@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import FormContainer from '../components/FormContainer'
 import { Button } from 'react-bootstrap';
-import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
+import { Form, FormGroup, Label, Input,FormFeedback,FormText} from 'reactstrap';
 import {useSelector,useDispatch} from 'react-redux'
 import Zoom from 'react-reveal/Zoom';
 import {addPlace} from '../actions/campgroundActions'
@@ -10,6 +10,7 @@ import {PLACE_CREATE_RESET} from '../constants/campgroundConstants'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import {USER_LOGIN_REQUIRED} from '../constants/appConstants'
+import axios from 'axios';
 
 
 const AddNewCampground = ({history}) => {
@@ -18,6 +19,7 @@ const AddNewCampground = ({history}) => {
     const [description,setDescription] = useState('')
     const [location,setLocation] = useState('')
     const [image,setImage] = useState('')
+    const [uploading,setUploading] = useState(false)
 
     const [touchedTitle,setTouchedTitle] = useState(false)
     const [touchedPrice,setTouchedPrice] = useState(false);
@@ -95,21 +97,37 @@ const AddNewCampground = ({history}) => {
             errors.location = 'Location should be >= 3 characters'
         }
 
-        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
         
-        if(touchedImage && !pattern.test(image)){
-            errors.image = 'Not a valid URL'
+        
+        if(touchedImage && image.length<1){
+            errors.image = 'Image Invalid'
         }
 
         if(touchedDescription && description.length<=0)
             errors.desc = 'No Description'
 
         return errors;
+    }
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0]
+        const formData = new FormData()
+        formData.append('image',file)
+        setUploading(true)
+
+        try{
+            const config = {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            }
+            const {data} = await axios.post('/api/upload',formData,config)
+            setImage(data)
+            setUploading(false)
+        }catch(err){
+            console.log(err);
+            setUploading(false)
+        }
     }
     
     const errors = validate(title);
@@ -122,7 +140,7 @@ const AddNewCampground = ({history}) => {
             <h1>New Campground</h1>
             {loadingAdd ? <Loader /> : null}
             {errorAdd ? <Message variant='danger'>{errorAdd}</Message> : null}
-            <Form onSubmit={submitHandler}>
+            <Form onSubmit={submitHandler} enctype="multipart/form-data">
                 <FormGroup>
                     <Label htmlFor="title">Title</Label>
                         <Input type="text" id="title" name="title"
@@ -173,6 +191,15 @@ const AddNewCampground = ({history}) => {
                             invalid={errors.image !== ''}
                         />
                         <FormFeedback>{errors.image}</FormFeedback>
+                </FormGroup>
+                
+                <FormGroup>
+                    <Label for="exampleFile">File</Label>
+                    <Input type="file" name="file" id="exampleFile" onChange={uploadFileHandler} />
+                    <FormText color="muted">
+                    Upload images of campground
+                    </FormText>
+                    {uploading && <Loader />}
                 </FormGroup>
 
                 <FormGroup>

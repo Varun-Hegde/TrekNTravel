@@ -6,6 +6,8 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import {Row,Col,Image} from 'react-bootstrap'
 import {addReview} from '../actions/campgroundActions'
+import ReactStars from "react-rating-stars-component";
+
 const PlaceDetailScreen = ({match}) => {
 
     const dispatch = useDispatch()
@@ -21,6 +23,23 @@ const PlaceDetailScreen = ({match}) => {
 
     const [rating,setRating] = useState(0)
     const [comment,setComment] = useState('')
+
+    const starRating = {
+        size: 25,
+        count: 5,
+        activeColor: "gold",
+        value: 4.8,
+        a11y: true,
+        isHalf: true,
+        emptyIcon: <i className="far fa-star" />,
+        halfIcon: <i className="fa fa-star-half-alt" />,
+        filledIcon: <i className="fa fa-star" />,
+        onChange: (newValue) => {
+            console.log(`${newValue}`);
+        },
+        edit:false  //MAKES COMPONENT READ ONLY
+    };
+
 
     let showEdit = false
     if(!isLoggedIn){
@@ -66,10 +85,12 @@ const PlaceDetailScreen = ({match}) => {
                     </Col>
                     
                 </Row>
+                <ReactStars {...starRating} />
                 {isLoggedIn && (
                 <Row>
                    <Col>
                     <h3>Reviews</h3>
+
                     <div>
                         Rating
                     <input type='text' value={rating} onChange={(e) => setRating(e.target.value)} />
