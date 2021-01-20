@@ -2,8 +2,8 @@ import React,{useState,useEffect} from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {Link} from 'react-router-dom'
 import FormContainer from '../components/FormContainer'
-import { Button } from 'react-bootstrap';
-import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
+import { Button ,Image} from 'react-bootstrap';
+import { Form, FormGroup, Label, Input,FormFeedback,FormText} from 'reactstrap';
 import Zoom from 'react-reveal/Zoom';
 import Message from '../components/Message'
 import {editPlace} from '../actions/campgroundActions'
@@ -11,7 +11,7 @@ import {PLACE_EDIT_RESET,} from '../constants/campgroundConstants'
 import Loader from '../components/Loader'
 import {PLACE_DETAIL_EDITED_PLACE} from '../constants/appConstants'
 import {USER_NO_PERMISSION} from '../constants/appConstants'
-
+import axios from 'axios';
 
 const EditCampgroundDetails = ({history,match}) => {
     const placeId = match.params.id
@@ -30,14 +30,19 @@ const EditCampgroundDetails = ({history,match}) => {
     const [price,setPrice] = useState();
     const [description,setDescription] = useState('')
     const [location,setLocation] = useState('')
-    const [image,setImage] = useState('')
+    const [image,setImage] = useState([])
+    const [uploading,setUploading] = useState(false)
+    const [uploadedImages,setUploadedImages] = useState('')
+    const [uploadErr,setUploadErr] = useState(false)
+    const [deleteImages,setDeleteImages] = useState([]) 
 
     const [touchedTitle,setTouchedTitle] = useState(false)
     const [touchedPrice,setTouchedPrice] = useState(false);
     const [touchedDescription,setTouchedDescription] = useState(false)
     const [touchedLocation,setTouchedLocation] = useState(false)
     const [touchedImage,setTouchedImage] = useState(false)
-
+    const [touchedUpload,setTouchedUpload] = useState(false)
+    const [numOfDeletedImages,setNumofDeletedImages] = useState(0)
     useEffect(()=>{
         
         
@@ -59,6 +64,8 @@ const EditCampgroundDetails = ({history,match}) => {
         setDescription(place.description)
         setPrice(place.price)
         setLocation(place.location)
+        setDeleteImages(new Array(image.length))
+        
     },[dispatch,match,history,placeId,place,successEdit,isLoggedIn])
 
     function validate() {
@@ -83,15 +90,8 @@ const EditCampgroundDetails = ({history,match}) => {
             errors.location = 'Location should be >= 3 characters'
         }
 
-        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-        
-        if(touchedImage && !pattern.test(image)){
-            errors.image = 'Not a valid URL'
+        if(touchedImage && image.length<1){
+            errors.image = 'Image Invalid'
         }
 
         if(touchedDescription && description.length<=0)
@@ -102,19 +102,72 @@ const EditCampgroundDetails = ({history,match}) => {
     
     const errors = validate(title);
 
-    const submitHandler = (e) => {
+    const onFileChange = (e) => {
+        setUploadedImages(e.target.files)
+    }
+
+    const submitHandler = async (e) => {
        e.preventDefault()
-        const campgroundDetails = {
-            title,
-            price,
-            description,
-            location,
-            image,
-            
+        const imageToBeDeleted = []
+        for(let i=0;i<deleteImages.length;i++){
+            if(deleteImages[i])
+                imageToBeDeleted.push(image[i])
+        } 
+        console.log(imageToBeDeleted)
+        var formData = new FormData();
+        for (const key of Object.keys(uploadedImages)) {
+            formData.append('image',uploadedImages[key])
         }
-      dispatch(editPlace(campgroundDetails,placeId))
+        setUploading(true)
+        let newImageData
+        try{
+            const config = {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            }
+            var {data} = await axios.post('/api/upload',formData,config)
+            newImageData = [...image,...data.filePath]
+            setImage(newImageData)
+            setUploading(false)
+            const campgroundDetails = {
+                title,
+                price,
+                description,
+                location,
+                image:newImageData,
+                deleteImages: imageToBeDeleted
+            }
+            dispatch(editPlace(campgroundDetails,placeId))
+        }catch(err){
+            setUploading(false)
+            setUploadErr(true);
+            setTouchedUpload(false)
+        }
+
+
+        
+      //dispatch(editPlace(campgroundDetails,placeId))
    }
 
+   const handleCheckBox = (e,idx) => {
+       const newData = [...deleteImages]
+       if(newData[idx] === undefined)
+            newData[idx] = true
+        else
+            newData[idx] = !newData[idx];
+        setDeleteImages(newData)
+        let num=0;
+        for(let i=0;i<newData.length;i++){
+            if(newData[i])
+                num++;
+        }
+        setNumofDeletedImages(num);
+   }
+    
+   const displayPic = (pic) => {
+      return pic.replace('/upload','/upload/w_300')
+   }
     return (
         <Zoom bottom>
             <Link to={`/campground/${placeId}`} className='btn btn-light my-3'>
@@ -122,7 +175,8 @@ const EditCampgroundDetails = ({history,match}) => {
             </Link>
             <FormContainer>
             <h1>Edit Campground</h1>
-            {loadingEdit ? <Loader /> : errorEdit ? <Message variant='danger'>{errorEdit}</Message> : null}
+            
+            {uploadErr ? <Message variant='danger'>File must be in jpg or jpeg or png format</Message> : null}
             <Form onSubmit={submitHandler}>
                 <FormGroup>
                     <Label htmlFor="title">Title</Label>
@@ -164,16 +218,12 @@ const EditCampgroundDetails = ({history,match}) => {
                 </FormGroup>
 
                 <FormGroup>
-                    <Label htmlFor="image">Image</Label>
-                        <Input type="text" id="image" name="image"
-                            placeholder="Campground image"
-                            value={image}
-                            onChange={(e) => setImage(e.target.value)} 
-                            onBlur = {() => setTouchedImage(true)}
-                            valid={errors.image === '' && image}
-                            invalid={errors.image !== ''}
-                        />
-                        <FormFeedback>{errors.image}</FormFeedback>
+                    <Label for="exampleFile">File</Label>
+                    <Input type="file" name="file" id="exampleFile" multiple={true} onChange={onFileChange} />
+                    <FormText color="muted">
+                    Upload images of campground
+                    </FormText>
+                    {uploading && <Loader />}
                 </FormGroup>
 
                 <FormGroup>
@@ -191,13 +241,38 @@ const EditCampgroundDetails = ({history,match}) => {
                         />
                         <FormFeedback>{errors.desc}</FormFeedback>
                 </FormGroup>
+                
+                <div className='mb-3'>
+                    {place && place.image && place.image.map((pic,index) => {
+                        return (
+                            <div className='mb-3' >
+                            <Image className='mb-1' src={displayPic(pic)} fluid thumbnail />
+                            <FormGroup check>
+                                <Label check>
+                                <Input 
+                                    type="checkbox" 
+                                    name='deleteImages[]'
+                                    value={pic}
+                                    onChange={(e) => handleCheckBox(e,index)}
+                                
+                                />
+                                Delete
+                                </Label>
+                            </FormGroup>
+                            </div>
+                        )
+                    }) }
+                </div>
+                
+                    {loadingEdit ? <Loader /> : errorEdit ? <Message variant='danger'>{errorEdit}</Message> : null}
+                    {place && place.image && numOfDeletedImages === place.image.length ? <Message variant='danger'>Cannot delete all Images</Message> : (null)}
 
                 <Button  
                     block 
                     type="submit" 
                     color="primary"
                     disabled = {errors.title || errors.price || errors.location
-                        || errors.image || errors.desc || !title || !image || !price || !location || !description}
+                       || errors.desc || !title ||  !price || !location || !description || ( numOfDeletedImages===place.image.length)}
                 >
                     Edit campground
                 </Button>

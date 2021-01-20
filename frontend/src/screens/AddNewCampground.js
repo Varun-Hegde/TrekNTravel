@@ -18,37 +18,24 @@ const AddNewCampground = ({history}) => {
     const [price,setPrice] = useState();
     const [description,setDescription] = useState('')
     const [location,setLocation] = useState('')
-    const [image,setImage] = useState('')
+    const [image,setImage] = useState([])
     const [uploading,setUploading] = useState(false)
+    const [uploadedImages,setUploadedImages] = useState('')
+    const [uploadErr,setUploadErr] = useState(false)
 
     const [touchedTitle,setTouchedTitle] = useState(false)
     const [touchedPrice,setTouchedPrice] = useState(false);
     const [touchedDescription,setTouchedDescription] = useState(false)
     const [touchedLocation,setTouchedLocation] = useState(false)
     const [touchedImage,setTouchedImage] = useState(false)
- 
+    const [touchedUpload,setTouchedUpload] = useState(false)
+
     const placeAdd = useSelector(state => state.placeAdd)
     const {loading: loadingAdd,error: errorAdd, success: successAdd} = placeAdd
     const dispatch = useDispatch()
 
     const statusState = useSelector(state => state.status)
     const {userInfo: userStatus,isLoggedIn} = statusState
-    /* useEffect(() => {
-        console.log("IAM BEING CALLED");
-        if(!isLoggedIn){
-            dispatch({type:USER_LOGIN_REQUIRED})
-            history.push('/')
-        }
-    },[])
-
-    useEffect(() => {
-        
-        if(successAdd){
-            dispatch({type:PLACE_CREATE_RESET})
-            history.push('/')
-        }
-    },[dispatch,successAdd,history]) */
-
 
     useEffect(() => {
         if(!isLoggedIn){
@@ -62,18 +49,6 @@ const AddNewCampground = ({history}) => {
         }
     },[dispatch,successAdd,history,userStatus,isLoggedIn])
 
-   const submitHandler = (e) => {
-       e.preventDefault()
-        const campgroundDetails = {
-            title,
-            price,
-            description,
-            location,
-            image
-        }
-        console.log("IAM BEING CALLED");
-        dispatch(addPlace(campgroundDetails))
-   }
    
    function validate() {
         const errors = {
@@ -109,26 +84,42 @@ const AddNewCampground = ({history}) => {
         return errors;
     }
 
-    const uploadFileHandler = async (e) => {
-        const file = e.target.files[0]
-        const formData = new FormData()
-        formData.append('image',file)
-        setUploading(true)
+    const onFileChange = (e) => {
+        setUploadedImages(e.target.files)
+    }
 
+    const submitHandler = async (e) => {
+       e.preventDefault()
+        var formData = new FormData();
+        for (const key of Object.keys(uploadedImages)) {
+            formData.append('image',uploadedImages[key])
+        }
+        setUploading(true)
+        let newImageData
         try{
             const config = {
                 headers: {
                     'Content-Type' : 'multipart/form-data'
                 }
             }
-            const {data} = await axios.post('/api/upload',formData,config)
-            setImage(data)
+            var {data} = await axios.post('/api/upload',formData,config)
+            newImageData = data.filePath
+            setImage(newImageData)
             setUploading(false)
+            const campgroundDetails = {
+                title,
+                price,
+                description,
+                location,
+                image:newImageData
+            }
+            dispatch(addPlace(campgroundDetails))
         }catch(err){
-            console.log(err);
             setUploading(false)
+            setUploadErr(true);
+            setTouchedUpload(false)
         }
-    }
+   }
     
     const errors = validate(title);
     return (
@@ -139,7 +130,7 @@ const AddNewCampground = ({history}) => {
             <FormContainer>
             <h1>New Campground</h1>
             {loadingAdd ? <Loader /> : null}
-            {errorAdd ? <Message variant='danger'>{errorAdd}</Message> : null}
+            {uploadErr ? <Message variant='danger'>File must be in jpg or jpeg or png format</Message> : null}
             <Form onSubmit={submitHandler} enctype="multipart/form-data">
                 <FormGroup>
                     <Label htmlFor="title">Title</Label>
@@ -180,22 +171,10 @@ const AddNewCampground = ({history}) => {
                         <FormFeedback>{errors.location}</FormFeedback>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label htmlFor="image">Image</Label>
-                        <Input type="text" id="image" name="image"
-                            placeholder="Campground image"
-                            value={image}
-                            onChange={(e) => setImage(e.target.value)} 
-                            onBlur = {() => setTouchedImage(true)}
-                            valid={errors.image === '' && image}
-                            invalid={errors.image !== ''}
-                        />
-                        <FormFeedback>{errors.image}</FormFeedback>
-                </FormGroup>
                 
                 <FormGroup>
                     <Label for="exampleFile">File</Label>
-                    <Input type="file" name="file" id="exampleFile" onChange={uploadFileHandler} />
+                    <Input type="file" name="file" id="exampleFile" multiple={true} onChange={onFileChange} />
                     <FormText color="muted">
                     Upload images of campground
                     </FormText>
@@ -222,8 +201,8 @@ const AddNewCampground = ({history}) => {
                     block 
                     type="submit" 
                     color="primary"
-                    disabled = {errors.title || errors.price || errors.location
-                        || errors.image || errors.desc || !title || !image || !price || !location || !description}
+                     disabled = {errors.title || errors.price || errors.location
+                        || errors.desc || !title || !uploadedImages || !price || !location || !description} 
                 >
                     Add new campground
                 </Button>

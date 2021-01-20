@@ -2,15 +2,17 @@ const multer = require('multer')
 const express = require('express')
 const path = require('path')
 const router = express.Router()
+const {storage} = require('../cloudinary/index')
 
-const storage = multer.diskStorage({
+
+/* const storage = multer.diskStorage({
     destination(req,file,cb){
         cb(null, 'uploads/')
     },
     filename(req,file,cb){
         cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
     }
-})
+}) */
 
 function checkFileType(file,cb){
     const filetypes = /jpg|jpeg|png/
@@ -28,10 +30,16 @@ const upload =  multer({
     fileFilter : function(req,file,cb) {
         checkFileType(file,cb)
     } 
-})
+}) 
 
-router.post('/',upload.single('image'),(req,res) => {
-    res.send(`/${req.file.path}`)
+router.post('/',upload.array('image'),(req,res) => {
+    console.log(req.files);
+    const filePath = []
+    for (var i = 0; i < req.files.length; i++) {
+        filePath.push(req.files[i].path)
+    }
+    console.log(req.files);
+    res.json({filePath: filePath})
 })
 
 module.exports = router

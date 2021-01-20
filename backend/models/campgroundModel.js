@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const reviewModel = require('./reviewModel');
 const Schema = mongoose.Schema;
 
+
+
 const CampgroundSchema = new Schema({
     title : {
         type: String,
@@ -27,9 +29,8 @@ const CampgroundSchema = new Schema({
         required: true
     },
     image:{
-        type: String,
+        type: [String],
         required: true,
-        default: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ruyoaxgf72nzpi4y6cdi.png'
     },
     author:{
         type: Schema.Types.ObjectId,

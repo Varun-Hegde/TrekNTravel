@@ -5,8 +5,9 @@ module.exports.validateCampground = ((req,res,next) => {
         title: Joi.string().required().min(3),
         price: Joi.number().min(0).required(),
         description: Joi.string().required().min(0),
-        image: Joi.string().required(),
-        location: Joi.string().min(3).required()
+        image: Joi.array().required(),
+        location: Joi.string().min(3).required(),
+        deleteImages : Joi.array()
     })
     const result = campgroundSchema.validate(req.body)
     if(result.error){

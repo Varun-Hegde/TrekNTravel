@@ -7,11 +7,11 @@ const Place = ({place,history}) => {
     const clickhandler = () => {
         history.push(`/campground/${place._id}`)
     }
-
+    console.log(place.image[0]);
     return(
         <>
             <Card onClick={clickhandler} className='my-5 mx-2 p-1 rounded place'>
-                <Card.Img variant="top" src={place.image} fluid />
+                <Card.Img variant="top" src={place.image[0]} fluid />
                 <Card.Body>
                     <Card.Title>{place.title}</Card.Title>
                     <Card.Text>

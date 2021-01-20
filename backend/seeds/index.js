@@ -28,7 +28,9 @@ const seedDB = async () => {
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             price,
-            image:'https://source.unsplash.com/collection/483251',
+            image: ['https://res.cloudinary.com/varunhegde/image/upload/v1611088332/TrekNTravel/rs2iulsugbed4fra8nsm.png',
+                'https://res.cloudinary.com/varunhegde/image/upload/v1611088332/TrekNTravel/ucwtg3lqhvahycvxnoqm.png'    
+            ],
             author: '6005bec321224c43847b128e'
         })
         await camp.save();

@@ -4,7 +4,7 @@ import {placeDetails} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import {Row,Col,Image} from 'react-bootstrap'
+import {Row,Col,Image,Carousel,CarouselItem} from 'react-bootstrap'
 import {addReview} from '../actions/campgroundActions'
 import ReactStars from "react-rating-stars-component";
 
@@ -39,7 +39,10 @@ const PlaceDetailScreen = ({match}) => {
         },
         edit:false  //MAKES COMPONENT READ ONLY
     };
-
+    console.log(window.width);
+    const displayPic = (pic) => {
+      return pic.replace('/upload','/upload/w_550')
+    }
 
     let showEdit = false
     if(!isLoggedIn){
@@ -79,10 +82,22 @@ const PlaceDetailScreen = ({match}) => {
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <>
                 <Row>
-                    <Col md={5}>
-                        <Image src={place.image} alt={place.name} fluid />
-                        <h1>{place.title}</h1>
-                    </Col>
+        <Carousel className='px-3'>
+            
+            {place && place.image && place.image.length>1 && place.image.map(pic => {
+                return (
+                    <Carousel.Item interval={3000}>
+                        <Image  src={displayPic(pic)} rounded fluid/>
+                    </Carousel.Item>
+                )
+            }
+            )}
+            
+            
+        
+        </Carousel>
+        {place && place.image && place.image.length===1 && <Image className='px-3' height="400" width="400" src={place.image[0]} rounded fluid/>}
+                    
                     
                 </Row>
                 <ReactStars {...starRating} />
