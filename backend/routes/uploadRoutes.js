@@ -33,12 +33,10 @@ const upload =  multer({
 }) 
 
 router.post('/',upload.array('image'),(req,res) => {
-    console.log(req.files);
     const filePath = []
     for (var i = 0; i < req.files.length; i++) {
         filePath.push(req.files[i].path)
     }
-    console.log(req.files);
     res.json({filePath: filePath})
 })
 

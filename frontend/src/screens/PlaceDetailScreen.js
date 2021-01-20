@@ -7,7 +7,7 @@ import Message from '../components/Message'
 import {Row,Col,Image,Carousel,CarouselItem} from 'react-bootstrap'
 import {addReview} from '../actions/campgroundActions'
 import ReactStars from "react-rating-stars-component";
-
+import Map from '../components/Map'
 const PlaceDetailScreen = ({match}) => {
 
     const dispatch = useDispatch()
@@ -82,20 +82,17 @@ const PlaceDetailScreen = ({match}) => {
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <>
                 <Row>
-        <Carousel className='px-3'>
-            
-            {place && place.image && place.image.length>1 && place.image.map(pic => {
-                return (
-                    <Carousel.Item interval={3000}>
-                        <Image  src={displayPic(pic)} rounded fluid/>
-                    </Carousel.Item>
-                )
-            }
-            )}
-            
-            
-        
-        </Carousel>
+                    {place && place.geometry && place.geometry.coordinates.length===2 && <Map campground={place} coOrd = {place.geometry.coordinates}/> }
+                <Carousel className='px-3'>
+                    {place && place.image && place.image.length>1 && place.image.map(pic => {
+                        return (
+                            <Carousel.Item interval={3000}>
+                                <Image  src={displayPic(pic)} rounded fluid/>
+                            </Carousel.Item>
+                        )
+                    }
+                    )}
+                </Carousel>
         {place && place.image && place.image.length===1 && <Image className='px-3' height="400" width="400" src={place.image[0]} rounded fluid/>}
                     
                     

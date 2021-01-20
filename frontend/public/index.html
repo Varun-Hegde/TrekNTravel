@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
       integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
       crossorigin="anonymous" />
+
+     
+      <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
+      <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
     
     <title>TrekNTravel</title>
   </head>
@@ -25,6 +29,14 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div> 
    
-  
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoidmFydW4taGVnZGUiLCJhIjoiY2trNWZrYXluMDZyZDJxbDh5NnZ3b2hqNCJ9.BRu8GNvnKcCuegWhnDWiZg';
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+        center: [-74.5, 40], // starting position [lng, lat]
+        zoom: 9 // starting zoom
+      });
+    </script>
   </body>
 </html>

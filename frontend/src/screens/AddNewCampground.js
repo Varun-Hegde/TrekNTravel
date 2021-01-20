@@ -129,7 +129,7 @@ const AddNewCampground = ({history}) => {
             </Link>
             <FormContainer>
             <h1>New Campground</h1>
-            {loadingAdd ? <Loader /> : null}
+            
             {uploadErr ? <Message variant='danger'>File must be in jpg or jpeg or png format</Message> : null}
             <Form onSubmit={submitHandler} enctype="multipart/form-data">
                 <FormGroup>
@@ -195,8 +195,8 @@ const AddNewCampground = ({history}) => {
                         invalid={errors.desc !== ''}
                         />
                         <FormFeedback>{errors.desc}</FormFeedback>
-                </FormGroup>
-
+                </FormGroup>    
+                {loadingAdd ? <Loader /> : null}
                 <Button  
                     block 
                     type="submit" 

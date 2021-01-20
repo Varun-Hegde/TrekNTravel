@@ -10,6 +10,7 @@
   "author": "Varun Hegde",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.11.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.23.0",
     "cookie-parser": "^1.4.5",
