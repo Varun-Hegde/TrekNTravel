@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState} from 'react'
 import './App.css';
 import {BrowserRouter as Router,Switch,Route} from 'react-router-dom'
 import { Container } from 'react-bootstrap';
@@ -13,6 +13,7 @@ import SignUpScreen from './screens/SignUpScreen'
 import SignInScreen from './screens/SignInScreen'
 import {toast } from 'react-toastify';
 import PopUp from './components/PopUp'
+import LandingScreen from './screens/LandingScreen'
 import {
   USER_SIGNEDIN_RESET,
   PLACE_LIST_ADDED_PLACE_REMOVE,
@@ -26,7 +27,7 @@ import {
 import {status} from './actions/userActions'
 
 function App() {
-
+  const [pathN,setPath] = useState()
   const dispatch = useDispatch()
   const appDetail = useSelector(state => state.appDetails)
   const {
@@ -36,13 +37,18 @@ function App() {
     signUpPopUp,
     signOutPopUp,
     userLoginPopUp,
-    userNoPermission
+    userNoPermission,
+    path
   } = appDetail
   
   useEffect(() => {
     console.log("THIS IS FROM APP.JS");
     dispatch(status())
   },[dispatch])
+
+  useEffect(()=>{
+    setPath(window.location.pathname)
+  })
 
   const popUpMsg = (displayText) => {
     toast.success(displayText, {
@@ -90,7 +96,9 @@ function App() {
   },[signInPopUp,addedPlacePopup,editedPlacePopup,signUpPopUp,signOutPopUp,userLoginPopUp,userNoPermission,dispatch])
 
   return (
-    <Router>
+    <>
+    {path === '/' || pathN === '/' ?<Router><LandingScreen /></Router>  : (
+      <Router>
       <Header />
       <PopUp />
       <main className = 'py-3'>
@@ -101,12 +109,16 @@ function App() {
           <Route exact path='/campground/:id' component={PlaceDetailScreen}  />  
           <Route exact path='/signup' component={SignUpScreen} />
           <Route exact path='/signin' component={SignInScreen} />
-          <Route exact path='/' component={HomeScreen} />  
+          <Route exact path='/campgrounds' component={HomeScreen} />  
+          <Route exact path='/landing' component={LandingScreen} />  
         </Switch>    
         </Container>  
       </main>
       <Footer />
     </Router>
+    ) }
+    
+  </>
   );
 }
 

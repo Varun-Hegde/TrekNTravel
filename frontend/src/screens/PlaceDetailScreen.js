@@ -72,7 +72,7 @@ const PlaceDetailScreen = ({match}) => {
 
     return (
         <div>
-            <Link className='btn btn-light my-3' to='/'>
+            <Link className='btn btn-light my-3' to='/campgrounds'>
                 Go Back
             </Link>
             {showEdit && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>

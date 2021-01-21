@@ -50,9 +50,15 @@ module.exports.postNewCampground = asyncHandler(async(req,res) => {
 module.exports.updateCampground = asyncHandler( async (req,res) => {
     if(!req.body)
         req.body = {}
+    console.log(req.body)
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.location,
+        limit: 1
+    }).send()
 
-    const campground = await Campground.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
-      
+    let campground = await Campground.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
+    campground.geometry = geoData.body.features[0].geometry;
+    campground = await campground.save()
     if(!campground){
         res.status(404)
         throw new Error("Campground not found")

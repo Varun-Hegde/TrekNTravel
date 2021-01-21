@@ -25,14 +25,14 @@ const Header = () => {
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
         <Container>
           <LinkContainer to='/'>
-            <Navbar.Brand>TrekNTravel</Navbar.Brand>
+            <Navbar.Brand onClick={() => dispatch({type:'PATH'})}>Trek-N-Travel</Navbar.Brand>
           </LinkContainer> 
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav>
-                <LinkContainer to='/' exact>
+                <LinkContainer to='/campgrounds' exact>
                     <Nav.Link>
-                        <i class="fas fa-home"></i> Home
+                        <i class="fas fa-campground"></i> Campgrounds
                     </Nav.Link>
                 </LinkContainer>
                 <LinkContainer  to='/newcampground'>

@@ -12,7 +12,8 @@ import {
     USER_LOGIN_REQUIRED,
     USER_LOGIN_REQUIRED_RESET,
     USER_NO_PERMISSION,
-    USER_NO_PERMISSION_RESET
+    USER_NO_PERMISSION_RESET,
+    PATH
 } from '../constants/appConstants'
 
 
@@ -88,6 +89,11 @@ export const app = (state={},action) => {
             return{
                 ...state,
                 userNoPermission: false
+            }
+        case PATH:
+            return{
+                ...state,
+                path: '/'
             }
         default: return state
     }    
