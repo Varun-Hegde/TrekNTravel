@@ -13,5 +13,23 @@
 
 .mapContainer {
   height: 300px;
-  width: 300px;
+  width: 1000px;
+}
+
+@media (max-width: 1000px) {
+  .mapContainer {
+    width: 700px;
+  }
+}
+
+@media (max-width: 650px) {
+  .mapContainer {
+    width: 450px;
+  }
+}
+
+@media (max-width: 450px) {
+  .mapContainer {
+    width: 300px;
+  }
 }

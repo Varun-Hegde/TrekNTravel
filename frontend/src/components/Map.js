@@ -17,11 +17,11 @@ class Map extends React.Component{
   componentDidMount() {
     const map = new mapboxgl.Map({
     container: this.mapContainer,
-    style: 'mapbox://styles/mapbox/light-v10',
+    style: 'mapbox://styles/mapbox/streets-v11',
     center: this.props.coOrd,
     zoom: this.state.zoom
     });
-
+    map.addControl(new mapboxgl.NavigationControl())
     var marker = new mapboxgl.Marker()
     .setLngLat(this.props.coOrd)
     .addTo(map)

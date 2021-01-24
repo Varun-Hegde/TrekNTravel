@@ -92,11 +92,20 @@ module.exports.deleteCampground = asyncHandler(async (req,res) => {
 
 module.exports.postNewReview = asyncHandler( async (req,res) => {
     const {id} = req.params
-    const campground = await Campground.findById(id)
+    const campground = await Campground.findById(id).populate('reviews')
     if(!campground){
         res.status(404)
         throw new Error('Campground not found')
     }
+    console.log(campground)
+    console.log(id)
+    const aldreadyReviewed = campground.reviews.find( r => r.author._id.toString() === req.user._id.toString())
+    if(aldreadyReviewed){
+        res.status(400);
+        throw new Error("You aldready added a review")
+    }
+    
+
     const review = new Review(req.body);
     review.author = req.user
     console.log(review);

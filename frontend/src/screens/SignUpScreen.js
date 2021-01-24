@@ -4,14 +4,14 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
 import FormContainer from '../components/FormContainer';
-import { Button } from 'react-bootstrap';
+import { Button,Row,Col } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNUP_RESET} from '../constants/userConstants'
 import {signup,status} from '../actions/userActions'
 
 const SignUpScreen = ({location,history}) => {
 
-    const redirect = location.search ? location.search.split('=')[1] : '/'
+    const redirect = location.search ? location.search.split('=')[1] : '/campgrounds'
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [username,setUserName] = useState('')
@@ -124,6 +124,11 @@ const SignUpScreen = ({location,history}) => {
                             Sign Up
                     </Button>
                 </Form>
+                <Row className='py-3'>
+                    <Col>
+                    Aldready have an account? <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>Log in</Link>
+                    </Col>
+            </Row>
             </FormContainer>
         </>
     )

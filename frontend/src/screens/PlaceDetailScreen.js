@@ -4,10 +4,11 @@ import {placeDetails} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import {Row,Col,Image,Carousel,CarouselItem} from 'react-bootstrap'
-import {addReview} from '../actions/campgroundActions'
+import {Row,Col,Image,Carousel,CarouselItem,ListGroup, Accordion} from 'react-bootstrap'
 import ReactStars from "react-rating-stars-component";
 import Map from '../components/Map'
+import Comment from '../components/Comment'
+import AddReview from '../components/AddReview'
 const PlaceDetailScreen = ({match}) => {
 
     const dispatch = useDispatch()
@@ -21,25 +22,15 @@ const PlaceDetailScreen = ({match}) => {
     const newReview = useSelector(state => state.newReview)
     const {loading:loadingNewReview,error:errorNewReview,success:successNewReview} = newReview
 
+   
     const [rating,setRating] = useState(0)
     const [comment,setComment] = useState('')
+    
 
-    const starRating = {
-        size: 25,
-        count: 5,
-        activeColor: "gold",
-        value: 4.8,
-        a11y: true,
-        isHalf: true,
-        emptyIcon: <i className="far fa-star" />,
-        halfIcon: <i className="fa fa-star-half-alt" />,
-        filledIcon: <i className="fa fa-star" />,
-        onChange: (newValue) => {
-            console.log(`${newValue}`);
-        },
-        edit:false  //MAKES COMPONENT READ ONLY
+    const ratingChanged = (newRating) => {
+        console.log(newRating);
     };
-    console.log(window.width);
+
     const displayPic = (pic) => {
       return pic.replace('/upload','/upload/w_550')
     }
@@ -56,19 +47,30 @@ const PlaceDetailScreen = ({match}) => {
     }
     }
     
+    
+    
 
     useEffect(() => {
         if(successNewReview){
             setComment('')
-            setRating(0)
+            setRating(0.5)
         }
         dispatch(placeDetails(match.params.id))
     },[match,dispatch,successNewReview])
 
-    const reviewSubmithandler = (e) => {
-        e.preventDefault()
-        dispatch(addReview(comment,rating,match.params.id))
+    const userReviewAdded = () => {
+       if(!isLoggedIn)
+       return false
+        for(let rev of place.reviews){
+           
+            
+            if(rev.author._id.toString() === userInfo.user._id.toString()){
+                return true
+            }
+        }
+        return false
     }
+    
 
     return (
         <div>
@@ -78,55 +80,81 @@ const PlaceDetailScreen = ({match}) => {
             {showEdit && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
             </Link>}
-            
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <>
                 <Row>
-                    {place && place.geometry && place.geometry.coordinates.length===2 && <Map campground={place} coOrd = {place.geometry.coordinates}/> }
-                <Carousel className='px-3'>
-                    {place && place.image && place.image.length>1 && place.image.map(pic => {
-                        return (
-                            <Carousel.Item interval={3000}>
-                                <Image  src={displayPic(pic)} rounded fluid/>
-                            </Carousel.Item>
-                        )
-                    }
-                    )}
-                </Carousel>
-        {place && place.image && place.image.length===1 && <Image className='px-3' height="400" width="400" src={place.image[0]} rounded fluid/>}
-                    
-                    
+                    <Col md={7}>
+                        <Carousel className='px-3'>
+                            {place && place.image && place.image.length>1 && place.image.map(pic => {
+                                return (
+                                    <Carousel.Item interval={3000}>
+                                        <Image  src={pic} width="800px" rounded fluid/>
+                                    </Carousel.Item>
+                                )
+                            }
+                            )}
+                        </Carousel>
+                    </Col>
+                    <Col md={5}>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>
+                                <h3>{place.title}</h3>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <ReactStars 
+                                    size =  {25}
+                                    count = {5}
+                                    activeColor = "gold"
+                                    value = {place.rating}
+                                    a11y = {true}
+                                    isHalf = {true}
+                                    emptyIcon = {<i className="far fa-star" />}
+                                    halfIcon = {<i className="fa fa-star-half-alt" />}
+                                    filledIcon = {<i className="fa fa-star" />}
+                                    onChange = {ratingChanged}
+                                    edit = {false}  //MAKES COMPONENT READ ONLY
+                                />
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <b style={{fontSize: "20px", fontWeight:"bold"}}>Price:</b> {place.price}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <b style={{fontSize: "20px", fontWeight:"bold"}}>Description:</b> {place.description}
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Col>
                 </Row>
-                <ReactStars {...starRating} />
-                {isLoggedIn && (
-                <Row>
-                   <Col>
-                    <h3>Reviews</h3>
-
-                    <div>
-                        Rating
-                    <input type='text' value={rating} onChange={(e) => setRating(e.target.value)} />
-                    </div>
-                    <div><p>Comment</p> <input type='text' value={comment} onChange={(e) => setComment(e.target.value)} />
-                    </div>
-                   {loadingNewReview ? <Loader /> : errorNewReview ? <Message variant='danger'>{errorNewReview}</Message> : null}
-                    <button onClick = {reviewSubmithandler}>Submit</button>
-                </Col>
-                </Row> )}
-                <Row>
-                    <h3>Reviews</h3>
-                    {place.reviews.map(review => {
-                        return (
-                            <Col key={review._id} md={12}>
-                                {review.body} - 
-                                {review.rating}
-                            </Col>
-                        )
-                        }
-                    )}
+                <Row className="d-flex justify-content-center">
+                    <Col md={10} className="pt-5 px-3 d-flex justify-content-center"  >
+                        {place && place.geometry && place.geometry.coordinates.length===2 && <Map campground={place} coOrd = {place.geometry.coordinates}/> }
+                    </Col>
+                </Row>
+                <Row className="pt-4">
+                    <Col>
+                        <h2>Reviews</h2> 
+                        {!userReviewAdded() && <AddReview id={match.params.id}/>}
+                        {place.reviews && place.reviews.length === 0 && <Message>No Reviews</Message>}
+                        <ListGroup variant="flush">
+                            {place.reviews.length > 0 ? (
+                            <>
+                                {place.reviews.map(review => {
+                                    return (
+                                        <ListGroup.Item style={{maxWidth: "380px"}}>
+                                            <Comment review={review} />
+                                        </ListGroup.Item>
+                                    )
+                                })}
+                            </>
+                        ) : (null)}
+                       
+                        </ListGroup>
+                        
+                        
+                    </Col>
                 </Row>
                 </>
             )}
+            
         </div>
     )
 }

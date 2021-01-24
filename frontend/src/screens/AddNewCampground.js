@@ -124,12 +124,12 @@ const AddNewCampground = ({history}) => {
     const errors = validate(title);
     return (
         <Zoom bottom>
-            <Link to='/' className='btn btn-light my-3'>
+            <Link to='/campgrounds' className='btn btn-light my-3'>
                 Go Back
             </Link>
             <FormContainer>
             <h1>New Campground</h1>
-            
+            {errorAdd && <Message variant='danger'>{errorAdd}</Message>}
             {uploadErr ? <Message variant='danger'>File must be in jpg or jpeg or png format</Message> : null}
             <Form onSubmit={submitHandler} enctype="multipart/form-data">
                 <FormGroup>
@@ -178,7 +178,7 @@ const AddNewCampground = ({history}) => {
                     <FormText color="muted">
                     Upload images of campground
                     </FormText>
-                    {uploading && <Loader />}
+                    
                 </FormGroup>
 
                 <FormGroup>
@@ -196,6 +196,7 @@ const AddNewCampground = ({history}) => {
                         />
                         <FormFeedback>{errors.desc}</FormFeedback>
                 </FormGroup>    
+                {uploading && <Loader />}
                 {loadingAdd ? <Loader /> : null}
                 <Button  
                     block 

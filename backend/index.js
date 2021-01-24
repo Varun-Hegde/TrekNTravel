@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
 const path = require('path')
+const mongoSanitize = require('express-mongo-sanitize');
 
 const connectDb = require('./config/db')
 const {notFound,errorHandler} = require('./middlewear/errorMiddlewear')
@@ -25,8 +26,12 @@ if(process.env.NODE_ENV === 'development'){
 app.use(cookieParser())
 /* app.use(passport.initialize()) */
 app.use(express.urlencoded())
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
-
+//FOR storing uploaded files locally:
+//app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+//Prevent Mongo Injections
+app.use(mongoSanitize({
+  replaceWith: '_'
+}))
 
 
 //ROUTES

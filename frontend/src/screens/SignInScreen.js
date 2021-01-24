@@ -4,14 +4,14 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { Form, FormGroup, Label, Input,FormFeedback} from 'reactstrap';
 import FormContainer from '../components/FormContainer';
-import { Button } from 'react-bootstrap';
+import { Button,Row,Col } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNIN_RESET} from '../constants/userConstants'
 import {signin,status} from '../actions/userActions'
 const SignInScreen = ({location,history}) => {
 
-    const redirect = location.search ? location.search.split('=')[1] : '/'
-    
+    const redirect = location.search ? location.search.split('=')[1] : '/campgrounds'
+
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     
@@ -105,7 +105,13 @@ const SignInScreen = ({location,history}) => {
                             Sign In
                     </Button>
                 </Form>
+                <Row className='py-3'>
+                    <Col>
+                        New Customer? <Link to={redirect ? `/signup/?redirect=${redirect}` : '/register'}>Register</Link>
+                    </Col>
+                </Row>
             </FormContainer>
+
         </>
     )
 }
