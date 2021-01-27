@@ -56,6 +56,12 @@ const CampgroundSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
+    ],
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
     ]
 });
 

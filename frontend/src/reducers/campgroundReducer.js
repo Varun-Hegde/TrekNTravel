@@ -15,7 +15,10 @@ import {
     PLACE_EDIT_SUCCESS,
     PLACE_REVIEW_ADD_FAIL,
     PLACE_REVIEW_ADD_REQUEST,
-    PLACE_REVIEW_ADD_SUCCESS
+    PLACE_REVIEW_ADD_SUCCESS,
+    PLACE_LIKE_FAIL,
+    PLACE_LIKE_REQUEST,
+    PLACE_LIKE_SUCCESS
 } from '../constants/campgroundConstants'
 
 
@@ -33,7 +36,9 @@ export const placeListReducer = (state={places:[],addedPlace:false} , action) =>
             return{
                 ...state,
                 loading: false,
-                places: action.payload,
+                places: action.payload.campgrounds,
+                page: action.payload.page,
+                pages: action.payload.pages,
                 error: null
             }
         case PLACE_LIST_FAIL:
@@ -143,4 +148,26 @@ export const reviewAddReducer = (state={} , action) => {
             }
         default: return state
     }
+}
+
+export const likeReducer = (state = {},action) => {
+    switch(action.type){
+        case PLACE_LIKE_REQUEST:
+            return{
+                loading: true,
+                success: false
+            }
+        case PLACE_LIKE_SUCCESS:
+            return{
+                loading:false,
+                success : true
+            }
+        case PLACE_LIKE_FAIL:
+            return{
+                success:false,
+                error:action.payload,
+            }
+        default:
+            return {}
+    }   
 }

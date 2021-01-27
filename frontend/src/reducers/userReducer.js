@@ -12,7 +12,10 @@ import {
     USER_SIGNOUT_REQUEST,
     USER_SIGNOUT_SUCCESS,
     USER_SIGNIN_RESET,
-    USER_SIGNUP_RESET
+    USER_SIGNUP_RESET,
+    USER_PROFILE_FAIL,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_SUCCESS
 } from '../constants/userConstants'
 
 
@@ -118,6 +121,30 @@ export const signOutReducer = (state={},action) => {
                 error: action.payload
             }
         default: 
+            return {}
+    }
+}
+
+
+//PROFILE
+export const profileReducer = (state={},action) => {
+    switch(action.type){
+        case USER_PROFILE_REQUEST:
+            return {
+                loading: true
+            }
+        case USER_PROFILE_SUCCESS:
+            return{
+                loading: false,
+                profile: action.payload,
+                error: false
+            }
+        case USER_PROFILE_FAIL:
+            return{
+                loading: false,
+                error: 'Not signed in'
+            }
+        default:
             return {}
     }
 }

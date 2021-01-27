@@ -7,14 +7,16 @@ import {
     placeListDetailReducer,
     placeAddReducer,
     editPlaceReducer,
-    reviewAddReducer
+    reviewAddReducer,
+    likeReducer
 } from './reducers/campgroundReducer'
 
 import {
     signUpReducer,
     statusReducer,
     signInReducer,
-    signOutReducer
+    signOutReducer,
+    profileReducer
 } from './reducers/userReducer'
 
 import {
@@ -31,7 +33,9 @@ const reducer = combineReducers({
     signOut: signOutReducer,
     status: statusReducer,
     appDetails: app,
-    newReview: reviewAddReducer
+    newReview: reviewAddReducer,
+    profile: profileReducer,
+    like: likeReducer
 })
 
 

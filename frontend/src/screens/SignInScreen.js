@@ -8,6 +8,9 @@ import { Button,Row,Col } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNIN_RESET} from '../constants/userConstants'
 import {signin,status} from '../actions/userActions'
+import Fade from 'react-reveal/Fade';
+
+
 const SignInScreen = ({location,history}) => {
 
     const redirect = location.search ? location.search.split('=')[1] : '/campgrounds'
@@ -63,7 +66,7 @@ const SignInScreen = ({location,history}) => {
 
     const errors = validate();
     return (
-        <>
+        <Fade bottom>
             <Link to={redirect} className='btn btn-light my-3'>
                     Go Back
             </Link>
@@ -112,7 +115,7 @@ const SignInScreen = ({location,history}) => {
                 </Row>
             </FormContainer>
 
-        </>
+        </Fade>
     )
 }
 

@@ -8,9 +8,15 @@ const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.getAllCampgrounds = asyncHandler(async(req,res) => {
-    const campgrounds = await Campground.find({})
+   
+    //FOR PAGINATION
+    const pageSize = 12
+    const page = req.query.pageNumber || 1
+    const count = await Campground.countDocuments()
+
+    const campgrounds = await Campground.find({}).limit(pageSize).skip(pageSize*(page-1))
     if(campgrounds)
-        res.json(campgrounds)
+        res.json({campgrounds,page,pages:Math.ceil(count/pageSize)})
     else{
         res.status(404)
         throw new Error("No Campgrounds found")
@@ -133,3 +139,25 @@ module.exports.deleteReview = asyncHandler( async (req,res) => {
     const deletedReview = await Review.findByIdAndDelete(reviewId) 
     res.status(200).json(deletedReview)
 })
+
+module.exports.like = (asyncHandler(async (req,res) => {
+    const {id} = req.params
+    const campground = await Campground.findById(id)
+    if(!campground){
+        res.status(404)
+        throw new Error('Campground not found')
+    }
+    var foundUserLike = campground.likes.some((like) => like.toString() === req.user._id.toString())
+    console.log(foundUserLike);
+    
+    if(!foundUserLike){
+        campground.likes.push(req.user._id)
+    }else{
+        campground.likes.pull(req.user._id)
+    }
+
+    const updatedCampground = await campground.save()
+
+    res.json({success:'true'})
+
+}))

@@ -4,6 +4,8 @@ import { useDispatch,useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {LinkContainer} from 'react-router-bootstrap'
 import {signout,status} from '../actions/userActions'
+import Fade from 'react-reveal/Fade';
+
 const LandingScreen = () => {
   
     const signOutDetails = useSelector(state => state.signOut)
@@ -21,11 +23,14 @@ const LandingScreen = () => {
     const {userInfo: userStatus,isLoggedIn} = statusState
 
     return (
+        <Fade >
         <div  className="d-flex text-center text-white bg-dark body">
             <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header className="mb-auto">
             <div className="landing-navbar">
-                <h3 style={{color: "white"}} className="float-md-left mb-0">Trek-N-Travel</h3>
+                <h3 style={{color: "white"}} className="float-md-left mb-0">
+                    <a style={{color:"white"}} href='/'>Trek-N-Travel</a>
+                </h3>
                 <nav className="nav nav-masthead justify-content-center float-md-right">
                     <a className="nav-link active" aria-current="page" href='/'><i class="fas fa-home"></i> Home</a>
                     <a className="nav-link" href="/campgrounds"><i class="fas fa-campground"></i> Campgrounds</a>
@@ -67,6 +72,7 @@ const LandingScreen = () => {
       <li></li>
     </ul>
         </div>
+        </Fade>
     )
 }
 

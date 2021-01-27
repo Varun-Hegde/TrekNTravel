@@ -1,6 +1,7 @@
 const JWT = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
+const Campground = require('../models/campgroundModel')
 
 const signToken = (user) => {
     const token = JWT.sign({
@@ -50,4 +51,16 @@ module.exports.status = asyncHandler(async(req,res,next) => {
 module.exports.signOut = asyncHandler((req,res) => {
     res.clearCookie('access_token')
     res.json({success:true})
+})
+
+
+module.exports.profile = asyncHandler(async (req,res) => {
+    const loggedInUser = req.user._id    
+    const user = await User.findById(loggedInUser);
+    const campground = await Campground.find({author:loggedInUser})
+    const data = {
+        user,
+        campground
+    }
+    res.json(data)
 })

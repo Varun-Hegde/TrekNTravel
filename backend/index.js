@@ -25,7 +25,6 @@ if(process.env.NODE_ENV === 'development'){
 }
 app.use(cookieParser())
 /* app.use(passport.initialize()) */
-app.use(express.urlencoded())
 //FOR storing uploaded files locally:
 //app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 //Prevent Mongo Injections

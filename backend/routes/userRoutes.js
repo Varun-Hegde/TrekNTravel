@@ -29,4 +29,11 @@ router.get('/status',passportJWT,UserController.status)
 router.get('/signout',passportJWT,UserController.signOut)
 
 
+//   @desc   User Profile
+//   @route  GET api/users/profile
+//   @access Private
+router.get('/profile',passportJWT,UserController.profile)
+
+
+
 module.exports = router

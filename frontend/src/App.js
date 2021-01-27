@@ -14,6 +14,8 @@ import SignInScreen from './screens/SignInScreen'
 import {toast } from 'react-toastify';
 import PopUp from './components/PopUp'
 import LandingScreen from './screens/LandingScreen'
+import ProfileScreen from './screens/ProfileScreen'
+
 import {
   USER_SIGNEDIN_RESET,
   PLACE_LIST_ADDED_PLACE_REMOVE,
@@ -110,7 +112,9 @@ function App() {
           <Route exact path='/signup' component={SignUpScreen} />
           <Route exact path='/signin' component={SignInScreen} />
           <Route exact path='/campgrounds' component={HomeScreen} />  
+          <Route exact path='/profile' component={ProfileScreen} />
           <Route exact path='/landing' component={LandingScreen} />  
+          <Route exact path='/campgrounds/page/:pageNumber' component={HomeScreen} />
         </Switch>    
         </Container>  
       </main>

@@ -13,7 +13,10 @@ import {
     PLACE_EDIT_SUCCESS,
     PLACE_REVIEW_ADD_FAIL,
     PLACE_REVIEW_ADD_REQUEST,
-    PLACE_REVIEW_ADD_SUCCESS
+    PLACE_REVIEW_ADD_SUCCESS,
+    PLACE_LIKE_FAIL,
+    PLACE_LIKE_REQUEST,
+    PLACE_LIKE_SUCCESS
 } from '../constants/campgroundConstants'
 
 import {
@@ -24,13 +27,13 @@ import {
 import axios from 'axios'
 
 //GET ALL PLACES
-export const listPlaces = () => async (dispatch) => {
+export const listPlaces = (pageNumber='') => async (dispatch) => {
     try{
         dispatch({
             type: PLACE_LIST_REQUEST
         })
 
-        const {data} = await axios.get('/api/campgrounds')
+        const {data} = await axios.get(`/api/campgrounds?pageNumber=${pageNumber}`)
 
         dispatch({
             type: PLACE_LIST_SUCCESS,
@@ -155,3 +158,25 @@ export const addReview = (body,rating,campId) =>async (dispatch) => {
         })
     }
 }
+
+
+//LIKE
+export const likeAction = (id) => async(dispatch) => {
+    try{
+        dispatch({
+            type: PLACE_LIKE_REQUEST
+        })
+
+        const data = await axios.post(`/api/campgrounds/${id}/like`)
+
+        dispatch({
+            type: PLACE_LIKE_SUCCESS
+        })
+    }catch(error){
+        dispatch({   
+            type:PLACE_LIKE_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+} 

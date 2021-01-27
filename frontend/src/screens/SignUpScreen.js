@@ -8,6 +8,7 @@ import { Button,Row,Col } from 'react-bootstrap';
 import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNUP_RESET} from '../constants/userConstants'
 import {signup,status} from '../actions/userActions'
+import Fade from 'react-reveal/Fade';
 
 const SignUpScreen = ({location,history}) => {
 
@@ -67,7 +68,7 @@ const SignUpScreen = ({location,history}) => {
 
     const errors = validate();
     return (
-        <>
+        <Fade bottom>
             <Link to={redirect} className='btn btn-light my-3'>
                     Go Back
             </Link>
@@ -130,7 +131,7 @@ const SignUpScreen = ({location,history}) => {
                     </Col>
             </Row>
             </FormContainer>
-        </>
+        </Fade>
     )
 }
 

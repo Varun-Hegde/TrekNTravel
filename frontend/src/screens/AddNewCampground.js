@@ -45,7 +45,7 @@ const AddNewCampground = ({history}) => {
 
         if(successAdd){
             dispatch({type:PLACE_CREATE_RESET})
-            history.push('/')
+            history.push('/campgrounds')
         }
     },[dispatch,successAdd,history,userStatus,isLoggedIn])
 

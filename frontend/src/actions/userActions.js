@@ -13,6 +13,9 @@ import {
     USER_SIGNOUT_FAIL,
     USER_SIGNOUT_REQUEST,
     USER_SIGNOUT_SUCCESS,
+    USER_PROFILE_FAIL,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_SUCCESS
 } from '../constants/userConstants'
 
 import {
@@ -125,6 +128,29 @@ export const signout = () => async (dispatch) => {
         dispatch({
             type: USER_SIGNOUT,
         })
+    }catch(error){
+        dispatch({   
+            type:USER_SIGNOUT_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//PROFILE SCREEN DETAILS
+export const profile = () => async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_PROFILE_REQUEST
+        })
+
+        const {data} = await axios.get('/api/users/profile')
+
+        dispatch({
+            type: USER_PROFILE_SUCCESS,
+            payload : data
+        })
+
     }catch(error){
         dispatch({   
             type:USER_SIGNOUT_FAIL,

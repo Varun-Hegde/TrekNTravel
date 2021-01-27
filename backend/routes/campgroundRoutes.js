@@ -48,4 +48,10 @@ router.post('/:id/reviews',passportJWT,validateReview,CampgroundController.postN
 //   @access Public
 router.delete('/:id/reviews/:reviewId',passportJWT,isReviewOwner,CampgroundController.deleteReview)
 
+//   @desc   Like Campground
+//   @route  POST api/campgrounds/:id/like
+//   @access Public
+router.post('/:id/like',passportJWT,CampgroundController.like)
+
+
 module.exports = router

@@ -9,10 +9,12 @@ import ReactStars from "react-rating-stars-component";
 import Map from '../components/Map'
 import Comment from '../components/Comment'
 import AddReview from '../components/AddReview'
+import Fade from 'react-reveal/Fade';
+
 const PlaceDetailScreen = ({match}) => {
 
     const dispatch = useDispatch()
-
+    const [like,setLike] = useState(false)
     const placeDetail = useSelector(state => state.placeDetail)
     const {loading,place,error} = placeDetail 
     
@@ -58,6 +60,19 @@ const PlaceDetailScreen = ({match}) => {
         dispatch(placeDetails(match.params.id))
     },[match,dispatch,successNewReview])
 
+    function liked(){
+        if(place && place.likes && isLoggedIn){
+            for(let liked of place.likes){
+                if(liked.toString() === userInfo.user._id.toString){
+                    setLike(true)
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     const userReviewAdded = () => {
        if(!isLoggedIn)
        return false
@@ -73,19 +88,22 @@ const PlaceDetailScreen = ({match}) => {
     
 
     return (
+        <Fade bottom>   
         <div>
             <Link className='btn btn-light my-3' to='/campgrounds'>
                 Go Back
             </Link>
+            {!liked() ? <h1>Like</h1> : <h1> dislike</h1>}
             {showEdit && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
             </Link>}
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
-                <>
+                <Fade bottom>
                 <Row>
                     <Col md={7}>
+
                         <Carousel className='px-3'>
-                            {place && place.image && place.image.length>1 && place.image.map(pic => {
+                            {place && place.image && place.image.length>=1 && place.image.map(pic => {
                                 return (
                                     <Carousel.Item interval={3000}>
                                         <Image  src={pic} width="800px" rounded fluid/>
@@ -152,10 +170,11 @@ const PlaceDetailScreen = ({match}) => {
                         
                     </Col>
                 </Row>
-                </>
+                </Fade>
             )}
             
         </div>
+        </Fade>
     )
 }
 
