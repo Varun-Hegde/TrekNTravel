@@ -18,7 +18,13 @@ import {
     PLACE_REVIEW_ADD_SUCCESS,
     PLACE_LIKE_FAIL,
     PLACE_LIKE_REQUEST,
-    PLACE_LIKE_SUCCESS
+    PLACE_LIKE_SUCCESS,
+    EDIT_REVIEW_FAIL,
+    EDIT_REVIEW_REQUEST,
+    EDIT_REVIEW_SUCCESS,
+    DELETE_REVIEW_REQUEST,
+    DELETE_REVIEW_SUCCESS,
+    DELETE_REVIEW_FAIL
 } from '../constants/campgroundConstants'
 
 
@@ -170,4 +176,46 @@ export const likeReducer = (state = {},action) => {
         default:
             return {}
     }   
+}
+
+export const editReviewReducer = (state={},action) => {
+    switch(action.type){
+        case EDIT_REVIEW_REQUEST:
+            return{
+                loading: true,
+            }
+        case EDIT_REVIEW_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        case EDIT_REVIEW_FAIL:
+            return{
+                loading: false,
+                success: false,
+                error: action.payload
+            }
+        default: return {}
+    }
+}
+
+export const deleteReviewReducer = (state={},action) => {
+    switch(action.type){
+        case DELETE_REVIEW_REQUEST:
+            return{
+                loading: true,
+            }
+        case DELETE_REVIEW_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        case DELETE_REVIEW_FAIL:
+            return{
+                loading: false,
+                success: false,
+                error: action.payload
+            }
+        default: return {}
+    }
 }

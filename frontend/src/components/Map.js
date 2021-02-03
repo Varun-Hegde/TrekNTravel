@@ -28,7 +28,7 @@ class Map extends React.Component{
     .setPopup(
       new mapboxgl.Popup({offset: 25})
       .setHTML(
-        `<h3>${this.props.campground.title}</h3>`)
+        `<p>${this.props.campground.title},<br />${this.props.campground.location}</p>`)
     );
     
     map.on('move', () => {

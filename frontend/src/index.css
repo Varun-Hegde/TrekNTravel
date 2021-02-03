@@ -15,3 +15,7 @@ code {
 main {
   min-height: 80vh;
 }
+
+.likeHover {
+  cursor: pointer;
+}

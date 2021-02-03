@@ -38,7 +38,6 @@ const AddReview = ({id}) => {
     
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log(rating)
         dispatch(addReview(comment,rating,id))
     }
 

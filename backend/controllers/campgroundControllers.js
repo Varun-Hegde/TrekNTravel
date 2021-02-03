@@ -54,6 +54,7 @@ module.exports.postNewCampground = asyncHandler(async(req,res) => {
 })
 
 module.exports.updateCampground = asyncHandler( async (req,res) => {
+    
     if(!req.body)
         req.body = {}
     console.log(req.body)
@@ -103,8 +104,6 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
         res.status(404)
         throw new Error('Campground not found')
     }
-    console.log(campground)
-    console.log(id)
     const aldreadyReviewed = campground.reviews.find( r => r.author._id.toString() === req.user._id.toString())
     if(aldreadyReviewed){
         res.status(400);
@@ -114,7 +113,6 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
 
     const review = new Review(req.body);
     review.author = req.user
-    console.log(review);
     campground.reviews.push(review)
     await review.save()
     await campground.save()
@@ -123,6 +121,7 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
 })
 
 module.exports.deleteReview = asyncHandler( async (req,res) => {
+    
     const {id,reviewId} = req.params
     const campground = await Campground.findById(id)
     const review = await Review.findById(reviewId)
@@ -161,3 +160,22 @@ module.exports.like = (asyncHandler(async (req,res) => {
     res.json({success:'true'})
 
 }))
+
+module.exports.editReview = asyncHandler( async (req,res) => {
+    const {id,reviewId} = req.params
+    const campground = await Campground.findById(id)
+    if(!campground){
+        res.status(404)
+        throw new Error('Campground not found')
+    }
+    let comment = await Review.findById(reviewId)
+    if(!comment){
+        res.status(404)
+        throw new Error("Review not found")
+    }
+    comment.body = req.body.body
+    comment.rating = req.body.rating
+    const updatedComment = await comment.save()
+    res.json(updatedComment)
+})
+

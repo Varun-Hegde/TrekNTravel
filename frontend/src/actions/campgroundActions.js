@@ -16,7 +16,13 @@ import {
     PLACE_REVIEW_ADD_SUCCESS,
     PLACE_LIKE_FAIL,
     PLACE_LIKE_REQUEST,
-    PLACE_LIKE_SUCCESS
+    PLACE_LIKE_SUCCESS,
+    EDIT_REVIEW_FAIL,
+    EDIT_REVIEW_REQUEST,
+    EDIT_REVIEW_SUCCESS,
+    DELETE_REVIEW_FAIL,
+    DELETE_REVIEW_REQUEST,
+    DELETE_REVIEW_SUCCESS
 } from '../constants/campgroundConstants'
 
 import {
@@ -180,3 +186,51 @@ export const likeAction = (id) => async(dispatch) => {
         })
     }
 } 
+
+export const editReviewAction = (id,reviewId,review) => async(dispatch) => {
+    try{
+        dispatch({
+            type: EDIT_REVIEW_REQUEST
+        })
+
+        const config = {
+            headers : {
+                'Content-Type' :'application/json'
+            }
+        }
+
+        const data = await axios.put(`/api/campgrounds/${id}/reviews/${reviewId}`,review,config)
+
+        dispatch({
+            type: EDIT_REVIEW_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:EDIT_REVIEW_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+export const deleteReviewAction = (id,reviewId) => async(dispatch) => {
+    try{
+        dispatch({
+            type: DELETE_REVIEW_REQUEST
+        })
+
+        const data = await axios.delete(`/api/campgrounds/${id}/reviews/${reviewId}`)
+
+        dispatch({
+            type: DELETE_REVIEW_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:DELETE_REVIEW_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}

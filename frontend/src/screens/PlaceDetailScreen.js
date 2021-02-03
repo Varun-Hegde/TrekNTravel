@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
-import {placeDetails} from '../actions/campgroundActions'
+import {placeDetails,likeAction} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -12,18 +12,27 @@ import AddReview from '../components/AddReview'
 import Fade from 'react-reveal/Fade';
 
 const PlaceDetailScreen = ({match}) => {
-
+    const campId = match.params.id
+   
     const dispatch = useDispatch()
-    const [like,setLike] = useState(false)
+  
     const placeDetail = useSelector(state => state.placeDetail)
     const {loading,place,error} = placeDetail 
-    
+    const [userLiked,setUserLiked] = useState(false)
+   
+    const deleteReview = useSelector(state => state.deleteReview)
+    const {success:successDeleteReview} = deleteReview
+
+    const [totalLikes,setTotalLikes] = useState(0)
+
     const userStatus = useSelector(state => state.status)
     const {isLoggedIn,userInfo} = userStatus
    
     const newReview = useSelector(state => state.newReview)
     const {loading:loadingNewReview,error:errorNewReview,success:successNewReview} = newReview
 
+    const like = useSelector(state => state.like)
+    const {success:successLike} = like
    
     const [rating,setRating] = useState(0)
     const [comment,setComment] = useState('')
@@ -49,6 +58,11 @@ const PlaceDetailScreen = ({match}) => {
     }
     }
     
+
+    useEffect(() => {
+        setUserLiked(false)
+        dispatch(placeDetails(match.params.id))
+    },[successNewReview,match,dispatch,match.params.id,successDeleteReview])
     
     
 
@@ -57,21 +71,20 @@ const PlaceDetailScreen = ({match}) => {
             setComment('')
             setRating(0.5)
         }
-        dispatch(placeDetails(match.params.id))
-    },[match,dispatch,successNewReview])
-
-    function liked(){
-        if(place && place.likes && isLoggedIn){
-            for(let liked of place.likes){
-                if(liked.toString() === userInfo.user._id.toString){
-                    setLike(true)
-                    return true;
+        if(isLoggedIn && place && place.likes && place.likes.length>0){
+            
+            
+            for(let p of place.likes){
+                if(p === userInfo.user._id){
+                    setUserLiked(true)
+                    break
                 }
             }
         }
-        return false;
-    }
-
+        if(place && place.likes){
+            setTotalLikes(place.likes.length)
+        }
+    },[match,dispatch,match.params.id,place])   
 
     const userReviewAdded = () => {
        if(!isLoggedIn)
@@ -86,6 +99,19 @@ const PlaceDetailScreen = ({match}) => {
         return false
     }
     
+    const likePlace = () => {
+        if(userLiked){
+            setTotalLikes(prev => prev-1)
+        }else{
+            setTotalLikes(prev => prev + 1)
+        }
+        dispatch(likeAction(match.params.id))
+        if(userLiked){
+            setUserLiked(false)
+        }else{
+            setUserLiked(true)
+        }
+    }
 
     return (
         <Fade bottom>   
@@ -93,7 +119,7 @@ const PlaceDetailScreen = ({match}) => {
             <Link className='btn btn-light my-3' to='/campgrounds'>
                 Go Back
             </Link>
-            {!liked() ? <h1>Like</h1> : <h1> dislike</h1>}
+            
             {showEdit && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
             </Link>}
@@ -147,6 +173,18 @@ const PlaceDetailScreen = ({match}) => {
                         {place && place.geometry && place.geometry.coordinates.length===2 && <Map campground={place} coOrd = {place.geometry.coordinates}/> }
                     </Col>
                 </Row>
+                            
+                <Row className='pt-4'>
+                    {isLoggedIn ? (
+                        <Col className='likeHover' onClick={isLoggedIn && likePlace}>
+                            {userLiked ? (<h3 ><i style={{color:"red"}} class="fas fa-heart"></i>  {totalLikes}</h3>): (<h3><i class="far fa-heart"></i> {totalLikes}</h3>)}
+                        </Col>
+                    ) : (
+                        <Col>
+                            <h3><Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><i class="far fa-heart"></i> {totalLikes}</Link></h3>
+                        </Col>
+                    )}
+                </Row>
                 <Row className="pt-4">
                     <Col>
                         <h2>Reviews</h2> 
@@ -158,7 +196,13 @@ const PlaceDetailScreen = ({match}) => {
                                 {place.reviews.map(review => {
                                     return (
                                         <ListGroup.Item style={{maxWidth: "380px"}}>
-                                            <Comment review={review} />
+                                            {isLoggedIn && review.author._id === userInfo.user._id ? (
+                                                <Comment review={review} reviewAuthor={true}/>
+                                            ) : (
+                                                
+                                                <Comment review={review} reviewAuthor={false} id={match.params.id}/>
+                                            )}
+                                            
                                         </ListGroup.Item>
                                     )
                                 })}

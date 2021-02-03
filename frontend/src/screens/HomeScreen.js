@@ -19,6 +19,7 @@ const HomeScreen = ({history,match}) => {
     console.log(pageNumber);
     useEffect(()=>{
         dispatch(listPlaces(pageNumber))
+        window.scrollTo(0, 0)
     },[dispatch,pageNumber,match])
 
 
