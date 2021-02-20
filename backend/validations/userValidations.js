@@ -28,6 +28,7 @@ module.exports.validateUserSignUp = ((req,res,next) => {
         password: Joi.string().required().escapeHTML(),
         username: Joi.string().required().escapeHTML()
     })
+
     const result = userSchema.validate(req.body)
     if(result.error){
         res.status(400)

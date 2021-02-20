@@ -38,7 +38,7 @@ const seedDB = async () => {
             image: ['https://res.cloudinary.com/varunhegde/image/upload/v1611088332/TrekNTravel/rs2iulsugbed4fra8nsm.png',
                 'https://res.cloudinary.com/varunhegde/image/upload/v1611088332/TrekNTravel/ucwtg3lqhvahycvxnoqm.png'    
             ],
-            author: '6005bec321224c43847b128e'
+            author: '60316342cb3c7c4700735310'
         })
         await camp.save();
     }

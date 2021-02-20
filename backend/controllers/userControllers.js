@@ -14,16 +14,29 @@ const signToken = (user) => {
 }
 
 module.exports.signUp = asyncHandler(async(req,res,next) => {
+
     const {email,password,username} = req.body 
-    let foundUser = await User.findOne({email})
+    let foundUser = await User.findOne({"local.email":email})
     if(foundUser){
         res.status(400);
         throw new Error('A user with this email aldready exists')
     }
+
+    //Check if user exists with same google email
+    foundUser = await User.findOne({"google.email":email})
+    if(foundUser){
+        res.status(400);
+        throw new Error('A user with this email aldready exists')
+    }
+    
     const newUser = new User({
-        email,
-        password,
-        username
+        methods: ['local'],
+        username:username,
+        email:email,
+        local: {
+            email: email,
+            password: password
+        }
     })
     const createdUser = await newUser.save();
     const token = signToken(createdUser)
@@ -63,4 +76,10 @@ module.exports.profile = asyncHandler(async (req,res) => {
         campground
     }
     res.json(data)
+})
+
+module.exports.googleAuth = asyncHandler(async (req,res) => {
+    const token = signToken(req.user)
+    res.cookie('access_token',token,{httpOnly: true,})
+    res.json({success: 'true' })
 })

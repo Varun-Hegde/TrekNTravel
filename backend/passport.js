@@ -1,6 +1,8 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
+const GoogleStrategy = require('passport-google-token').Strategy
+const FacebookTokenStrategy = require('passport-facebook-token');
 
 const User = require('./models/userModel')
 
@@ -37,7 +39,9 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 }, async (email,password,done) => {
     try{
-        const user = await User.findOne({email})
+   
+        const user = await User.findOne({ email})
+
         if(!user) {
             return done(null,false)
         }
@@ -51,5 +55,62 @@ passport.use(new LocalStrategy({
     }
 }))
 
+
+passport.use('googleToken',new GoogleStrategy({
+    clientID: '191396252820-3cmrdlajhok0enub0mr6ij577g2ruc7f.apps.googleusercontent.com',
+    clientSecret: 'L_3vLf6Tp6f5gwgl-aoUBWFw',
+    passReqToCallback: true,
+}, async (req,accessToken,refreshToken,profile,done) => {
+    try{
+        //Could get accessed in 2 ways:
+        // 1. When registering for 1st time
+        // 2. When linking account to existing one
+
+        //Aldready logged in,need to link account
+        //Add google's data to an existing account
+        if(req.user){
+            req.user.methods.push('google')
+            req.user.google = {
+                id: profile.id,
+                email: profile.emails[0].value
+            }
+            await req.user.save()
+            done(null,req.user)
+        }else{
+            //In account creation process
+            //CHECK WHETHER THIS USER EXISTS IN OUR DB
+            let existingUser = await User.findOne({"google.id":profile.id})
+            if(existingUser){
+                return done(null,existingUser)
+            }
+
+            existingUser = await User.findOne({"local.email":profile.emails[0].value})
+            if(existingUser){
+                //We need to merge google's data with local auth
+                existingUser.methods.push('google')
+                existingUser.google = {
+                    id: profile.id,
+                    email: profile.emails[0].value
+                }
+                await existingUser.save()
+                return done(null,existingUser)
+            }
+
+            const newUser = new User({
+                methods: ['google'],
+                username: profile.emails[0].value.split('@')[0],
+                email: profile.emails[0].value,
+                google:{
+                    id: profile.id,
+                    email: profile.emails[0].value
+                }
+            })
+            await newUser.save()
+            return done(null,newUser)
+        }
+    }catch(err){
+        done(err,false,err.message)
+    }
+}))
 
 
