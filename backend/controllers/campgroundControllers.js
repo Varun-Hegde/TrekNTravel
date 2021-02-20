@@ -109,15 +109,13 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
         res.status(400);
         throw new Error("You aldready added a review")
     }
-    
-
     const review = new Review(req.body);
     review.author = req.user
     campground.reviews.push(review)
     await review.save()
-    await campground.save()
+    const newCamp = await campground.save()
     res.status(201)
-    res.json(campground)
+    res.json(newCamp)
 })
 
 module.exports.deleteReview = asyncHandler( async (req,res) => {

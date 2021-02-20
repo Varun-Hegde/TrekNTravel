@@ -113,9 +113,9 @@ const Comment = ({review,reviewAuthor}) => {
                     </>
                 ) : (
                     <>
-                    <Row style={{width: "420px"}}>
-                    <Col md={7} style={{fontSize:"20px", fontWeight:"700"}}>{review.author.username}</Col>
-                    <Col md={5}>
+                    <Row >
+                    <Col md={7} sm={12} style={{fontSize:"20px", fontWeight:"700"}}>{review.author.username}</Col>
+                    <Col md={5} sm={12}>
                         <ReactStars 
                             size =  {15}
                             count = {5}
