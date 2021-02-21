@@ -9,7 +9,7 @@ import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNIN_RESET} from '../constants/userConstants'
 import {signin,status} from '../actions/userActions'
 import Fade from 'react-reveal/Fade';
-
+import GoogleLogin from '../components/GoogleLoginButton'
 
 const SignInScreen = ({location,history}) => {
 
@@ -108,6 +108,7 @@ const SignInScreen = ({location,history}) => {
                             Sign In
                     </Button>
                 </Form>
+                <GoogleLogin />
                 <Row className='py-3'>
                     <Col>
                         New Customer? <Link to={redirect ? `/signup/?redirect=${redirect}` : '/register'}>Register</Link>

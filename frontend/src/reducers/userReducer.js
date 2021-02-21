@@ -15,7 +15,10 @@ import {
     USER_SIGNUP_RESET,
     USER_PROFILE_FAIL,
     USER_PROFILE_REQUEST,
-    USER_PROFILE_SUCCESS
+    USER_PROFILE_SUCCESS,
+    USER_GOOGLE_FAIL,
+    USER_GOOGLE_REQUEST,
+    USER_GOOGLE_SUCCESS
 } from '../constants/userConstants'
 
 
@@ -146,5 +149,28 @@ export const profileReducer = (state={},action) => {
             }
         default:
             return {}
+    }
+}
+
+//GOOGLE OAUTH
+export const googleOauth = (state={},action) => {
+    switch(action.type){
+        case USER_GOOGLE_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_GOOGLE_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                userInfo: action.payload,
+            }
+        case USER_GOOGLE_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default: return {}
     }
 }

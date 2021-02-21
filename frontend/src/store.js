@@ -18,7 +18,8 @@ import {
     statusReducer,
     signInReducer,
     signOutReducer,
-    profileReducer
+    profileReducer,
+    googleOauth
 } from './reducers/userReducer'
 
 import {
@@ -39,7 +40,8 @@ const reducer = combineReducers({
     profile: profileReducer,
     like: likeReducer,
     editReview: editReviewReducer,
-    deleteReview: deleteReviewReducer
+    deleteReview: deleteReviewReducer,
+    googleSignIn: googleOauth
 })
 
 

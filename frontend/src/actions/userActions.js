@@ -15,7 +15,10 @@ import {
     USER_SIGNOUT_SUCCESS,
     USER_PROFILE_FAIL,
     USER_PROFILE_REQUEST,
-    USER_PROFILE_SUCCESS
+    USER_PROFILE_SUCCESS,
+    USER_GOOGLE_FAIL,
+    USER_GOOGLE_REQUEST,
+    USER_GOOGLE_SUCCESS
 } from '../constants/userConstants'
 
 import {
@@ -154,6 +157,35 @@ export const profile = () => async (dispatch) => {
     }catch(error){
         dispatch({   
             type:USER_SIGNOUT_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//GOOGLE OAUTH
+export const googleOauth = (token) =>async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_GOOGLE_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/google',token)
+
+        dispatch({
+            type: USER_GOOGLE_SUCCESS,
+            payload: data
+        })
+        dispatch({
+            type: USER_SIGNEDIN
+        })
+        dispatch({
+            type: USER_SIGNIN_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_GOOGLE_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })
