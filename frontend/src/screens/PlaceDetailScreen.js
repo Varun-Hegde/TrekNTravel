@@ -50,7 +50,7 @@ const PlaceDetailScreen = ({match}) => {
     if(!isLoggedIn){
         showEdit = false;
     }else{
-        if(!loading && isLoggedIn){
+        if(!loading && isLoggedIn && userInfo){
             {
                 if(userInfo.user._id === place.author._id)
                     showEdit = true
@@ -144,7 +144,7 @@ const PlaceDetailScreen = ({match}) => {
                             <ListGroup.Item>
                                 <h3>{place.title}</h3>
                             </ListGroup.Item>
-                            <ListGroup.Item>
+                            <ListGroup.Item className='d-flex  align-items-center'>
                                 <ReactStars 
                                     size =  {25}
                                     count = {5}
@@ -158,6 +158,7 @@ const PlaceDetailScreen = ({match}) => {
                                     onChange = {ratingChanged}
                                     edit = {false}  //MAKES COMPONENT READ ONLY
                                 />
+                                <div className='pl-2'>{place.numReviews} reviews</div>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <b style={{fontSize: "20px", fontWeight:"bold"}}>Price:</b> {place.price}
@@ -177,11 +178,11 @@ const PlaceDetailScreen = ({match}) => {
                 <Row className='pt-4'>
                     {isLoggedIn ? (
                         <Col className='likeHover' onClick={isLoggedIn && likePlace}>
-                            {userLiked ? (<h3 ><i style={{color:"red"}} class="fas fa-heart"></i>  {totalLikes}</h3>): (<h3><i class="far fa-heart"></i> {totalLikes}</h3>)}
+                            {userLiked ? (<h3 ><i style={{color:"#318CE7"}} class="fas fa-thumbs-up"></i>  {totalLikes}</h3>): (<h3><i class="far fa-thumbs-up"></i> {totalLikes}</h3>)}
                         </Col>
                     ) : (
                         <Col>
-                            <h3><Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><i class="far fa-heart"></i> {totalLikes}</Link></h3>
+                            <h3><Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><i class="far fa-thumbs-up"></i> {totalLikes}</Link></h3>
                         </Col>
                     )}
                 </Row>

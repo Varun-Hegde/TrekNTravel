@@ -112,6 +112,12 @@ module.exports.postNewReview = asyncHandler( async (req,res) => {
     const review = new Review(req.body);
     review.author = req.user
     campground.reviews.push(review)
+
+    let totalReviews = 0;
+    campground.numReviews = campground.reviews.length
+
+    campground.rating = campground.reviews.reduce((acc, item) => item.rating + acc, 0) / campground.reviews.length
+    
     await review.save()
     const newCamp = await campground.save()
     res.status(201)
@@ -134,6 +140,13 @@ module.exports.deleteReview = asyncHandler( async (req,res) => {
     
     await Campground.findByIdAndUpdate(id,{$pull : {reviews:reviewId}},{new:true,runValidators:true})
     const deletedReview = await Review.findByIdAndDelete(reviewId) 
+    const newCamp = await Campground.findById(id).populate('reviews')
+    let rating = 0
+    if(newCamp.reviews.length > 0)
+        rating = newCamp.reviews.reduce((acc, item) => item.rating + acc, 0) / newCamp.reviews.length
+    newCamp.rating = rating
+    await newCamp.save()
+    
     res.status(200).json(deletedReview)
 })
 
@@ -161,7 +174,7 @@ module.exports.like = (asyncHandler(async (req,res) => {
 
 module.exports.editReview = asyncHandler( async (req,res) => {
     const {id,reviewId} = req.params
-    const campground = await Campground.findById(id)
+    const campground = await Campground.findById(id).populate('reviews')
     if(!campground){
         res.status(404)
         throw new Error('Campground not found')
@@ -171,9 +184,13 @@ module.exports.editReview = asyncHandler( async (req,res) => {
         res.status(404)
         throw new Error("Review not found")
     }
+    let oldRating = comment.rating
     comment.body = req.body.body
     comment.rating = req.body.rating
     const updatedComment = await comment.save()
+    const newCamp = await Campground.findById(id).populate('reviews')
+    newCamp.rating = newCamp.reviews.reduce((acc, item) => item.rating + acc, 0) / newCamp.reviews.length
+    await newCamp.save()
     res.json(updatedComment)
 })
 

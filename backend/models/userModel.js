@@ -13,12 +13,14 @@ const UserSchema = new Schema({
     },
     email:{
         type:String,
-        required: true
+        required: true,
+        unique: true
     },
     local: {
         email:{
             type:String,
-            lowercase: true
+            lowercase: true,
+            
         },
         password:{
             type: String
@@ -31,7 +33,8 @@ const UserSchema = new Schema({
         },
         email:{
             type: String,
-            lowercase: true
+            lowercase: true,
+            
         }
     },
     facebook:{
@@ -40,7 +43,8 @@ const UserSchema = new Schema({
         },
         email:{
             type:String,
-            lowercase:true
+            lowercase:true,
+            
         }
     },
 
