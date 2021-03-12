@@ -33,6 +33,7 @@ module.exports.signUp = asyncHandler(async(req,res,next) => {
         methods: ['local'],
         username:username,
         email:email,
+        age:18,
         local: {
             email: email,
             password: password

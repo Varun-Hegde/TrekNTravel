@@ -17,6 +17,7 @@ const app = express()
 const campgroundRoutes = require('./routes/campgroundRoutes')
 const userRoutes = require('./routes/userRoutes')
 const uploadRoutes = require('./routes/uploadRoutes')
+const followRoutes = require('./routes/followRoutes')
 
 //MIDDLEWEARS
 app.use(express.json())
@@ -27,6 +28,8 @@ app.use(cookieParser())
 /* app.use(passport.initialize()) */
 //FOR storing uploaded files locally:
 //app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
+
 //Prevent Mongo Injections
 app.use(mongoSanitize({
   replaceWith: '_'
@@ -47,6 +50,8 @@ app.use('/api/users',userRoutes)
 //UPLOAD ROUTES
 app.use('/api/upload',uploadRoutes)
 
+//FOLLOW ROUTES
+app.use('/api',followRoutes)
 
 //PAGE NOT FOUND
 app.use(notFound)

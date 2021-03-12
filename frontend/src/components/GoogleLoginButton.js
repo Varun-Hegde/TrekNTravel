@@ -6,7 +6,7 @@ import {googleOauth} from '../actions/userActions'
 const GoogleLoginButton = () => {
     const dispatch = useDispatch()
     const responseGoogle = (res) => {
-        console.log(res);
+        
         const data = {
             access_token: res.accessToken
         }
