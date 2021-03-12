@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const passport = require('passport')
 const path = require('path')
 const mongoSanitize = require('express-mongo-sanitize');
+const cors = require('cors')
 
 const connectDb = require('./config/db')
 const {notFound,errorHandler} = require('./middlewear/errorMiddlewear')
@@ -25,6 +26,9 @@ if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
 }
 app.use(cookieParser())
+
+app.use(cors({credentials:true,origin:'http://localhost:3000'}))
+
 /* app.use(passport.initialize()) */
 //FOR storing uploaded files locally:
 //app.use('/uploads', express.static(path.join(__dirname, '/uploads')))

@@ -17,6 +17,9 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
+    description:{
+        type: String,
+    },
     local: {
         email:{
             type:String,

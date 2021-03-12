@@ -59,3 +59,21 @@ module.exports.removeFollower = asyncHandler(async(req,res,next) => {
         msg: "Successfully unfollowed this user"
     })
 })
+
+module.exports.status = asyncHandler(async (req,res,next) => {
+    const username = req.params.username
+    
+    const user = await User.findOne({username:username})
+    
+    if(!user){
+        res.status(404);
+        throw new Error('User with this username not found')
+    }
+
+    const followData = await Follower.findOne({follower:req.user._id , following:user._id})
+    if(followData){
+        res.json({follow:true})
+    }else{
+        res.json({follow: false})
+    }
+})

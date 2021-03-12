@@ -4,12 +4,13 @@ import {placeDetails,likeAction} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import {Row,Col,Image,Carousel,CarouselItem,ListGroup, Accordion} from 'react-bootstrap'
+import {Row,Col,Image,Carousel,CarouselItem,ListGroup, Accordion, Button} from 'react-bootstrap'
 import ReactStars from "react-rating-stars-component";
 import Map from '../components/Map'
 import Comment from '../components/Comment'
 import AddReview from '../components/AddReview'
 import Fade from 'react-reveal/Fade';
+import {followUserAction,unfollowUserAction,followUserStatusAction} from '../actions/userActions'
 
 const PlaceDetailScreen = ({match}) => {
     const campId = match.params.id
@@ -30,6 +31,15 @@ const PlaceDetailScreen = ({match}) => {
    
     const newReview = useSelector(state => state.newReview)
     const {loading:loadingNewReview,error:errorNewReview,success:successNewReview} = newReview
+
+    const followUserStatus = useSelector(state => state.followUserStatus)
+    const {loading:followUserLoading,error:followUserError,follow:followUserFollowing} = followUserStatus
+
+    const followUserReducer = useSelector(state => state.followUser)
+    const {loading: fuLoading,error:fuError,success:fuSuccess} = followUserReducer
+
+    const unfollowUserReducer = useSelector(state => state.unfollowUser)
+    const {loading: ufuLoading,error:ufuError,success:ufuSuccess} = unfollowUserReducer
 
     const like = useSelector(state => state.like)
     const {success:successLike} = like
@@ -62,9 +72,14 @@ const PlaceDetailScreen = ({match}) => {
     useEffect(() => {
         setUserLiked(false)
         dispatch(placeDetails(match.params.id))
+        
     },[successNewReview,match,dispatch,match.params.id,successDeleteReview])
     
-    
+    useEffect(() => {
+        if(isLoggedIn && place && place.author){
+            dispatch(followUserStatusAction(place.author.username))
+        }
+    },[place,ufuSuccess,fuSuccess])
 
     useEffect(() => {
         if(successNewReview){
@@ -112,6 +127,17 @@ const PlaceDetailScreen = ({match}) => {
             setUserLiked(true)
         }
     }
+
+    const followUserHandler = () => {
+        dispatch(followUserAction(place.author.username))
+    }
+
+    const unfollowUserHandler = () => {
+        dispatch(unfollowUserAction(place.author.username))
+    }
+
+
+
 
     return (
         <Fade bottom>   
@@ -185,6 +211,33 @@ const PlaceDetailScreen = ({match}) => {
                             <h3><Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><i class="far fa-thumbs-up"></i> {totalLikes}</Link></h3>
                         </Col>
                     )}
+                </Row>
+                <Row className='authorDetails'>
+                    <h3>Written By</h3>
+                    <div className='d-flex justify-content-between'>
+                        <div>
+                            <p className='heading'>{place.author.username}</p>
+                            <p>{place.author.description} </p>
+                        </div>
+                        <div className='ml-4'>
+                            {!isLoggedIn ? (
+                                <Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><Button variant='success'>Follow</Button></Link>
+                                
+                            ) : (
+                                <>
+                                    {followUserFollowing ? (
+                                        <Button onClick={unfollowUserHandler} variant="outline-success">Following</Button>
+                                    ) : (
+                                        <Button onClick={followUserHandler} variant='success'>Follow</Button>
+                                    )}
+                                </>
+                            )}
+                            
+                           
+                        </div>
+                    </div>
+                    
+                    
                 </Row>
                 <Row className="pt-4">
                     <Col>

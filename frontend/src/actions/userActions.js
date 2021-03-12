@@ -18,7 +18,16 @@ import {
     USER_PROFILE_SUCCESS,
     USER_GOOGLE_FAIL,
     USER_GOOGLE_REQUEST,
-    USER_GOOGLE_SUCCESS
+    USER_GOOGLE_SUCCESS,
+    USER_FOLLOW_FAIL,
+    USER_FOLLOW_REQUEST,
+    USER_FOLLOW_SUCCESS,
+    USER_UNFOLLOW_FAIL,
+    USER_UNFOLLOW_REQUEST,
+    USER_UNFOLLOW_SUCCESS,
+    USER_FOLLOW_STATUS_FAIL,
+    USER_FOLLOW_STATUS_REQUEST,
+    USER_FOLLOW_STATUS_SUCCESS,
 } from '../constants/userConstants'
 
 import {
@@ -186,6 +195,72 @@ export const googleOauth = (token) =>async (dispatch) => {
     }catch(error){
         dispatch({   
             type:USER_GOOGLE_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+export const followUserAction = (username) => async(dispatch) => {
+    try{
+        dispatch({
+            type: USER_FOLLOW_REQUEST
+        })
+
+        const {data} = await axios.post(`/api/follow/${username}`)
+
+        dispatch({
+            type: USER_FOLLOW_SUCCESS,
+            payload: data
+        })
+
+    }catch(error){
+        dispatch({   
+            type:USER_FOLLOW_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+export const unfollowUserAction = (username) => async(dispatch) => {
+    try{
+        dispatch({
+            type: USER_UNFOLLOW_REQUEST
+        })
+
+        const {data} = await axios.delete(`/api/unfollow/${username}`)
+
+        dispatch({
+            type: USER_UNFOLLOW_SUCCESS,
+            payload: data
+        })
+
+    }catch(error){
+        dispatch({   
+            type:USER_UNFOLLOW_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+export const followUserStatusAction = (username) => async(dispatch) => {
+    try{
+        dispatch({
+            type: USER_FOLLOW_STATUS_REQUEST
+        })
+
+        const {data} = await axios.get(`/api/status/${username}`)
+
+        dispatch({
+            type: USER_FOLLOW_STATUS_SUCCESS,
+            payload: data.follow
+        })
+
+    }catch(error){
+        dispatch({   
+            type: USER_FOLLOW_STATUS_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

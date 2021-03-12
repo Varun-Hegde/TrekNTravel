@@ -48,6 +48,7 @@ module.exports.signUp = asyncHandler(async(req,res,next) => {
 module.exports.signIn = asyncHandler(async(req,res,next) => {
     const token = signToken(req.user)
     res.cookie('access_token',token,{httpOnly: true})
+    //res.cookie('access_token', token, {sameSite: 'strict',path: '/',httpOnly:true,secure:true),
     res.json({success: true})
 })
 

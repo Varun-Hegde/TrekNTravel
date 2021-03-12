@@ -19,3 +19,13 @@ main {
 .likeHover {
   cursor: pointer;
 }
+
+.authorDetails {
+  border-top: 2px solid #f1f1f1;
+  padding-top: 15px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 700;
+}

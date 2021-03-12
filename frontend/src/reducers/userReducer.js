@@ -18,7 +18,16 @@ import {
     USER_PROFILE_SUCCESS,
     USER_GOOGLE_FAIL,
     USER_GOOGLE_REQUEST,
-    USER_GOOGLE_SUCCESS
+    USER_GOOGLE_SUCCESS,
+    USER_FOLLOW_FAIL,
+    USER_FOLLOW_REQUEST,
+    USER_FOLLOW_SUCCESS,
+    USER_UNFOLLOW_FAIL,
+    USER_UNFOLLOW_REQUEST,
+    USER_UNFOLLOW_SUCCESS,
+    USER_FOLLOW_STATUS_FAIL,
+    USER_FOLLOW_STATUS_REQUEST,
+    USER_FOLLOW_STATUS_SUCCESS,
 } from '../constants/userConstants'
 
 
@@ -166,6 +175,72 @@ export const googleOauth = (state={},action) => {
                 userInfo: action.payload,
             }
         case USER_GOOGLE_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default: return {}
+    }
+}
+
+//FOLLOW USER
+export const followUserReducer = (state={},action) => {
+    switch(action.type){
+        case USER_FOLLOW_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_FOLLOW_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        case USER_FOLLOW_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default: return {}
+    }
+}
+
+//UNFOLLOW USER
+export const unfollowUserReducer = (state={},action) => {
+    switch(action.type){
+        case USER_UNFOLLOW_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_UNFOLLOW_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        case USER_UNFOLLOW_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default: return {}
+    }
+}
+
+//FOLLOW STATUS USER
+export const followUserStatusReducer = (state={},action) => {
+    switch(action.type){
+        case USER_FOLLOW_STATUS_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_FOLLOW_STATUS_SUCCESS:
+            return{
+                loading: false,
+                follow: action.payload,
+            }
+        case USER_FOLLOW_STATUS_FAIL:
             return{
                 loading: false,
                 error: action.payload,
