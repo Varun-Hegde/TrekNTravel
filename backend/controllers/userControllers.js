@@ -2,6 +2,7 @@ const JWT = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 const Campground = require('../models/campgroundModel')
+const Follower = require('../models/followersModel')
 
 const signToken = (user) => {
     const token = JWT.sign({
@@ -84,4 +85,19 @@ module.exports.googleAuth = asyncHandler(async (req,res) => {
     const token = signToken(req.user)
     res.cookie('access_token',token,{httpOnly: true,})
     res.json({success: 'true' })
+})
+
+module.exports.getFullprofileInfo = asyncHandler(async (req,res) => {
+    let user = await User.findById(req.user._id)
+    if(!user){
+        res.status(404)
+        throw new Error('User does not exist')
+    }
+    
+    const campgrounds = await Campground.find({author:user})
+    user.campgrounds = campgrounds
+    const followers = await Follower.find({following:user})
+    const following = await Follower.find({follower:user})
+    const data = {user,campgrounds,followers,following}
+    res.json(data)
 })

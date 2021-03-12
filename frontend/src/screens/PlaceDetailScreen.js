@@ -201,17 +201,21 @@ const PlaceDetailScreen = ({match}) => {
                     </Col>
                 </Row>
                             
-                <Row className='pt-4'>
+                <div className='mt-3 d-flex'>
                     {isLoggedIn ? (
-                        <Col className='likeHover' onClick={isLoggedIn && likePlace}>
+                        <div className='likeHover' onClick={isLoggedIn && likePlace}>
                             {userLiked ? (<h3 ><i style={{color:"#318CE7"}} class="fas fa-thumbs-up"></i>  {totalLikes}</h3>): (<h3><i class="far fa-thumbs-up"></i> {totalLikes}</h3>)}
-                        </Col>
+                        </div>
                     ) : (
-                        <Col>
+                        <div>
                             <h3><Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><i class="far fa-thumbs-up"></i> {totalLikes}</Link></h3>
-                        </Col>
+                        </div>
                     )}
-                </Row>
+                    <div className='ml-5'>
+                        <h3><i class="far fa-comment-alt"></i> {place.reviews && place.reviews.length}</h3>
+                    </div>
+                    
+                </div>
                 <Row className='authorDetails'>
                     <h3>Written By</h3>
                     <div className='d-flex justify-content-between'>

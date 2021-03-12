@@ -28,6 +28,7 @@ router.get('/profile',passportJWT,UserController.profile)
 //  @desc   Google Oauth
 router.post('/oauth/google',passportGoogle,UserController.googleAuth)
 
+router.get('/myprofile',passportJWT,UserController.getFullprofileInfo)
 
 
 module.exports = router
