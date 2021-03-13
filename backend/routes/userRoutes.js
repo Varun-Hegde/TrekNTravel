@@ -23,7 +23,7 @@ router.get('/signout',passportJWT,UserController.signOut)
 
 
 //   @desc   User Profile
-router.get('/profile',passportJWT,UserController.profile)
+router.get('/user-profile/:username',UserController.profile)
 
 //  @desc   Google Oauth
 router.post('/oauth/google',passportGoogle,UserController.googleAuth)

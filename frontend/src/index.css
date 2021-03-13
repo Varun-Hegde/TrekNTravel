@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -28,4 +29,11 @@ main {
 .heading {
   font-size: 22px;
   font-weight: 700;
+}
+
+.profilePic {
+  background-color: rgb(243, 243, 243);
+  min-height: 300px;
+  width: 100%;
+  overflow-x: hidden;
 }

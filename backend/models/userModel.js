@@ -20,6 +20,9 @@ const UserSchema = new Schema({
     description:{
         type: String,
     },
+    profilePic:{
+        type: String,
+    },
     local: {
         email:{
             type:String,

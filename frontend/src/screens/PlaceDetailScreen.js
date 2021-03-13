@@ -229,11 +229,16 @@ const PlaceDetailScreen = ({match}) => {
                                 
                             ) : (
                                 <>
-                                    {followUserFollowing ? (
+                                    {isLoggedIn && place.author.username === userInfo.user.username ? (null) : (
+                                        <>
+                                        {followUserFollowing ? (
                                         <Button onClick={unfollowUserHandler} variant="outline-success">Following</Button>
-                                    ) : (
-                                        <Button onClick={followUserHandler} variant='success'>Follow</Button>
-                                    )}
+                                        ) : (
+                                            <Button onClick={followUserHandler} variant='success'>Follow</Button>
+                                        )}
+                                        </>
+                                    ) }
+                                    
                                 </>
                             )}
                             

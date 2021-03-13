@@ -28,6 +28,9 @@ import {
     USER_FOLLOW_STATUS_FAIL,
     USER_FOLLOW_STATUS_REQUEST,
     USER_FOLLOW_STATUS_SUCCESS,
+    USER_MY_PROFILE_REQUEST,
+    USER_MY_PROFILE_FAIL,
+    USER_MY_PROFILE_SUCCESS
 } from '../constants/userConstants'
 
 
@@ -154,7 +157,7 @@ export const profileReducer = (state={},action) => {
         case USER_PROFILE_FAIL:
             return{
                 loading: false,
-                error: 'Not signed in'
+                error: true
             }
         default:
             return {}
@@ -245,6 +248,27 @@ export const followUserStatusReducer = (state={},action) => {
                 loading: false,
                 error: action.payload,
                 success: false
+            }
+        default: return {}
+    }
+}
+
+//USER MY PROFILE
+export const myProfileReducer = (state = {},action) => {
+    switch(action.type){
+        case USER_MY_PROFILE_REQUEST:
+            return {
+                loading: true,
+            }
+        case USER_MY_PROFILE_SUCCESS:
+            return {
+                loading: false,
+                profile : action.payload
+            }
+        case USER_MY_PROFILE_FAIL:
+            return {
+                loading: false,
+                error: action.payload
             }
         default: return {}
     }

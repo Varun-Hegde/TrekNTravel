@@ -14,6 +14,7 @@ import {toast } from 'react-toastify';
 import PopUp from './components/PopUp'
 import LandingScreen from './screens/LandingScreen'
 import ProfileScreen from './screens/ProfileScreen'
+import UserProfile from './screens/UserProfile'
 
 import {
   USER_SIGNEDIN_RESET,
@@ -43,7 +44,6 @@ function App() {
   } = appDetail
   
   useEffect(() => {
-    console.log("THIS IS FROM APP.JS");
     dispatch(status())
   },[dispatch])
 
@@ -103,7 +103,7 @@ function App() {
       <Header />
       <PopUp />
       <main className = 'py-3'>
-        <Container>
+        <div className='container'>
         <Switch>
           <Route exact path='/newcampground' component={AddNewCampground}  />
           <Route exact path='/campground/:id/edit' component={EditCampgroundDetails} />  
@@ -111,11 +111,12 @@ function App() {
           <Route exact path='/signup' component={SignUpScreen} />
           <Route exact path='/signin' component={SignInScreen} />
           <Route exact path='/campgrounds' component={HomeScreen} />  
-          <Route exact path='/profile' component={ProfileScreen} />
+          <Route exact path='/my-profile' component={ProfileScreen} />
+          <Route exact path='/user-profile/:username' component={UserProfile} />
           <Route exact path='/landing' component={LandingScreen} />  
           <Route exact path='/campgrounds/page/:pageNumber' component={HomeScreen} />
         </Switch>    
-        </Container>  
+        </div>  
       </main>
       <Footer />
     </Router>

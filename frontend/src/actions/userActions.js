@@ -28,6 +28,9 @@ import {
     USER_FOLLOW_STATUS_FAIL,
     USER_FOLLOW_STATUS_REQUEST,
     USER_FOLLOW_STATUS_SUCCESS,
+    USER_MY_PROFILE_REQUEST,
+    USER_MY_PROFILE_FAIL,
+    USER_MY_PROFILE_SUCCESS
 } from '../constants/userConstants'
 
 import {
@@ -150,13 +153,13 @@ export const signout = () => async (dispatch) => {
 }
 
 //PROFILE SCREEN DETAILS
-export const profile = () => async (dispatch) => {
+export const profile = (username) => async (dispatch) => {
     try{
         dispatch({
             type: USER_PROFILE_REQUEST
         })
 
-        const {data} = await axios.get('/api/users/profile')
+        const {data} = await axios.get(`/api/users/user-profile/${username}`)
 
         dispatch({
             type: USER_PROFILE_SUCCESS,
@@ -164,8 +167,10 @@ export const profile = () => async (dispatch) => {
         })
 
     }catch(error){
+        console.log(error);
         dispatch({   
-            type:USER_SIGNOUT_FAIL,
+            
+            type:USER_PROFILE_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })
@@ -261,6 +266,28 @@ export const followUserStatusAction = (username) => async(dispatch) => {
     }catch(error){
         dispatch({   
             type: USER_FOLLOW_STATUS_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+export const userMyProfileAction = () => async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_MY_PROFILE_REQUEST
+        })
+
+        const {data} = await axios.get('/api/users/myprofile')
+        
+        dispatch({
+            type: USER_MY_PROFILE_SUCCESS,
+            payload: data
+        })
+
+    }catch(error){
+        dispatch({   
+            type: USER_MY_PROFILE_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

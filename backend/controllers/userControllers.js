@@ -71,13 +71,18 @@ module.exports.signOut = asyncHandler((req,res) => {
 
 
 module.exports.profile = asyncHandler(async (req,res) => {
-    const loggedInUser = req.user._id    
-    const user = await User.findById(loggedInUser);
-    const campground = await Campground.find({author:loggedInUser})
-    const data = {
-        user,
-        campground
+    let user = await User.findOne({username:req.params.username},'username email profilePic description')
+    if(!user){
+        res.status(404)
+        throw new Error('User does not exist')
     }
+
+    let campgrounds = await Campground.find({author:user})
+
+    const followers = await Follower.find({following:user}).countDocuments();
+    const following = await Follower.find({follower:user}).countDocuments();
+
+    const data = {user,campgrounds,followers,following}
     res.json(data)
 })
 
@@ -96,8 +101,8 @@ module.exports.getFullprofileInfo = asyncHandler(async (req,res) => {
     
     const campgrounds = await Campground.find({author:user})
     user.campgrounds = campgrounds
-    const followers = await Follower.find({following:user})
-    const following = await Follower.find({follower:user})
+    const followers = await Follower.find({following:user}).populate('follower','username email profilePic')
+    const following = await Follower.find({follower:user}).populate('following','username email profilePic')
     const data = {user,campgrounds,followers,following}
     res.json(data)
 })

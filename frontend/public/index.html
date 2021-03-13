@@ -10,37 +10,53 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <link rel="stylesheet" href="bower_components/aos/dist/aos.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
       integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
-      crossorigin="anonymous" />
+      crossorigin="anonymous"
+    />
 
-     
-      <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
-      <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"
+    ></script>
 
     <title>TrekNTravel</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div> 
-   
+    <div id="root"></div>
+
     <script>
-      mapboxgl.accessToken = 'pk.eyJ1IjoidmFydW4taGVnZGUiLCJhIjoiY2trNWZrYXluMDZyZDJxbDh5NnZ3b2hqNCJ9.BRu8GNvnKcCuegWhnDWiZg';
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoidmFydW4taGVnZGUiLCJhIjoiY2trNWZrYXluMDZyZDJxbDh5NnZ3b2hqNCJ9.BRu8GNvnKcCuegWhnDWiZg";
       var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11", // stylesheet location
         center: [-74.5, 40], // starting position [lng, lat]
-        zoom: 9 // starting zoom
+        zoom: 9, // starting zoom
       });
     </script>
   </body>

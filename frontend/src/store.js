@@ -22,7 +22,8 @@ import {
     googleOauth,
     followUserReducer,
     unfollowUserReducer,
-    followUserStatusReducer
+    followUserStatusReducer,
+    myProfileReducer
 } from './reducers/userReducer'
 
 import {
@@ -47,7 +48,8 @@ const reducer = combineReducers({
     googleSignIn: googleOauth,
     followUser: followUserReducer,
     unfollowUser: unfollowUserReducer,
-    followUserStatus: followUserStatusReducer
+    followUserStatus: followUserStatusReducer,
+    myProfile: myProfileReducer
 })
 
 
