@@ -160,7 +160,7 @@ export const profile = (username) => async (dispatch) => {
         })
 
         const {data} = await axios.get(`/api/users/user-profile/${username}`)
-
+        
         dispatch({
             type: USER_PROFILE_SUCCESS,
             payload : data

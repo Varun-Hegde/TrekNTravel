@@ -60,7 +60,7 @@ const PlaceDetailScreen = ({match}) => {
     if(!isLoggedIn){
         showEdit = false;
     }else{
-        if(!loading && isLoggedIn && userInfo){
+        if(!loading && isLoggedIn && userInfo && place){
             {
                 if(userInfo.user._id === place.author._id)
                     showEdit = true

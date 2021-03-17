@@ -152,12 +152,12 @@ export const profileReducer = (state={},action) => {
             return{
                 loading: false,
                 profile: action.payload,
-                error: false
+                
             }
         case USER_PROFILE_FAIL:
             return{
                 loading: false,
-                error: true
+                error: action.payload
             }
         default:
             return {}

@@ -167,7 +167,9 @@ const ProfileScreen = ({history}) => {
             <>
             <Row >
                 <Col xs={12} className='profilePic d-flex flex-column justify-content-center align-items-center'>
-                    {profile && <Image className='' width="200px" src={`https://avatars.dicebear.com/4.5/api/bottts/${profile.user._id}.svg`} fluid rounded/> }
+                    {profile && profile.user.profilePic ? (<Image className='' width="200px" src={profile.profilePic} fluid rounded/>) : profile ? 
+                    (<Image className='' width="200px" src={`https://avatars.dicebear.com/4.5/api/bottts/${profile.user._id}.svg`} fluid rounded/>) : (null)}
+                      
                     <h4>{profile && profile.user.username}</h4>
                     <p>{profile && profile.user.email}</p>
                     <p>Edit <i class="fas fa-edit"></i></p>

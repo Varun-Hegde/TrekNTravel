@@ -13,9 +13,7 @@ import Box from '@material-ui/core/Box';
 import Place from '../components/Place'
 import {Row,Col,Image,Nav,Button} from 'react-bootstrap'
 import Fade from 'react-reveal/Fade';
-import {followUserAction,unfollowUserAction,followUserStatusAction} from '../actions/userActions'
 
-import {Link} from 'react-router-dom'
 function TabPanel(props) {
   const { profile,children, value, index, ...other } = props;
     
@@ -98,7 +96,7 @@ function SimpleTabs(props) {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Row>
-          <center><h4>{userProfile && userProfile.following} following</h4></center>
+          <center><h4>{userProfile.following} following</h4></center>
         </Row>
       </TabPanel>
     </div>
@@ -106,52 +104,36 @@ function SimpleTabs(props) {
 }
 
 
-
 const UserProfile = ({match,history}) => {
 
     const {username} = match.params
-    console.log("username: ",username);
+    
     const dispatch = useDispatch()
 
     const profileData = useSelector(state => state.profile)
     const {loading,profile:userProfile,error} = profileData
+    
+    const userStatus = useSelector(state => state.status)
+    const {isLoggedIn,userInfo} = userStatus
+   
 
     const followUserStatus = useSelector(state => state.followUserStatus)
     const {loading:followUserLoading,error:followUserError,follow:followUserFollowing} = followUserStatus
 
-    const userStatus = useSelector(state => state.status)
-    const {isLoggedIn,userInfo} = userStatus
-
-    const followUserReducer = useSelector(state => state.followUser)
-    const {loading: fuLoading,error:fuError,success:fuSuccess} = followUserReducer
-
-    const unfollowUserReducer = useSelector(state => state.unfollowUser)
-    const {loading: ufuLoading,error:ufuError,success:ufuSuccess} = unfollowUserReducer
-
     useEffect(() => {
-        dispatch(profile(username))
-       
-    },[])
-    useEffect(() => {
-        if(isLoggedIn && username){
-            dispatch(followUserStatusAction(username))
-        }
-    },[username,ufuSuccess,fuSuccess])
+        dispatch(profile(username))  
+    },[username,match,dispatch])
 
-    const followUserHandler = () => {
-        dispatch(followUserAction(username))
-    }
+    
+   
+    
 
-    const unfollowUserHandler = () => {
-        dispatch(unfollowUserAction(username))
-    }
 
     return (
-        <div>
-            {loading ? <Loader /> : (
-                error || !userProfile ? <Message variant='danger'>No user with this username</Message> : (
-                    userProfile ? (
-                        <>
+      <div>
+        {loading ? <Loader /> : error ? <Message variant='danger'>error</Message> : (
+          userProfile ? (
+            <>
                             <Row>
                                 <Col xs={12} className='profilePic d-flex flex-column justify-content-center align-items-center'>
                                     {userProfile && userProfile.user.profilePic ? (
@@ -161,44 +143,20 @@ const UserProfile = ({match,history}) => {
                                     )} 
                                     <h4>{userProfile && userProfile.user.username}</h4>
                                     <p>{userProfile && userProfile.user.email}</p>
-                                    {!isLoggedIn ? (
-                                <Link style={{textDecoration: "none"}} to={`/signin?redirect=/campground/${match.params.id}`}><Button variant='success'>Follow</Button></Link>
-                                
-                            ) : (
-                                <>
-                                    {isLoggedIn && username === userInfo.user.username ? (null) : (
-                                        <>
-                                        {followUserFollowing ? (
-                                        <Button onClick={unfollowUserHandler} variant="outline-success">Following</Button>
-                                        ) : (
-                                            <Button onClick={followUserHandler} variant='success'>Follow</Button>
-                                        )}
-                                        </>
-                                    ) }
                                     
-                                </>
-                            )}
+                                    
                                 </Col>
                                     
                             </Row>
+                            
                             <Row className='mt-5'>
-                            {userProfile && <SimpleTabs profile={userProfile} history={history}/>}
+                              {userProfile && <SimpleTabs profile={userProfile} history={history}/>}
                             </Row>
                         </>
-                    ) : (null)
-                )
-            )}
-            
-            
-        </div>
+          ) : (null)
+        )} 
+      </div>
     )
 }
 
 export default UserProfile
-
-
-
-
-
-
-    
