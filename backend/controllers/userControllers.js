@@ -54,14 +54,12 @@ module.exports.signIn = asyncHandler(async(req,res,next) => {
 })
 
 module.exports.status = asyncHandler(async(req,res,next) => {
+    const user = req.user
     res.json({
         loggedIn: true,
-        user: {
-            _id: req.user._id,
-            email:req.user.email,
-            username: req.user.username
-        }
+        user
     })
+    
 })
 
 module.exports.signOut = asyncHandler((req,res) => {
@@ -105,4 +103,10 @@ module.exports.getFullprofileInfo = asyncHandler(async (req,res) => {
     const following = await Follower.find({follower:user}).populate('following','username email profilePic')
     const data = {user,campgrounds,followers,following}
     res.json(data)
+})
+
+module.exports.facebookOAuth = asyncHandler(async(req,res) => {
+    const token = signToken(req.user)
+    res.cookie('access_token',token,{httpOnly:true})
+    res.json({success: 'true' })
 })

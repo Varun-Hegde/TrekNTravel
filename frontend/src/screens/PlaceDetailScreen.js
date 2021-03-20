@@ -220,7 +220,7 @@ const PlaceDetailScreen = ({match}) => {
                     <h3>Written By</h3>
                     <div className='d-flex justify-content-between'>
                         <div>
-                            <p className='heading'>{place.author.username}</p>
+                            <Link to={`/user-profile/${place.author.username}`}><p className='heading'>{place.author.username}</p></Link>
                             <p>{place.author.description} </p>
                         </div>
                         <div className='ml-4'>

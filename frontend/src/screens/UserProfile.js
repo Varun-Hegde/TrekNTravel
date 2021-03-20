@@ -141,7 +141,7 @@ const UserProfile = ({match,history}) => {
                                     ) : (
                                         <Image className='' width="200px" src={`https://avatars.dicebear.com/4.5/api/bottts/${userProfile.user._id}.svg`} fluid rounded/> 
                                     )} 
-                                    <h4>{userProfile && userProfile.user.username}</h4>
+                                    <h4 className='mt-3'>{userProfile && userProfile.user.username}</h4>
                                     <p>{userProfile && userProfile.user.email}</p>
                                     
                                     
