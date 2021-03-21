@@ -110,3 +110,61 @@ module.exports.facebookOAuth = asyncHandler(async(req,res) => {
     res.cookie('access_token',token,{httpOnly:true})
     res.json({success: 'true' })
 })
+
+module.exports.linkGoogle = asyncHandler(async (req,res) => {
+    res.json({success: true,methods:req.user.methods,message: 'Successfully linked account with google'})
+})
+
+
+module.exports.linkFacebook = asyncHandler(async (req,res) => {
+    res.json({success: true,methods:req.user.methods,message: 'Successfully linked account with facebook'})
+})
+
+module.exports.unLinkGoogle = asyncHandler(async (req,res) => {
+    const googleStrPos = req.user.methods.indexOf('google')
+    if(googleStrPos === -1){
+        res.status(404)
+        throw new Error('You have not linked your google account')
+    }
+    if (req.user.google) {
+      req.user.google = undefined
+    }
+    // Remove 'google' from methods array
+    
+    if (googleStrPos >= 0) {
+      req.user.methods.splice(googleStrPos, 1)
+    }
+    await req.user.save()
+
+    // Return something
+    res.json({ 
+      success: true,
+      methods: req.user.methods, 
+      message: 'Successfully unlinked account from Google' 
+    });
+}) 
+
+module.exports.unLinkFacebook = asyncHandler(async (req,res) => {
+    const facebookStrPos = req.user.methods.indexOf('facebook')
+    if( facebookStrPos === -1){
+        res.status(404)
+        throw new Error('You have not linked your facebook account')
+    }
+    // Delete Facebook sub-object
+    if (req.user.facebook) {
+      req.user.facebook = undefined
+    }
+    // Remove 'facebook' from methods array
+    
+    if (facebookStrPos >= 0) {
+      req.user.methods.splice(facebookStrPos, 1)
+    }
+    await req.user.save()
+
+    // Return something?
+    res.json({ 
+      success: true,
+      methods: req.user.methods, 
+      message: 'Successfully unlinked account from Facebook' 
+    });
+})

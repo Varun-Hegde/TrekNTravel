@@ -35,4 +35,13 @@ router.get('/myprofile',passportJWT,UserController.getFullprofileInfo)
 //Facebook OAuth
 router.post('/oauth/facebook',passportFacebook,UserController.facebookOAuth)
 
+//Link google
+router.post('/oauth/link/google',passportJWT,passportGoogle,UserController.linkGoogle)
+
+//Link facebook
+router.post('/oauth/link/facebook',passportJWT,passportFacebook,UserController.linkFacebook)
+
+router.post('/oauth/unlink/google',passportJWT,UserController.unLinkGoogle)
+router.post('/oauth/unlink/facebook',passportJWT,UserController.unLinkFacebook)
+
 module.exports = router

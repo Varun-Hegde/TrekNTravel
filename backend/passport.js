@@ -69,7 +69,15 @@ passport.use('googleToken',new GoogleStrategy({
 
         //Aldready logged in,need to link account
         //Add google's data to an existing account
+        
         if(req.user){
+            //Check if aldready linked account
+            const googleStrPos = req.user.methods.indexOf('google')
+            if(googleStrPos >= 0){
+                //done('You have aldready linked your google account',null)
+                throw new Error('You have aldready linked your google account')
+            }
+
             req.user.methods.push('google')
             req.user.google = {
                 id: profile.id,
@@ -126,8 +134,16 @@ passport.use('facebookToken', new FacebookTokenStrategy({
         //Could get accessed in 2 ways:
         // 1. When registering for 1st time
         // 2. When linking account to existing one
-      
+
+        
         if(req.user){
+            //Check if aldready linked account
+            const facebookStrPos = req.user.methods.indexOf('facebook')
+            if(facebookStrPos >= 0){
+                //done('You have aldready linked your google account',null)
+                throw new Error('You have aldready linked your facebook account')
+            }
+
             //Aldready logged in,need to link account
             //Add facebook's data to an existing account
             req.user.methods.push('facebook')
