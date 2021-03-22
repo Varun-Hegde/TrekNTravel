@@ -19,6 +19,9 @@ import {
     USER_GOOGLE_FAIL,
     USER_GOOGLE_REQUEST,
     USER_GOOGLE_SUCCESS,
+    USER_FACEBOOK_FAIL,
+    USER_FACEBOOK_REQUEST,
+    USER_FACEBOOK_SUCCESS,
     USER_FOLLOW_FAIL,
     USER_FOLLOW_REQUEST,
     USER_FOLLOW_SUCCESS,
@@ -200,6 +203,35 @@ export const googleOauth = (token) =>async (dispatch) => {
     }catch(error){
         dispatch({   
             type:USER_GOOGLE_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//FACEBOOK OAUTH
+export const facebookOauth = (token) =>async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_FACEBOOK_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/facebook',token)
+
+        dispatch({
+            type: USER_FACEBOOK_SUCCESS,
+            payload: data
+        })
+        dispatch({
+            type: USER_SIGNEDIN
+        })
+        dispatch({
+            type: USER_SIGNIN_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_FACEBOOK_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

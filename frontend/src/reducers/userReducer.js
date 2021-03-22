@@ -19,6 +19,9 @@ import {
     USER_GOOGLE_FAIL,
     USER_GOOGLE_REQUEST,
     USER_GOOGLE_SUCCESS,
+    USER_FACEBOOK_FAIL,
+    USER_FACEBOOK_REQUEST,
+    USER_FACEBOOK_SUCCESS,
     USER_FOLLOW_FAIL,
     USER_FOLLOW_REQUEST,
     USER_FOLLOW_SUCCESS,
@@ -178,6 +181,29 @@ export const googleOauth = (state={},action) => {
                 userInfo: action.payload,
             }
         case USER_GOOGLE_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default: return {}
+    }
+}
+
+//FACEBOOK OAUTH
+export const facebookOauth = (state={},action) => {
+    switch(action.type){
+        case USER_FACEBOOK_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_FACEBOOK_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                userInfo: action.payload,
+            }
+        case USER_FACEBOOK_FAIL:
             return{
                 loading: false,
                 error: action.payload,
