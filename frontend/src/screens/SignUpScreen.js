@@ -9,6 +9,8 @@ import { useDispatch,useSelector} from 'react-redux'
 import {USER_SIGNUP_RESET} from '../constants/userConstants'
 import {signup,status} from '../actions/userActions'
 import Fade from 'react-reveal/Fade';
+import GoogleLogin from '../components/GoogleLoginButton'
+import FacebookLogin from '../components/FacebookLoginButton'
 
 const SignUpScreen = ({location,history}) => {
 
@@ -125,9 +127,15 @@ const SignUpScreen = ({location,history}) => {
                             Sign Up
                     </Button>
                 </Form>
+                <center style={{fontSize: '30px', margin:'10px'}}>OR</center>
+                <center style={{fontSize: '20px', marginBottom:'5px'}}>Sign in using</center>
+                <div className='d-flex justify-content-around'>
+                    <GoogleLogin />
+                    <FacebookLogin />
+                </div>
                 <Row className='py-3'>
                     <Col>
-                    Aldready have an account? <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>Log in</Link>
+                    Aldready have an account? <Link to={redirect ? `/signin?redirect=${redirect}` : '/signin'}>Log in</Link>
                     </Col>
             </Row>
             </FormContainer>

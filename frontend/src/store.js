@@ -24,7 +24,11 @@ import {
     followUserReducer,
     unfollowUserReducer,
     followUserStatusReducer,
-    myProfileReducer
+    myProfileReducer,
+    googleLink,
+    googleUnLink,
+    facebookLink,
+    facebookUnLink
 } from './reducers/userReducer'
 
 import {
@@ -51,7 +55,11 @@ const reducer = combineReducers({
     followUser: followUserReducer,
     unfollowUser: unfollowUserReducer,
     followUserStatus: followUserStatusReducer,
-    myProfile: myProfileReducer
+    myProfile: myProfileReducer,
+    googleLink: googleLink,
+    googleUnLink: googleUnLink,
+    facebookLink: facebookLink,
+    facebookUnLink: facebookUnLink
 })
 
 

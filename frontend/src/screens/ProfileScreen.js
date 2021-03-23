@@ -94,9 +94,9 @@ function SimpleTabs(props) {
       <TabPanel value={value} index={1}>
         <Row>
           
-          {profile && profile.user.methods.length === 1 && profile.user.methods[0] === 'local' ? (<center><h5>You haven't linked any accounts. Link Now?</h5></center>) : (null)}
-          {profile && <Accounts profile={profile.user}/> }
-          <center><h4> </h4></center>
+          {profile && <Accounts profile={profile.user}/>}
+           
+          
         </Row>
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -152,6 +152,17 @@ const ProfileScreen = ({history}) => {
     const userStatus = useSelector(state => state.status)
     const {isLoggedIn,userInfo} = userStatus
 
+
+    const googleLinkStore = useSelector(state => state.googleLink)
+    const googleUnLinkStore = useSelector(state => state.googleUnLink)
+    const facebookLinkStore = useSelector(state => state.facebookLink)
+    const facebookUnLinkStore = useSelector(state => state.facebookUnLink)
+
+    const {success: googleLinkSuccess} = googleLinkStore
+    const {success: googleUnLinkSuccess} = googleUnLinkStore
+    const {success: facebookLinkSuccess} = facebookLinkStore
+    const {success: facebookUnLinkSuccess} = facebookUnLinkStore
+
     useEffect(() => {
         if(!isLoggedIn){
           history.push('/signin?redirect=/my-profile')
@@ -159,7 +170,7 @@ const ProfileScreen = ({history}) => {
         dispatch(userMyProfileAction())
         
       
-    },[])
+    },[googleLinkSuccess,googleUnLinkSuccess,facebookLinkSuccess,facebookUnLinkSuccess])
     return (
         <>
         

@@ -1,8 +1,8 @@
 import React from 'react'
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import {useDispatch} from 'react-redux'
 import {facebookOauth} from '../actions/userActions'
-
+import {Button} from 'react-bootstrap'
 
 const FacebookLoginButton = () => {
     const dispatch = useDispatch()
@@ -18,9 +18,11 @@ const FacebookLoginButton = () => {
     return (
         <FacebookLogin
             appId="188326146161766"
-            autoLoad={true}
+            render={renderProps => (
+                <Button variant='primary' className='facebook' onClick={renderProps.onClick}><i style={{fontSize: '20px'}} className="fab fa-facebook-f pr-2"></i> Facebook</Button>
+            )}
             fields="name,email,picture"
-            
+            cssClass="btn btn-outline-primary"
             callback={responseFacebook} 
         />
     )

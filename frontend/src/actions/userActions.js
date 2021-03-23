@@ -33,7 +33,19 @@ import {
     USER_FOLLOW_STATUS_SUCCESS,
     USER_MY_PROFILE_REQUEST,
     USER_MY_PROFILE_FAIL,
-    USER_MY_PROFILE_SUCCESS
+    USER_MY_PROFILE_SUCCESS,
+    USER_GOOGLE_LINK_FAIL,
+    USER_GOOGLE_LINK_REQUEST,
+    USER_GOOGLE_LINK_SUCCESS,
+    USER_GOOGLE_UNLINK_FAIL,
+    USER_GOOGLE_UNLINK_REQUEST,
+    USER_GOOGLE_UNLINK_SUCCESS,
+    USER_FACEBOOK_LINK_FAIL,
+    USER_FACEBOOK_LINK_REQUEST,
+    USER_FACEBOOK_LINK_SUCCESS,
+    USER_FACEBOOK_UNLINK_FAIL,
+    USER_FACEBOOK_UNLINK_REQUEST,
+    USER_FACEBOOK_UNLINK_SUCCESS
 } from '../constants/userConstants'
 
 import {
@@ -320,6 +332,95 @@ export const userMyProfileAction = () => async (dispatch) => {
     }catch(error){
         dispatch({   
             type: USER_MY_PROFILE_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//LINK GOOGLE ACCOUNT
+export const linkGoogleAction = (token) => async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_GOOGLE_LINK_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/link/google',token)
+
+        dispatch({
+            type: USER_GOOGLE_LINK_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_GOOGLE_LINK_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//LINK FACEBOOK ACCOUNT
+export const linkFacebookAction = (token) =>async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_FACEBOOK_LINK_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/link/facebook',token)
+
+        dispatch({
+            type: USER_FACEBOOK_LINK_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_FACEBOOK_LINK_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//UNLINK GOOGLE ACCOUNT
+export const unlinkGoogleAction = () =>async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_GOOGLE_UNLINK_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/unlink/google')
+
+        dispatch({
+            type: USER_GOOGLE_UNLINK_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_GOOGLE_UNLINK_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+
+//UNLINK FACEBOOK ACCOUNT
+export const unlinkFacebookAction = (token) =>async (dispatch) => {
+    try{
+        dispatch({
+            type: USER_FACEBOOK_UNLINK_REQUEST
+        })
+
+        const {data} = await axios.post('/api/users/oauth/unlink/facebook')
+
+        dispatch({
+            type: USER_FACEBOOK_UNLINK_SUCCESS,
+            payload: data
+        })
+    }catch(error){
+        dispatch({   
+            type:USER_FACEBOOK_UNLINK_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

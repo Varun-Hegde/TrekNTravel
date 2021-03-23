@@ -109,8 +109,13 @@ const SignInScreen = ({location,history}) => {
                             Sign In
                     </Button>
                 </Form>
-                <GoogleLogin />
-                <FacebookLogin />
+                <center style={{fontSize: '30px', margin:'10px'}}>OR</center>
+                <center style={{fontSize: '20px', marginBottom:'5px'}}>Sign in using</center>
+                <div className='d-flex justify-content-around'>
+                    <GoogleLogin />
+                    <FacebookLogin />
+                </div>
+                
                 <Row className='py-3'>
                     <Col>
                         New Customer? <Link to={redirect ? `/signup/?redirect=${redirect}` : '/register'}>Register</Link>

@@ -37,3 +37,11 @@ main {
   width: 100%;
   overflow-x: hidden;
 }
+
+.facebook {
+  background-color: rgb(65, 94, 155) !important;
+}
+
+.google {
+  background-color: rgb(209, 73, 61) !important;
+}

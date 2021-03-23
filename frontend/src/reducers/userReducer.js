@@ -33,7 +33,19 @@ import {
     USER_FOLLOW_STATUS_SUCCESS,
     USER_MY_PROFILE_REQUEST,
     USER_MY_PROFILE_FAIL,
-    USER_MY_PROFILE_SUCCESS
+    USER_MY_PROFILE_SUCCESS,
+    USER_GOOGLE_LINK_FAIL,
+    USER_GOOGLE_LINK_REQUEST,
+    USER_GOOGLE_LINK_SUCCESS,
+    USER_GOOGLE_UNLINK_FAIL,
+    USER_GOOGLE_UNLINK_REQUEST,
+    USER_GOOGLE_UNLINK_SUCCESS,
+    USER_FACEBOOK_LINK_FAIL,
+    USER_FACEBOOK_LINK_REQUEST,
+    USER_FACEBOOK_LINK_SUCCESS,
+    USER_FACEBOOK_UNLINK_FAIL,
+    USER_FACEBOOK_UNLINK_REQUEST,
+    USER_FACEBOOK_UNLINK_SUCCESS
 } from '../constants/userConstants'
 
 
@@ -295,6 +307,78 @@ export const myProfileReducer = (state = {},action) => {
             return {
                 loading: false,
                 error: action.payload
+            }
+        default: return {}
+    }
+}
+
+export const googleLink = (state = {},action) => {
+    switch(action.type){
+        case USER_GOOGLE_LINK_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_GOOGLE_LINK_SUCCESS:
+            return {
+                success: true
+            }
+        case USER_GOOGLE_LINK_FAIL:
+            return {
+                success: false
+            }
+        default: return {}
+    }
+}
+
+export const facebookLink = (state = {},action) => {
+    switch(action.type){
+        case USER_FACEBOOK_LINK_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_FACEBOOK_LINK_SUCCESS:
+            return {
+                success: true
+            }
+        case USER_FACEBOOK_LINK_FAIL:
+            return {
+                success: false
+            }
+        default: return {}
+    }
+}
+
+export const googleUnLink = (state = {},action) => {
+    switch(action.type){
+        case USER_GOOGLE_UNLINK_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_GOOGLE_UNLINK_SUCCESS:
+            return {
+                success: true
+            }
+        case USER_GOOGLE_UNLINK_FAIL:
+            return {
+                success: false
+            }
+        default: return {}
+    }
+}
+
+export const facebookUnLink = (state = {},action) => {
+    switch(action.type){
+        case USER_FACEBOOK_UNLINK_REQUEST:
+            return{
+                loading: true
+            }
+        case USER_FACEBOOK_UNLINK_SUCCESS:
+            return {
+                success: true
+            }
+        case USER_FACEBOOK_UNLINK_FAIL:
+            return {
+                success: false
             }
         default: return {}
     }
