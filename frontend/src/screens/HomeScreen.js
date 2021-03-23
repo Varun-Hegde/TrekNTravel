@@ -5,10 +5,10 @@ import Place from '../components/Place'
 import {listPlaces} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Fade from 'react-reveal/Fade';
-
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
+
 
 const HomeScreen = ({history,match}) => {
 
@@ -26,6 +26,7 @@ const HomeScreen = ({history,match}) => {
 
     return (
         <>
+            
             <h1>Welcome to Trek-N-Travel</h1>
             
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (

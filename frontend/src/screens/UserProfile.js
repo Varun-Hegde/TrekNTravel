@@ -13,6 +13,7 @@ import Box from '@material-ui/core/Box';
 import Place from '../components/Place'
 import {Row,Col,Image,Nav,Button} from 'react-bootstrap'
 import Fade from 'react-reveal/Fade';
+import { Facebook } from 'react-content-loader'
 
 function TabPanel(props) {
   const { profile,children, value, index, ...other } = props;
@@ -131,7 +132,7 @@ const UserProfile = ({match,history}) => {
 
     return (
       <div>
-        {loading ? <Loader /> : error ? <Message variant='danger'>error</Message> : (
+        {loading ? <Facebook /> : error ? <Message variant='danger'>{error}</Message> : (
           userProfile ? (
             <>
                             <Row>
@@ -146,7 +147,7 @@ const UserProfile = ({match,history}) => {
                                     
                                     
                                 </Col>
-                                    
+                              
                             </Row>
                             
                             <Row className='mt-5'>

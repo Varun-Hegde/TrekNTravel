@@ -15,6 +15,7 @@ import Box from '@material-ui/core/Box';
 import Place from '../components/Place'
 import UserFollow from '../components/UserFollow'
 import Accounts from '../components/Accounts'
+import { Facebook } from 'react-content-loader'
 
 function TabPanel(props) {
   const { profile,children, value, index, ...other } = props;
@@ -174,7 +175,7 @@ const ProfileScreen = ({history}) => {
     return (
         <>
         
-        {loading ? <Loader /> : (
+        {loading ? <Facebook /> : (
             <>
             <Row >
                 <Col xs={12} className='profilePic d-flex flex-column justify-content-center align-items-center'>

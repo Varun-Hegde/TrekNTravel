@@ -12,6 +12,7 @@ import Fade from 'react-reveal/Fade';
 import GoogleLogin from '../components/GoogleLoginButton'
 import FacebookLogin from '../components/FacebookLoginButton'
 
+
 const SignInScreen = ({location,history}) => {
 
     const redirect = location.search ? location.search.split('=')[1] : '/campgrounds'
@@ -68,6 +69,7 @@ const SignInScreen = ({location,history}) => {
     const errors = validate();
     return (
         <Fade bottom>
+        
             <Link to={redirect} className='btn btn-light my-3'>
                     Go Back
             </Link>
