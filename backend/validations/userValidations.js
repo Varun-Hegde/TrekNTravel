@@ -22,6 +22,7 @@ const extension = (joi) => ({
 });
 
 const Joi = BaseJoi.extend(extension)
+
 module.exports.validateUserSignUp = ((req,res,next) => {
     const userSchema = Joi.object({
         email: Joi.string().email().required().escapeHTML(),

@@ -10,7 +10,8 @@ import {
     reviewAddReducer,
     likeReducer,
     editReviewReducer,
-    deleteReviewReducer
+    deleteReviewReducer,
+    deletePlaceReducer
 } from './reducers/campgroundReducer'
 
 import {
@@ -40,6 +41,7 @@ const reducer = combineReducers({
     placeDetail: placeListDetailReducer,
     placeAdd: placeAddReducer,
     placeEdit: editPlaceReducer,
+    placeDelete : deletePlaceReducer,
     signUp: signUpReducer,
     signIn: signInReducer,
     signOut: signOutReducer,

@@ -36,8 +36,9 @@ passport.use(new JwtStrategy({
 
 //LOCAL STRATEGY
 passport.use(new LocalStrategy({
-    usernameField: 'email'
-}, async (email,password,done) => {
+    usernameField: 'email',
+    passReqToCallback: true
+}, async (req,email,password,done) => {
     try{
    
         const user = await User.findOne({ email})
@@ -49,6 +50,7 @@ passport.use(new LocalStrategy({
         if(!isMatch){
             return done(null,false);
         }
+        req.user = user
         done(null,user);
     }catch(err){
         done(err,false);
@@ -115,6 +117,7 @@ passport.use('googleToken',new GoogleStrategy({
                     email: profile.emails[0].value
                 }
             })
+            req.user = newUser
             await newUser.save()
             return done(null,newUser)
         }
@@ -186,6 +189,7 @@ passport.use('facebookToken', new FacebookTokenStrategy({
                     email:profile.emails[0].value
                 }
             })
+            req.user = newUser
             await newUser.save()
             done(null,newUser)
         }

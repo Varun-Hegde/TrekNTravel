@@ -27,6 +27,7 @@ const seedDB = async () => {
             methods: ['local'],
             username:'Admin',
             email:'admin@gmail.com',
+            isAdmin: true,
             local: {
                 email: 'admin@gmail.com',
                 password: 'admin'

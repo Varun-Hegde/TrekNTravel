@@ -10,38 +10,18 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 const passportGoogle = passport.authenticate('googleToken',{session: false})
 const passportFacebook = passport.authenticate('facebookToken',{session:false})
 
-//SignUp a new user
-router.post('/signup',validateUserSignUp,UserController.signUp)
 
-//SignIn a new user
-router.post('/signin',validateUserSignIn,passportLocal,UserController.signIn)
-
-//Get login Status 
-router.get('/status',passportJWT,UserController.status)
-
-//SignOut a  user
-router.get('/signout',passportJWT,UserController.signOut)
-
-
-//User Profile
-router.get('/user-profile/:username',UserController.profile)
-
-//Google Oauth
-router.post('/oauth/google',passportGoogle,UserController.googleAuth)
-
-//Get my profile
-router.get('/myprofile',passportJWT,UserController.getFullprofileInfo)
-
-//Facebook OAuth
-router.post('/oauth/facebook',passportFacebook,UserController.facebookOAuth)
-
-//Link google
-router.post('/oauth/link/google',passportJWT,passportGoogle,UserController.linkGoogle)
-
-//Link facebook
-router.post('/oauth/link/facebook',passportJWT,passportFacebook,UserController.linkFacebook)
-
-router.post('/oauth/unlink/google',passportJWT,UserController.unLinkGoogle)
-router.post('/oauth/unlink/facebook',passportJWT,UserController.unLinkFacebook)
+router.post('/signup',validateUserSignUp,UserController.signUp)                                 //SignUp a new user
+router.post('/signin',validateUserSignIn,passportLocal,UserController.signIn)                   //SignIn a new user
+router.get('/status',passportJWT,UserController.status)                                         //Get login Status 
+router.get('/signout',passportJWT,UserController.signOut)                                       //SignOut a  user
+router.get('/user-profile/:username',UserController.profile)                                    //User Profile
+router.post('/oauth/google',passportGoogle,UserController.googleAuth)                           //Google Oauth
+router.get('/myprofile',passportJWT,UserController.getFullprofileInfo)                          //Get my profile
+router.post('/oauth/facebook',passportFacebook,UserController.facebookOAuth)                    //Facebook OAuth
+router.post('/oauth/link/google',passportJWT,passportGoogle,UserController.linkGoogle)          //Link google
+router.post('/oauth/link/facebook',passportJWT,passportFacebook,UserController.linkFacebook)    //Link facebook
+router.post('/oauth/unlink/google',passportJWT,UserController.unLinkGoogle)                     //UnLink google
+router.post('/oauth/unlink/facebook',passportJWT,UserController.unLinkFacebook)                 //UnLink facebook
 
 module.exports = router

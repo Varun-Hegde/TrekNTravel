@@ -11,6 +11,9 @@ import {
     PLACE_EDIT_FAIL,
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_SUCCESS,
+    PLACE_DELETE_FAIL,
+    PLACE_DELETE_REQUEST,
+    PLACE_DELETE_SUCCESS,
     PLACE_REVIEW_ADD_FAIL,
     PLACE_REVIEW_ADD_REQUEST,
     PLACE_REVIEW_ADD_SUCCESS,
@@ -131,6 +134,35 @@ export const editPlace = (campground,id) => async (dispatch) => {
     }catch(error){
         dispatch({   
             type:PLACE_EDIT_FAIL,
+            payload: error.response && error.response.data.message ?
+                error.response.data.message : error.message
+        })
+    }
+}
+
+//DELETE PLACE
+export const deletePlace = (id) => async (dispatch) => {
+    try{
+        dispatch({
+            type:PLACE_DELETE_REQUEST
+        })
+
+        const config = {
+            headers : {
+                'Content-Type' :'application/json'
+            }
+        }
+        const {data} = await axios.delete(`/api/campgrounds/${id}`,config)
+
+        dispatch({
+            type:PLACE_DELETE_SUCCESS,
+            payload: data
+        })
+        
+
+    }catch(error){
+        dispatch({   
+            type:PLACE_DELETE_FAIL,
             payload: error.response && error.response.data.message ?
                 error.response.data.message : error.message
         })

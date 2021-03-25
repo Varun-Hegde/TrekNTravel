@@ -9,7 +9,7 @@ module.exports.isCampgroundOwner =asyncHandler(async  (req,res,next) => {
         res.status(404)
         throw new Error("Campground not found")
     }
-    if(campground.author.equals(req.user._id)){
+    if(campground.author.equals(req.user._id) || req.user.isAdmin){
         return next()
     }else{
         res.status(403)
@@ -23,7 +23,7 @@ module.exports.isReviewOwner =asyncHandler(async  (req,res,next) => {
         res.status(404)
         throw new Error("Review not found")
     }
-    if(review.author.equals(req.user._id)){
+    if(review.author.equals(req.user._id) || req.user.isAdmin){
         return next()
     }else{
         res.status(403)

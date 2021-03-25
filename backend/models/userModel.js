@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     profilePic:{
         type: String,
     },
+    isAdmin : {
+        type: Boolean,
+        default: false
+    },
     local: {
         email:{
             type:String,

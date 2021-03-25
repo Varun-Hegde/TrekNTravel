@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
-import {placeDetails,likeAction} from '../actions/campgroundActions'
+import {placeDetails,likeAction,deletePlace} from '../actions/campgroundActions'
 import {Link} from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -11,8 +11,9 @@ import Comment from '../components/Comment'
 import AddReview from '../components/AddReview'
 import Fade from 'react-reveal/Fade';
 import {followUserAction,unfollowUserAction,followUserStatusAction} from '../actions/userActions'
+import {PLACE_DELETE_RESET} from '../constants/campgroundConstants'
 
-const PlaceDetailScreen = ({match}) => {
+const PlaceDetailScreen = ({match,history}) => {
     const campId = match.params.id
    
     const dispatch = useDispatch()
@@ -43,6 +44,9 @@ const PlaceDetailScreen = ({match}) => {
 
     const like = useSelector(state => state.like)
     const {success:successLike} = like
+
+    const deletedPlace = useSelector(state => state.placeDelete)
+    const {loading:loadingDelete,success:successDelete,error:errorDelete} = deletedPlace
    
     const [rating,setRating] = useState(0)
     const [comment,setComment] = useState('')
@@ -62,7 +66,7 @@ const PlaceDetailScreen = ({match}) => {
     }else{
         if(!loading && isLoggedIn && userInfo && place){
             {
-                if(userInfo.user._id === place.author._id)
+                if(userInfo.user._id === place.author._id || userInfo.user.isAdmin)
                     showEdit = true
             }
     }
@@ -99,7 +103,15 @@ const PlaceDetailScreen = ({match}) => {
         if(place && place.likes){
             setTotalLikes(place.likes.length)
         }
-    },[match,dispatch,match.params.id,place])   
+    },[match,dispatch,match.params.id,place]) 
+    
+    useEffect(()=>{
+        if(successDelete){
+            dispatch({type:PLACE_DELETE_RESET})
+            history.push('/campgrounds')
+        }
+            
+    },[successDelete])
 
     const userReviewAdded = () => {
        if(!isLoggedIn)
@@ -136,6 +148,9 @@ const PlaceDetailScreen = ({match}) => {
         dispatch(unfollowUserAction(place.author.username))
     }
 
+    const deletePlaceHandler = () => {
+        dispatch(deletePlace(match.params.id))
+    }
 
 
 
@@ -149,6 +164,11 @@ const PlaceDetailScreen = ({match}) => {
             {showEdit && <Link className='btn btn-light my-3' to={`/campground/${match.params.id}/edit`}>
                 Edit
             </Link>}
+
+            {showEdit && <Button className='btn btn-light my-3' onClick={deletePlaceHandler}>
+                Delete
+            </Button>}
+            
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <Fade bottom>
                 <Row>
@@ -259,7 +279,7 @@ const PlaceDetailScreen = ({match}) => {
                                 {place.reviews.map(review => {
                                     return (
                                         <ListGroup.Item style={{maxWidth: "380px"}}>
-                                            {isLoggedIn && review.author._id === userInfo.user._id ? (
+                                            {isLoggedIn && (review.author._id === userInfo.user._id || userInfo.user.isAdmin) ? (
                                                 <Comment review={review} reviewAuthor={true}/>
                                             ) : (
                                                 

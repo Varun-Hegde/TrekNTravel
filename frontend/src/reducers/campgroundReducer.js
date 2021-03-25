@@ -13,6 +13,10 @@ import {
     PLACE_EDIT_REQUEST,
     PLACE_EDIT_RESET,
     PLACE_EDIT_SUCCESS,
+    PLACE_DELETE_FAIL,
+    PLACE_DELETE_REQUEST,
+    PLACE_DELETE_SUCCESS,
+    PLACE_DELETE_RESET,
     PLACE_REVIEW_ADD_FAIL,
     PLACE_REVIEW_ADD_REQUEST,
     PLACE_REVIEW_ADD_SUCCESS,
@@ -131,6 +135,31 @@ export const editPlaceReducer = (state={} , action) => {
     }
 }
 
+//DELETE A PLACE
+export const deletePlaceReducer = (state={success:false} , action) => {
+    switch(action.type){
+        case PLACE_DELETE_REQUEST:
+            return {
+                loading: true,
+            }
+        case PLACE_DELETE_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                
+            }
+        case PLACE_DELETE_FAIL:
+            return{
+                error:action.payload,
+                loading: false,
+                success: false
+            }
+        case PLACE_DELETE_RESET:
+            return {success: false}
+        
+        default: return state
+    }
+}
 
 //ADD NEW REVIEW
 export const reviewAddReducer = (state={} , action) => {
