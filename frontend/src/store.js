@@ -35,6 +35,8 @@ import {
 
 import { app } from './reducers/appReducer';
 
+import { getTags } from './reducers/tagReducer';
+
 const reducer = combineReducers({
 	placeList: placeListReducer,
 	placeDetail: placeListDetailReducer,
@@ -62,6 +64,7 @@ const reducer = combineReducers({
 	facebookLink: facebookLink,
 	facebookUnLink: facebookUnLink,
 	editProfileReducer: editProfileReducer,
+	getTags: getTags,
 });
 
 const initialState = {};
