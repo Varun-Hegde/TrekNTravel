@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Campground = require('../models/campgroundModel');
 const { populate } = require('../models/reviewModel');
 const Review = require('../models/reviewModel');
+const Follow = require('../models/followersModel');
 const { cloudinary } = require('../cloudinary/index');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
@@ -16,7 +17,8 @@ module.exports.getAllCampgrounds = asyncHandler(async (req, res) => {
 
 	const campgrounds = await Campground.find({})
 		.limit(pageSize)
-		.skip(pageSize * (page - 1));
+		.skip(pageSize * (page - 1))
+		.sort({ createdAt: 'desc' });
 	if (campgrounds) res.json({ campgrounds, page, pages: Math.ceil(count / pageSize) });
 	else {
 		res.status(404);
@@ -214,4 +216,29 @@ module.exports.editReview = asyncHandler(async (req, res) => {
 	newCamp.rating = newCamp.reviews.reduce((acc, item) => item.rating + acc, 0) / newCamp.reviews.length;
 	await newCamp.save();
 	res.json(updatedComment);
+});
+
+module.exports.myFeed = asyncHandler(async (req, res) => {
+	let id = req.user._id;
+	const followingId = await Follow.find({ follower: id }, 'following');
+	const ids = [];
+
+	for (let item of followingId) {
+		ids.push(item.following);
+	}
+
+	const pageSize = 12;
+	const page = req.query.pageNumber || 1;
+	const count = await Campground.countDocuments({ author: { $in: ids } });
+
+	const campgrounds = await Campground.find({ author: { $in: ids } })
+		.limit(pageSize)
+		.skip(pageSize * (page - 1))
+		.sort({ createdAt: 'desc' });
+
+	if (campgrounds) res.json({ campgrounds, page, pages: Math.ceil(count / pageSize) });
+	else {
+		res.status(404);
+		throw new Error('No Campgrounds found');
+	}
 });

@@ -68,24 +68,30 @@ const UserSchema = new Schema({
     } */
 });
 
-UserSchema.pre('save', async function (next) {
-	try {
-		if (!this.methods.includes('local')) {
-			return next();
-		}
+UserSchema.pre(
+	'save',
+	async function (next) {
+		try {
+			if (!this.methods.includes('local')) {
+				return next();
+			}
 
-		if (this.isModified('local.password')) {
-			//GENERATE A SALT
-			const salt = await bcrypt.genSalt(10);
-			const hashedPassword = await bcrypt.hash(this.local.password, salt);
-			this.local.password = hashedPassword;
-		}
+			if (this.isModified('local.password')) {
+				//GENERATE A SALT
+				const salt = await bcrypt.genSalt(10);
+				const hashedPassword = await bcrypt.hash(this.local.password, salt);
+				this.local.password = hashedPassword;
+			}
 
-		next();
-	} catch (err) {
-		next(err);
+			next();
+		} catch (err) {
+			next(err);
+		}
+	},
+	{
+		timestamps: true,
 	}
-});
+);
 
 UserSchema.methods.isValidPassword = async function (newPassword) {
 	try {

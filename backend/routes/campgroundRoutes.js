@@ -10,6 +10,7 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 const { isCampgroundOwner, isReviewOwner } = require('../middleware/campgroundMiddleware');
 
 router.get('/', CampgroundController.getAllCampgrounds); //Get all Campgrounds
+router.get('/my-feed', passportJWT, CampgroundController.myFeed);
 router.get('/:id', CampgroundController.getParticularCampground); //Get a particular Campground
 router.post('/', validateCampground, passportJWT, CampgroundController.postNewCampground); //Post a new Campground
 router.put('/:id', validateCampground, passportJWT, isCampgroundOwner, CampgroundController.updateCampground); //Edit a particular Campground

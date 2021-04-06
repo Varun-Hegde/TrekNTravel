@@ -12,6 +12,7 @@ import {
 	editReviewReducer,
 	deleteReviewReducer,
 	deletePlaceReducer,
+	placeListMyFeedReducer,
 } from './reducers/campgroundReducer';
 
 import {
@@ -35,10 +36,11 @@ import {
 
 import { app } from './reducers/appReducer';
 
-import { getTags } from './reducers/tagReducer';
+import { getTags, getTagCampgroundsReducer } from './reducers/tagReducer';
 
 const reducer = combineReducers({
 	placeList: placeListReducer,
+	placeMyFeedList: placeListMyFeedReducer,
 	placeDetail: placeListDetailReducer,
 	placeAdd: placeAddReducer,
 	placeEdit: editPlaceReducer,
@@ -65,6 +67,7 @@ const reducer = combineReducers({
 	facebookUnLink: facebookUnLink,
 	editProfileReducer: editProfileReducer,
 	getTags: getTags,
+	getTagCampgrounds: getTagCampgroundsReducer,
 });
 
 const initialState = {};
