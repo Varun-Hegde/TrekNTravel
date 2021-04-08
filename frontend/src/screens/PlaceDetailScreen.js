@@ -12,6 +12,8 @@ import AddReview from '../components/AddReview';
 import Fade from 'react-reveal/Fade';
 import { followUserAction, unfollowUserAction, followUserStatusAction } from '../actions/userActions';
 import { PLACE_DELETE_RESET } from '../constants/campgroundConstants';
+import NumberFormat from 'react-number-format';
+import moment from 'moment';
 
 const PlaceDetailScreen = ({ match, history }) => {
 	const campId = match.params.id;
@@ -212,8 +214,17 @@ const PlaceDetailScreen = ({ match, history }) => {
 											: null}
 									</ListGroup.Item>
 									<ListGroup.Item>
-										<b style={{ fontSize: '20px', fontWeight: 'bold' }}>Price:</b> {place.price}
+										<b style={{ fontSize: '20px', fontWeight: 'bold' }}>Price:</b>
+										<NumberFormat
+											style={{ border: 'none' }}
+											className={'ml-2'}
+											thousandSeparator={true}
+											thousandsGroupStyle="lakh"
+											prefix={'₹'}
+											value={place.price}
+										/>
 									</ListGroup.Item>
+									<ListGroup.Item>{moment(place.createdAt, 'YYYYMMDD').fromNow()}</ListGroup.Item>
 									<ListGroup.Item>
 										<b style={{ fontSize: '20px', fontWeight: 'bold' }}>Description:</b>{' '}
 										{place.description}

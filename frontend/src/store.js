@@ -38,6 +38,8 @@ import { app } from './reducers/appReducer';
 
 import { getTags, getTagCampgroundsReducer } from './reducers/tagReducer';
 
+import { searchReducer } from './reducers/searchReducer';
+
 const reducer = combineReducers({
 	placeList: placeListReducer,
 	placeMyFeedList: placeListMyFeedReducer,
@@ -68,6 +70,7 @@ const reducer = combineReducers({
 	editProfileReducer: editProfileReducer,
 	getTags: getTags,
 	getTagCampgrounds: getTagCampgroundsReducer,
+	searchReducer: searchReducer,
 });
 
 const initialState = {};

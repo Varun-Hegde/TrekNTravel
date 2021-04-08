@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
 import { listTags } from '../actions/tagActions';
+import AutoSearch from '../components/AutoSearch';
 
 const HomeScreen = ({ history, match }) => {
 	const dispatch = useDispatch();
@@ -30,8 +31,8 @@ const HomeScreen = ({ history, match }) => {
 		if (!isLoggedIn) {
 			dispatch(listPlaces(pageNumber));
 		} else {
-			if (feed == 'globalfeed') dispatch(listPlaces(pageNumber));
-			if (feed == 'myfeed') dispatch(listMyFeed(pageNumber));
+			if (feed === 'globalfeed') dispatch(listPlaces(pageNumber));
+			if (feed === 'myfeed') dispatch(listMyFeed(pageNumber));
 		}
 
 		window.scrollTo(0, 0);

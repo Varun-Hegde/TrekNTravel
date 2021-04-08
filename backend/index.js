@@ -20,6 +20,7 @@ const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const followRoutes = require('./routes/followRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const searchRoutes = require('./routes/searchRoute');
 
 //MIDDLEWEARS
 app.use(express.json());
@@ -60,6 +61,9 @@ app.use('/api', followRoutes);
 
 //TAG ROUTES
 app.use('/api/tags/', tagRoutes);
+
+//SEARCH ROUTE
+app.use('/api', searchRoutes);
 
 //PAGE NOT FOUND
 app.use(notFound);

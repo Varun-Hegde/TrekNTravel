@@ -1,47 +1,45 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow-x: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 main {
-  min-height: 80vh;
+	min-height: 80vh;
 }
 
 .likeHover {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .authorDetails {
-  border-top: 2px solid #f1f1f1;
-  padding-top: 15px;
+	border-top: 2px solid #f1f1f1;
+	padding-top: 15px;
 }
 
 .heading {
-  font-size: 22px;
-  font-weight: 700;
+	font-size: 22px;
+	font-weight: 700;
 }
 
 .profilePic {
-  background-color: rgb(243, 243, 243);
-  min-height: 300px;
-  width: 100%;
-  overflow-x: hidden;
+	background-color: rgb(243, 243, 243);
+	min-height: 300px;
+	width: 100%;
+	overflow-x: hidden;
 }
 
 .facebook {
-  background-color: rgb(65, 94, 155) !important;
+	background-color: rgb(65, 94, 155) !important;
 }
 
 .google {
-  background-color: rgb(209, 73, 61) !important;
+	background-color: rgb(209, 73, 61) !important;
 }
