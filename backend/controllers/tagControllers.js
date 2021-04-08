@@ -25,7 +25,7 @@ module.exports.getCampgrounds = asyncHandler(async (req, res) => {
 		  }
 		: {};
 
-	const campgrounds = await Tag.find({ ...keyword }).populate('places');
+	const campgrounds = await Tag.find({ ...keyword }, 'places').populate('places');
 
 	res.json(campgrounds);
 });

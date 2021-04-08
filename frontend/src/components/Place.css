@@ -1,11 +1,26 @@
 .place {
-  cursor: pointer;
-  transition: transform 0.25s;
-  transition-timing-function: ease-in;
+	cursor: pointer;
+	transition: transform 0.25s;
+	transition-timing-function: ease-in;
 }
 
 .place:hover {
-  transform: scale(1.15);
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
-    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+	transform: scale(1.025);
+	box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.place__title {
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.place__details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.place__bottom {
+	display: flex;
+	justify-content: space-between;
 }

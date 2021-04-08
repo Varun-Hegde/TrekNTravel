@@ -37,7 +37,7 @@ export const getTagCampgroundsAction = (keyword) => async (dispatch) => {
 		});
 
 		const { data } = await axios.get(`/api/tags/campgrounds?tag=${keyword}`);
-
+		console.log(data);
 		dispatch({
 			type: TAG_CAMPGROUND_SUCCESS,
 			payload: data,

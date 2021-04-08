@@ -20,10 +20,11 @@ export const getTags = (state = { tags: [] }, action) => {
 			};
 		case TAG_FAIL:
 			return {
+				loading: false,
 				error: action.payload,
 			};
 		default:
-			return {};
+			return state;
 	}
 };
 
@@ -43,6 +44,6 @@ export const getTagCampgroundsReducer = (state = { tags: [] }, action) => {
 				error: action.payload,
 			};
 		default:
-			return {};
+			return state;
 	}
 };
