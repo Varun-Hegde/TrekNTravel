@@ -2,71 +2,77 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 
-const UserSchema = new Schema({
-	methods: {
-		type: [String],
-		required: true,
-	},
-	username: {
-		type: String,
-		required: true,
-	},
-	email: {
-		type: String,
-		required: true,
-		unique: true,
-	},
-	description: {
-		type: String,
-	},
-	profilePic: {
-		type: String,
-	},
-	isAdmin: {
-		type: Boolean,
-		default: false,
-	},
-	local: {
-		email: {
-			type: String,
-			lowercase: true,
+const UserSchema = new Schema(
+	{
+		methods: {
+			type: [String],
+			required: true,
 		},
-		password: {
+		username: {
 			type: String,
-		},
-	},
-	google: {
-		id: {
-			type: String,
+			required: true,
 		},
 		email: {
 			type: String,
+			required: true,
+			unique: true,
 			lowercase: true,
 		},
-	},
-	facebook: {
-		id: {
+		description: {
 			type: String,
 		},
-		email: {
+		profilePic: {
 			type: String,
-			lowercase: true,
 		},
-	},
+		isAdmin: {
+			type: Boolean,
+			default: false,
+		},
+		local: {
+			email: {
+				type: String,
+				lowercase: true,
+			},
+			password: {
+				type: String,
+			},
+		},
+		google: {
+			id: {
+				type: String,
+			},
+			email: {
+				type: String,
+				lowercase: true,
+			},
+		},
+		facebook: {
+			id: {
+				type: String,
+			},
+			email: {
+				type: String,
+				lowercase: true,
+			},
+		},
+		newMessagePopUp: {
+			type: Boolean,
+			default: true,
+		},
+		unreadMessage: {
+			type: Boolean,
+			default: false,
+		},
 
-	/* email:{
-        type: String,
-        required: true,
-        lowercase: true
-    },
-    password:{
-        type: String,
-    },
-    username: {
-        type: String,
-        required: true,
-    } */
-});
+		unreadNotification: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
 
 UserSchema.pre(
 	'save',

@@ -8,11 +8,17 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const Tag = require('../models/tagModel');
+const {
+	newLikeNotification,
+	removeLikeNotification,
+	newCommentNotification,
+	removeCommentNotification,
+} = require('../utils/notificationActions');
 
 module.exports.getAllCampgrounds = asyncHandler(async (req, res) => {
 	//FOR PAGINATION
 	const pageSize = 12;
-	const page = req.query.pageNumber || 1;
+	const page = Number(req.query.pageNumber) || 1;
 	const count = await Campground.countDocuments();
 
 	const campgrounds = await Campground.find({})
@@ -130,10 +136,10 @@ module.exports.postNewReview = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error('Campground not found');
 	}
-	const aldreadyReviewed = campground.reviews.find((r) => r.author._id.toString() === req.user._id.toString());
-	if (aldreadyReviewed) {
+	const alreadyReviewed = campground.reviews.find((r) => r.author._id.toString() === req.user._id.toString());
+	if (alreadyReviewed) {
 		res.status(400);
-		throw new Error('You aldready added a review');
+		throw new Error('You already added a review');
 	}
 	const review = new Review(req.body);
 	review.author = req.user;
@@ -144,8 +150,18 @@ module.exports.postNewReview = asyncHandler(async (req, res) => {
 
 	campground.rating = campground.reviews.reduce((acc, item) => item.rating + acc, 0) / campground.reviews.length;
 
-	await review.save();
+	const addedReview = await review.save();
 	const newCamp = await campground.save();
+
+	if (newCamp.author.toString() !== req.user._id.toString()) {
+		await newCommentNotification(
+			newCamp._id.toString(),
+			addedReview._id.toString(),
+			req.user._id,
+			newCamp.author.toString(),
+			addedReview.body
+		);
+	}
 	res.status(201);
 	res.json(newCamp);
 });
@@ -172,6 +188,15 @@ module.exports.deleteReview = asyncHandler(async (req, res) => {
 	newCamp.rating = rating;
 	await newCamp.save();
 
+	if (newCamp.author.toString() !== req.user._id.toString()) {
+		await removeCommentNotification(
+			newCamp._id.toString(),
+			deletedReview._id.toString(),
+			req.user._id,
+			newCamp.author.toString()
+		);
+	}
+
 	res.status(200).json(deletedReview);
 });
 
@@ -187,8 +212,23 @@ module.exports.like = asyncHandler(async (req, res) => {
 
 	if (!foundUserLike) {
 		campground.likes.push(req.user._id);
+
+		// Add like notification:
+		// If we are liking our own posts, don't send notifications
+		if (campground.author.toString() !== req.user._id.toString()) {
+			await newLikeNotification(req.user._id.toString(), campground._id.toString(), campground.author.toString());
+		}
 	} else {
 		campground.likes.pull(req.user._id);
+
+		// If we are disliking our own posts, don't send notifications
+		if (campground.author.toString() !== req.user._id.toString()) {
+			await removeLikeNotification(
+				req.user._id.toString(),
+				campground._id.toString(),
+				campground.author.toString()
+			);
+		}
 	}
 
 	const updatedCampground = await campground.save();

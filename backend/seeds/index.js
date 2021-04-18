@@ -4,6 +4,7 @@ const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campgroundModel');
 const User = require('../models/userModel');
 const Tag = require('../models/tagModel');
+const Notification = require('../models/notificationModel');
 
 mongoose.connect('mongodb+srv://varun:varun@cluster0.t7npb.mongodb.net/TrekNTravel?retryWrites=true&w=majority', {
 	useNewUrlParser: true,
@@ -35,6 +36,9 @@ const seedDB = async () => {
 		},
 	});
 	const addedUser = await newUser.save();
+
+	const notifications = new Notification({ user: addedUser._id, notifications: [] });
+	await notifications.save();
 	let tag = new Tag({ tag: 'Trekking' });
 	tag = await tag.save();
 	for (let i = 0; i < 50; i++) {

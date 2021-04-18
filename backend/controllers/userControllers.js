@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 const Campground = require('../models/campgroundModel');
 const Follower = require('../models/followersModel');
+const NotificationModel = require('../models/notificationModel');
 
 const signToken = (user) => {
 	const token = JWT.sign(
@@ -19,17 +20,24 @@ const signToken = (user) => {
 
 module.exports.signUp = asyncHandler(async (req, res, next) => {
 	const { email, password, username } = req.body;
-	let foundUser = await User.findOne({ 'local.email': email });
+	let foundUser = await User.findOne({ 'local.email': email.toLowerCase() });
 	if (foundUser) {
 		res.status(400);
-		throw new Error('A user with this email aldready exists');
+		throw new Error('A user with this email already exists');
 	}
 
 	//Check if user exists with same google email
-	foundUser = await User.findOne({ 'google.email': email });
+	foundUser = await User.findOne({ 'google.email': email.toLowerCase() });
 	if (foundUser) {
 		res.status(400);
-		throw new Error('A user with this email aldready exists');
+		throw new Error('A user with this email already exists');
+	}
+
+	//Check if user exists with same facebook email
+	foundUser = await User.findOne({ 'facebook.email': email.toLowerCase() });
+	if (foundUser) {
+		res.status(400);
+		throw new Error('A user with this email already exists');
 	}
 
 	const newUser = new User({
@@ -43,6 +51,8 @@ module.exports.signUp = asyncHandler(async (req, res, next) => {
 		},
 	});
 	const createdUser = await newUser.save();
+	await new NotificationModel({ user: createdUser._id, notifications: [] }).save();
+
 	const token = signToken(createdUser);
 	res.cookie('access_token', token, { httpOnly: true });
 	res.json({ success: true, createdUser });
@@ -50,6 +60,12 @@ module.exports.signUp = asyncHandler(async (req, res, next) => {
 
 module.exports.signIn = asyncHandler(async (req, res, next) => {
 	const token = signToken(req.user);
+
+	const notificationModel = await NotificationModel.findOne({ user: req.user._id });
+	if (!notificationModel) {
+		await new NotificationModel({ user: req.user._id, notifications: [] }).save();
+	}
+
 	res.cookie('access_token', token, { httpOnly: true });
 	//res.cookie('access_token', token, {sameSite: 'strict',path: '/',httpOnly:true,secure:true),
 	res.json({ success: true });

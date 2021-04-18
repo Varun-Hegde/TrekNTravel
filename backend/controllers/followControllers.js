@@ -1,79 +1,83 @@
-const asyncHandler = require('express-async-handler')
-const User = require('../models/userModel')
-const Follower = require('../models/followersModel')
+const asyncHandler = require('express-async-handler');
+const User = require('../models/userModel');
+const Follower = require('../models/followersModel');
+const { newFollowerNotification, removeFollowerNotification } = require('../utils/notificationActions');
 
+module.exports.addFollower = asyncHandler(async (req, res, next) => {
+	const { username } = req.params;
+	if (req.user.username === username) {
+		res.status(422);
+		throw new Error("You can't follow yourself");
+	}
+	const user = await User.findOne({ username: username });
 
-module.exports.addFollower = asyncHandler(async (req,res,next) => {
-    const {username} = req.params
-    if(req.user.username === username){
-        res.status(422)
-        throw new Error("You can't follow yourself")
-    }
-    const user = await User.findOne({username:username})
-    
-    if(!user){
-        res.status(404);
-        throw new Error('User with this username not found')
-    }
-    const followData = await Follower.findOne({follower:req.user._id , following:user._id})
-    if(followData){
-        res.status(200)
-        throw new Error('You are aldready following this user')
-    }
-    const followers = new Follower({
-        follower: req.user._id,
-        following: user
-    })
+	if (!user) {
+		res.status(404);
+		throw new Error('User with this username not found');
+	}
+	const followData = await Follower.findOne({ follower: req.user._id, following: user._id });
+	if (followData) {
+		res.status(200);
+		throw new Error('You are already following this user');
+	}
+	const followers = new Follower({
+		follower: req.user._id,
+		following: user,
+	});
 
-    await followers.save()
+	await newFollowerNotification(req.user._id, user._id);
 
-    res.status(200).json({
-        success : true
-    })
-})
+	await followers.save();
 
-module.exports.removeFollower = asyncHandler(async(req,res,next) => {
-    const username = req.params.username
-    if(req.user.username === username){
-        res.status(422)
-        throw new Error("You can't follow yourself")
-    }
-    const user = await User.findOne({username:username})
-    
-    if(!user){
-        res.status(404);
-        throw new Error('User with this username not found')
-    }
+	res.status(200).json({
+		success: true,
+	});
+});
 
-    const followData = await Follower.findOne({follower:req.user._id , following:user._id})
+module.exports.removeFollower = asyncHandler(async (req, res, next) => {
+	const username = req.params.username;
+	if (req.user.username === username) {
+		res.status(422);
+		throw new Error("You can't follow yourself");
+	}
+	const user = await User.findOne({ username: username });
 
-    if(!followData){
-        res.status(404)
-        throw new Error("You haven't followed this user yet")
-    }
+	if (!user) {
+		res.status(404);
+		throw new Error('User with this username not found');
+	}
 
-    await Follower.findByIdAndDelete(followData._id)
+	const followData = await Follower.findOne({ follower: req.user._id, following: user._id });
 
-    res.status(200).json({
-        success: true,
-        msg: "Successfully unfollowed this user"
-    })
-})
+	if (!followData) {
+		res.status(404);
+		throw new Error("You haven't followed this user yet");
+	}
 
-module.exports.status = asyncHandler(async (req,res,next) => {
-    const username = req.params.username
-    
-    const user = await User.findOne({username:username})
-    
-    if(!user){
-        res.status(404);
-        throw new Error('User with this username not found')
-    }
+	await removeFollowerNotification(req.user._id, user._id);
 
-    const followData = await Follower.findOne({follower:req.user._id , following:user._id})
-    if(followData){
-        res.json({follow:true})
-    }else{
-        res.json({follow: false})
-    }
-})
+	await Follower.findByIdAndDelete(followData._id);
+
+	res.status(200).json({
+		success: true,
+		msg: 'Successfully unfollowed this user',
+	});
+});
+
+module.exports.status = asyncHandler(async (req, res, next) => {
+	const username = req.params.username;
+
+	const user = await User.findOne({ username: username });
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User with this username not found');
+	}
+
+	const followData = await Follower.findOne({ follower: req.user._id, following: user._id });
+	if (followData) {
+		res.json({ follow: true });
+	} else {
+		res.json({ follow: false });
+	}
+});

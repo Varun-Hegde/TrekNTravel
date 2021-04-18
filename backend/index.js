@@ -21,8 +21,9 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const followRoutes = require('./routes/followRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const searchRoutes = require('./routes/searchRoute');
+const notificationRoute = require('./routes/notificationRoutes');
 
-//MIDDLEWEARS
+//MIDDLEWARE
 app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
@@ -64,6 +65,9 @@ app.use('/api/tags/', tagRoutes);
 
 //SEARCH ROUTE
 app.use('/api', searchRoutes);
+
+//NOTIFICATION ROUTE
+app.use('/api/notifications', notificationRoute);
 
 //PAGE NOT FOUND
 app.use(notFound);

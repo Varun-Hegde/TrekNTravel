@@ -9,7 +9,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
 import { listTags } from '../actions/tagActions';
-import AutoSearch from '../components/AutoSearch';
+import { BulletList } from 'react-content-loader';
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -141,6 +141,7 @@ const HomeScreen = ({ history, match }) => {
 				</Col>
 				<Col className="tags" sm={12} md={3}>
 					<p style={{ fontSize: '25px' }}>Popular Tags</p>
+					{loadingTags ? <BulletList /> : null}
 					{tags && tags.length > 0
 						? tags.map((tag) => {
 								return (

@@ -1,21 +1,48 @@
 import React, { useEffect } from 'react';
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown, Dropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { signout, status } from '../actions/userActions';
+import { getNotifications } from '../actions/notificationActions';
 import AutoSearch from './AutoSearch';
+import moment from 'moment';
+
+function dropdown(username, text, date) {
+	return (
+		<>
+			<div>
+				<div>
+					{username} {text}
+				</div>
+				<div>{moment(date, 'YYYYMMDD').fromNow()}</div>
+			</div>
+		</>
+	);
+}
 
 const Header = () => {
 	const dispatch = useDispatch();
 	const userStatus = useSelector((state) => state.status);
-	const { userInfo } = userStatus;
+	const { isLoggedIn, userInfo } = userStatus;
 
 	const signOutDetails = useSelector((state) => state.signOut);
 	const { success, error } = signOutDetails;
 
+	const allNotifications = useSelector((state) => state.getNotificationReducer);
+	const {
+		loading: loadingNotificaton,
+		success: successNotificaton,
+		error: errorNotificaton,
+		notifications,
+	} = allNotifications;
+
 	useEffect(() => {
 		dispatch(status());
 	}, [success, error, dispatch]);
+
+	useEffect(() => {
+		if (isLoggedIn) dispatch(getNotifications());
+	}, [dispatch, isLoggedIn]);
 
 	const logoutHandler = () => {
 		dispatch(signout());
@@ -47,12 +74,89 @@ const Header = () => {
 								<AutoSearch />
 							</Nav.Link>
 							{userInfo ? (
-								<NavDropdown title={userInfo.user.username} id="username">
-									<LinkContainer to="/my-profile">
-										<NavDropdown.Item>Profile</NavDropdown.Item>
-									</LinkContainer>
-									<NavDropdown.Item onClick={logoutHandler}>Sign Out</NavDropdown.Item>
-								</NavDropdown>
+								<>
+									<NavDropdown
+										title={<i style={{ fontSize: '20px' }} className="far fa-envelope"></i>}
+										id="notifications"
+									>
+										{notifications && notifications.notifications.length > 0 ? (
+											<>
+												{notifications.notifications.map((notification) => {
+													if (notification.type === 'newLike') {
+														return (
+															<>
+																<LinkContainer
+																	to={`/campground/${notification.post._id}`}
+																>
+																	<NavDropdown.Item>
+																		{dropdown(
+																			notification.user.username,
+																			' liked your post',
+																			notification.date
+																		)}
+																	</NavDropdown.Item>
+																</LinkContainer>
+																<hr />
+															</>
+														);
+													} else if (notification.type === 'newComment') {
+														return (
+															<>
+																<LinkContainer
+																	to={`/campground/${notification.post._id}`}
+																>
+																	<NavDropdown.Item>
+																		{dropdown(
+																			notification.user.username,
+																			' commented on your post,',
+																			notification.date
+																		)}
+																	</NavDropdown.Item>
+																</LinkContainer>
+																<hr />
+															</>
+														);
+													} else if (notification.type === 'newPost') {
+														return (
+															<NavDropdown.Item>
+																{notification.user.username} added new post
+															</NavDropdown.Item>
+														);
+													} else if (notification.type === 'newFollower') {
+														return (
+															<>
+																<LinkContainer
+																	to={`/user-profile/${notification.user.username}`}
+																>
+																	<NavDropdown.Item>
+																		{dropdown(
+																			notification.user.username,
+																			' started following you,',
+																			notification.date
+																		)}
+																	</NavDropdown.Item>
+																</LinkContainer>
+																<hr />
+															</>
+														);
+													}
+													return 0;
+												})}
+											</>
+										) : (
+											<>
+												<NavDropdown.Item>No Notifications</NavDropdown.Item>
+											</>
+										)}
+									</NavDropdown>
+
+									<NavDropdown title={userInfo.user.username} id="username">
+										<LinkContainer to="/my-profile">
+											<NavDropdown.Item>Profile</NavDropdown.Item>
+										</LinkContainer>
+										<NavDropdown.Item onClick={logoutHandler}>Sign Out</NavDropdown.Item>
+									</NavDropdown>
+								</>
 							) : (
 								<>
 									<LinkContainer to="/signup">

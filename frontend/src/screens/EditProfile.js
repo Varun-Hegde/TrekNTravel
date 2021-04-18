@@ -45,7 +45,8 @@ const EditProfile = ({ history }) => {
 			password2: '',
 		};
 
-		if (touchedDesc && desc.length < 3) errors.description = 'Description must contain atleast 3 characters';
+		if (touchedDesc && desc && desc.length < 3)
+			errors.description = 'Description must contain atleast 3 characters';
 
 		if (touchedPass1 && pass1.length < 5) errors.password1 = 'Password should be >= 6 characters';
 
