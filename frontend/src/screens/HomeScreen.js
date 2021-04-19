@@ -124,7 +124,7 @@ const HomeScreen = ({ history, match }) => {
 												</Col>
 											))
 										) : (
-											<Message variant="info">No places found. </Message>
+											<Message variant="info">No posts from people you follow </Message>
 										)}
 									</Row>
 									<Fade bottom>

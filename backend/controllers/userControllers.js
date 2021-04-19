@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const Campground = require('../models/campgroundModel');
 const Follower = require('../models/followersModel');
 const NotificationModel = require('../models/notificationModel');
+const ChatModel = require('../models/chatModel');
 
 const signToken = (user) => {
 	const token = JWT.sign(
@@ -51,7 +52,9 @@ module.exports.signUp = asyncHandler(async (req, res, next) => {
 		},
 	});
 	const createdUser = await newUser.save();
+
 	await new NotificationModel({ user: createdUser._id, notifications: [] }).save();
+	await new ChatModel({ user: createdUser._id, chats: [] }).save();
 
 	const token = signToken(createdUser);
 	res.cookie('access_token', token, { httpOnly: true });
@@ -64,6 +67,11 @@ module.exports.signIn = asyncHandler(async (req, res, next) => {
 	const notificationModel = await NotificationModel.findOne({ user: req.user._id });
 	if (!notificationModel) {
 		await new NotificationModel({ user: req.user._id, notifications: [] }).save();
+	}
+
+	const chatModel = await ChatModel.findOne({ user: req.user._id });
+	if (!chatModel) {
+		await new ChatModel({ user: createdUser._id, chats: [] }).save();
 	}
 
 	res.cookie('access_token', token, { httpOnly: true });

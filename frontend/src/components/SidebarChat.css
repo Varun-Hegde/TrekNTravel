@@ -1,0 +1,11 @@
+.chat__detail {
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	cursor: pointer;
+}
+
+.activeChat {
+	background-color: white;
+	padding: 10px;
+}

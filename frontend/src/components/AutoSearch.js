@@ -94,7 +94,7 @@ export default function AutoSearch() {
 							{data.users.map((d) => (
 								<Link className="d-flex mt-2" onClick={() => setData('')} to={d.link}>
 									<Image height="50" width="50" src={d.image} roundedCircle />
-									<p className="ml-2 align-self-center">{d.name}</p>{' '}
+									<p className="ml-2 align-self-center pt-3">{d.name}</p>{' '}
 								</Link>
 							))}
 						</>

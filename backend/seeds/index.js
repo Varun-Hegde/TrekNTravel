@@ -5,6 +5,7 @@ const Campground = require('../models/campgroundModel');
 const User = require('../models/userModel');
 const Tag = require('../models/tagModel');
 const Notification = require('../models/notificationModel');
+const ChatModel = require('../models/chatModel');
 
 mongoose.connect('mongodb+srv://varun:varun@cluster0.t7npb.mongodb.net/TrekNTravel?retryWrites=true&w=majority', {
 	useNewUrlParser: true,
@@ -25,6 +26,9 @@ const seedDB = async () => {
 	await Campground.deleteMany({});
 	await User.deleteMany({});
 	await Tag.deleteMany({});
+	await Notification.deleteMany({});
+	await ChatModel.deleteMany({});
+
 	const newUser = new User({
 		methods: ['local'],
 		username: 'Admin',
@@ -39,6 +43,10 @@ const seedDB = async () => {
 
 	const notifications = new Notification({ user: addedUser._id, notifications: [] });
 	await notifications.save();
+
+	const chat = new ChatModel({ user: addedUser._id, chats: [] });
+	await chat.save();
+
 	let tag = new Tag({ tag: 'Trekking' });
 	tag = await tag.save();
 	for (let i = 0; i < 50; i++) {

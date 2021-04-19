@@ -17,6 +17,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import UserProfile from './screens/UserProfile';
 import EditProfile from './screens/EditProfile';
 import TagCampground from './screens/TagCampgrounds';
+import ChatScreen from './screens/ChatScreen';
 
 import {
 	USER_SIGNEDIN_RESET,
@@ -125,10 +126,11 @@ function App() {
 								<Route exact path="/campgrounds" component={HomeScreen} />
 								<Route exact path="/my-profile" component={ProfileScreen} />
 								<Route exact path="/user-profile/:username" component={UserProfile} />
-								<Route exact path="/landing" component={LandingScreen} />
+
 								<Route exact path="/campgrounds/page/:pageNumber" component={HomeScreen} />
 								<Route exact path="/edit-profile" component={EditProfile} />
 								<Route exact path="/tags/:tagname" component={TagCampground} />
+								<Route exact path="/chats" component={ChatScreen} />
 							</Switch>
 						</div>
 					</main>

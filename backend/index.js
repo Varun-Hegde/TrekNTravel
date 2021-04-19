@@ -22,6 +22,7 @@ const followRoutes = require('./routes/followRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const searchRoutes = require('./routes/searchRoute');
 const notificationRoute = require('./routes/notificationRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 //MIDDLEWARE
 app.use(express.json());
@@ -68,6 +69,9 @@ app.use('/api', searchRoutes);
 
 //NOTIFICATION ROUTE
 app.use('/api/notifications', notificationRoute);
+
+//CHAT ROUTES
+app.use('/api/chats', chatRoutes);
 
 //PAGE NOT FOUND
 app.use(notFound);
