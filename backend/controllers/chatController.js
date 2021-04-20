@@ -1,5 +1,6 @@
 const ChatModel = require('../models/chatModel');
 const asyncHandler = require('express-async-handler');
+const User = require('../models/userModel');
 
 module.exports.getAllChats = asyncHandler(async (req, res, next) => {
 	const userId = req.user._id;
@@ -19,4 +20,13 @@ module.exports.getAllChats = asyncHandler(async (req, res, next) => {
 		});
 	}
 	res.json(chatsToBeSent);
+});
+
+module.exports.getUserChat = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.userToFindId);
+
+	if (!user) {
+		res.status(404).send('No user found');
+	}
+	return res.json({ name: user.username, profilePic: user.profilePic });
 });

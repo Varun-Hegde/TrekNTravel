@@ -3,8 +3,9 @@ import './SidebarChat.css';
 import { Image } from 'react-bootstrap';
 import moment from 'moment';
 import { LinkContainer } from 'react-router-bootstrap';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
-const SidebarChat = ({ data }) => {
+const SidebarChat = ({ data, connectedUsers, history }) => {
 	const getQueryParams = () => {
 		const params = new URLSearchParams(window.location.search);
 		if (params.get('message'))
@@ -12,31 +13,40 @@ const SidebarChat = ({ data }) => {
 		return false;
 	};
 
+	const isOnline =
+		connectedUsers.length > 0 && connectedUsers.filter((user) => user.userId === data.messagesWith).length > 0;
+
 	return (
-		<LinkContainer to={`/chats?message=${data.messagesWith}`}>
-			<div className={`chat__detail ${getQueryParams() && 'activeChat'}`}>
-				<div className={`d-flex `}>
-					{data.profilePic ? (
-						<Image height="50" width="50" src={data.profilePic} roundedCircle />
-					) : (
-						<Image
-							height="50"
-							width="50"
-							src={`https://avatars.dicebear.com/4.5/api/bottts/${data.messagesWith}.svg`}
-							roundedCircle
-						/>
-					)}
-					<p style={{ fontSize: '20px' }} className="ml-3 pt-3">
-						{data.name}
-					</p>
+		<div
+			onClick={() => history.push(`/chats?message=${data.messagesWith}`)}
+			className={`chat__detail ${getQueryParams() && 'activeChat'}`}
+		>
+			<div className="sidebar_chat">
+				{data.profilePic ? (
+					<Image height="50" width="50" src={data.profilePic} roundedCircle />
+				) : (
+					<Image
+						height="50"
+						width="50"
+						src={`https://avatars.dicebear.com/4.5/api/bottts/${data.messagesWith}.svg`}
+						roundedCircle
+					/>
+				)}
+				<div className="sidebarChat__info">
+					<div className="sidebarChatHeader">
+						<div>
+							<p style={{ fontSize: '18px', fontWeight: 800 }}>{data.name}</p>
+							{isOnline && <FiberManualRecordIcon style={{ color: '81b214', fontSize: '15px' }} />}
+						</div>
+					</div>
+					<div style={{ fontSize: '14px' }} className=" d-flex justify-content-between">
+						{data.lastMessage.length > 15 ? data.lastMessage.substring(0, 15) + ' ...' : data.lastMessage}
+
+						<p className="ml-5"> {moment(data.date, 'YYYYMMDD').fromNow()}</p>
+					</div>
 				</div>
-				<div style={{ fontSize: '14px' }} className="ml-3 d-flex justify-content-between">
-					{data.lastMessage}
-					<p>{moment(data.date, 'YYYYMMDD').fromNow()}</p>
-				</div>
-				<hr />
 			</div>
-		</LinkContainer>
+		</div>
 	);
 };
 

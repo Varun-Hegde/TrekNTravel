@@ -1,11 +1,16 @@
-.chat__detail {
-	display: flex;
-	flex-direction: column;
-	padding: 8px;
-	cursor: pointer;
-}
-
 .activeChat {
 	background-color: white;
 	padding: 10px;
+}
+
+.sidebar_chat {
+	display: flex;
+	padding: 20px;
+	cursor: pointer;
+	border-bottom: 1px solid lightgray;
+	width: 100%;
+}
+
+.sidebar_chat:hover {
+	background-color: #f6f6f6;
 }
