@@ -109,6 +109,15 @@ const EditProfile = ({ history }) => {
 				{editLoading ? <Loader /> : null}
 				<Form onSubmit={submitHandler}>
 					<FormGroup>
+						<Label for="exampleFile">File</Label>
+						<Input type="file" name="file" id="exampleFile" onChange={uploadFileHandler} />
+						<FormText color="muted">Upload images of campground</FormText>
+					</FormGroup>
+					{uploadingError ? (
+						<Message variant="danger">File must be in jpg or jpeg or png format</Message>
+					) : null}
+					{uploading ? <Loader /> : null}
+					<FormGroup>
 						<Label htmlFor="password1">Password</Label>
 						<Input
 							type="password"
@@ -123,15 +132,7 @@ const EditProfile = ({ history }) => {
 						/>
 						<FormFeedback>{errors.password1}</FormFeedback>
 					</FormGroup>
-					<FormGroup>
-						<Label for="exampleFile">File</Label>
-						<Input type="file" name="file" id="exampleFile" onChange={uploadFileHandler} />
-						<FormText color="muted">Upload images of campground</FormText>
-					</FormGroup>
-					{uploadingError ? (
-						<Message variant="danger">File must be in jpg or jpeg or png format</Message>
-					) : null}
-					{uploading ? <Loader /> : null}
+
 					<FormGroup>
 						<Label htmlFor="password2">Confirm Password</Label>
 						<Input

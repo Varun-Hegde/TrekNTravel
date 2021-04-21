@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Button, Badge } from 'react-bootstrap';
 import Place from '../components/Place';
@@ -14,7 +14,10 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import { LinkContainer } from 'react-router-bootstrap';
 import { List } from 'react-content-loader';
-
+import io from 'socket.io-client';
+import getUserInfo from '../utils/getUserInfo';
+import MessageNotificationModal from '../components/ModalPopUp';
+import newMsgReceived from '../utils/newMsgSound';
 const HomeScreen = ({ history, match }) => {
 	const dispatch = useDispatch();
 
@@ -33,7 +36,44 @@ const HomeScreen = ({ history, match }) => {
 	const { loading: loadingTags, tags, error: errorTags } = allTags;
 
 	const pageNumber = match.params.pageNumber ? match.params.pageNumber : '1';
-	console.log(pageNumber);
+
+	const socket = useRef();
+	const [newMessageReceived, setNewMessageReceived] = useState();
+	const [newMessageModal, showNewMessageModal] = useState(false);
+
+	//SOCKETS
+	useEffect(() => {
+		if (userInfo && userInfo.user) {
+			if (!socket.current) {
+				socket.current = io('http://localhost:5000');
+			}
+			if (socket.current) {
+				socket.current.emit('join', { userId: userInfo.user._id });
+
+				socket.current.on('newMsgReceived', async ({ newMsg }) => {
+					const { name, profilePic } = await getUserInfo(newMsg.sender);
+
+					if (userInfo.user.newMessagePopUp) {
+						setNewMessageReceived({
+							...newMsg,
+							senderName: name,
+							senderProfilePic: profilePic,
+						});
+						showNewMessageModal(true);
+					}
+					newMsgReceived(name);
+				});
+			}
+
+			return () => {
+				if (socket.current) {
+					socket.current.emit('disconnect');
+					socket.current.off(); //removes the event listener
+				}
+			};
+		}
+	}, [userInfo]);
+
 	useEffect(() => {
 		if (!isLoggedIn) {
 			dispatch(listPlaces(pageNumber));
@@ -51,6 +91,16 @@ const HomeScreen = ({ history, match }) => {
 
 	return (
 		<>
+			{newMessageModal && newMessageReceived !== null && (
+				<MessageNotificationModal
+					socket={socket}
+					showNewMessageModal={showNewMessageModal}
+					newMessageModal={newMessageModal}
+					newMessageReceived={newMessageReceived}
+					user={userInfo.user}
+				/>
+			)}
+
 			<div>
 				{isLoggedIn && (
 					<Button

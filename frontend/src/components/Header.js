@@ -6,7 +6,9 @@ import { signout, status } from '../actions/userActions';
 import { getNotifications } from '../actions/notificationActions';
 import AutoSearch from './AutoSearch';
 import moment from 'moment';
-
+import ChatIcon from '@material-ui/icons/Chat';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Badge from '@material-ui/core/Badge';
 function dropdown(username, text, date) {
 	return (
 		<>
@@ -75,10 +77,7 @@ const Header = () => {
 							</Nav.Link>
 							{userInfo ? (
 								<>
-									<NavDropdown
-										title={<i style={{ fontSize: '20px' }} className="far fa-envelope"></i>}
-										id="notifications"
-									>
+									<NavDropdown title={<NotificationsIcon />} id="notifications">
 										{notifications && notifications.notifications.length > 0 ? (
 											<>
 												{notifications.notifications.map((notification) => {
@@ -150,6 +149,18 @@ const Header = () => {
 										)}
 									</NavDropdown>
 
+									<LinkContainer to="/chats">
+										<Nav.Link>
+											{userInfo.user.unreadMessage ? (
+												<Badge color="secondary" variant="dot">
+													<ChatIcon />
+												</Badge>
+											) : (
+												<ChatIcon />
+											)}
+										</Nav.Link>
+									</LinkContainer>
+
 									<NavDropdown title={userInfo.user.username} id="username">
 										<LinkContainer to="/my-profile">
 											<NavDropdown.Item>Profile</NavDropdown.Item>
@@ -164,6 +175,7 @@ const Header = () => {
 											<i class="fas fa-user-plus"></i> Sign Up
 										</Nav.Link>
 									</LinkContainer>
+
 									<LinkContainer to="/signin">
 										<Nav.Link>
 											<i class="fas fa-user"></i> Sign In

@@ -136,6 +136,21 @@ io.on('connection', async (socket) => {
 		socket.emit('msgSent', { newMsg });
 	});
 
+	socket.on('sendMsgFromNotification', async ({ userId, msgSendToUserId, msg }) => {
+		const { newMsg } = await sendMsg(userId, msgSendToUserId, msg);
+
+		//Check if receiver is online
+		const receiverSocket = findConnectedUser(msgSendToUserId);
+
+		//If online send msg else make his unreadMsg in his user model to true
+		if (receiverSocket) {
+			io.to(receiverSocket.socketId).emit('newMsgReceived', { newMsg });
+		} else {
+			setMsgToUnread(msgSendToUserId);
+		}
+		socket.emit('msgSentFromNotification', { newMsg });
+	});
+
 	//On disconnect
 	socket.on('disconnect', () => {
 		removeUser(socket.id);
