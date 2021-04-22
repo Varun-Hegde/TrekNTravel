@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { placeDetails, likeAction, deletePlace } from '../actions/campgroundActions';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,10 @@ import { followUserAction, unfollowUserAction, followUserStatusAction } from '..
 import { PLACE_DELETE_RESET } from '../constants/campgroundConstants';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
-
+import io from 'socket.io-client';
+import getUserInfo from '../utils/getUserInfo';
+import MessageNotificationModal from '../components/ModalPopUp';
+import newMsgReceived from '../utils/newMsgSound';
 const PlaceDetailScreen = ({ match, history }) => {
 	const campId = match.params.id;
 
@@ -66,11 +69,45 @@ const PlaceDetailScreen = ({ match, history }) => {
 		showEdit = false;
 	} else {
 		if (!loading && isLoggedIn && userInfo && place) {
-			{
-				if (userInfo.user._id === place.author._id || userInfo.user.isAdmin) showEdit = true;
-			}
+			if (userInfo.user._id === place.author._id || userInfo.user.isAdmin) showEdit = true;
 		}
 	}
+	const socket = useRef();
+	const [newMessageReceived, setNewMessageReceived] = useState();
+	const [newMessageModal, showNewMessageModal] = useState(false);
+
+	//SOCKETS
+	useEffect(() => {
+		if (userInfo && userInfo.user) {
+			if (!socket.current) {
+				socket.current = io('http://localhost:5000');
+			}
+			if (socket.current) {
+				socket.current.emit('join', { userId: userInfo.user._id });
+
+				socket.current.on('newMsgReceived', async ({ newMsg }) => {
+					const { name, profilePic } = await getUserInfo(newMsg.sender);
+
+					if (userInfo.user.newMessagePopUp) {
+						setNewMessageReceived({
+							...newMsg,
+							senderName: name,
+							senderProfilePic: profilePic,
+						});
+						showNewMessageModal(true);
+					}
+					newMsgReceived(name);
+				});
+			}
+
+			return () => {
+				if (socket.current) {
+					socket.current.emit('disconnect');
+					socket.current.off(); //removes the event listener
+				}
+			};
+		}
+	}, [userInfo]);
 
 	useEffect(() => {
 		setUserLiked(false);
@@ -147,6 +184,16 @@ const PlaceDetailScreen = ({ match, history }) => {
 	return (
 		<Fade bottom>
 			<div>
+				{newMessageModal && newMessageReceived !== null && (
+					<MessageNotificationModal
+						socket={socket}
+						showNewMessageModal={showNewMessageModal}
+						newMessageModal={newMessageModal}
+						newMessageReceived={newMessageReceived}
+						user={userInfo.user}
+					/>
+				)}
+
 				<Link className="btn btn-light my-3" to="/campgrounds">
 					Go Back
 				</Link>

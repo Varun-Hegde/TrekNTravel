@@ -58,7 +58,7 @@ const SignUpScreen = ({ location, history }) => {
 			errors.email = 'Not a valid email';
 		}
 		if (touchedPassword && password.length < 5) {
-			errors.password = 'Password should be >= 6 characters';
+			errors.password = 'Password should be >= 5 characters';
 		}
 		if (touchedUsername && username.length < 1) {
 			errors.username = 'Password should be >= 1 characters';
@@ -135,7 +135,7 @@ const SignUpScreen = ({ location, history }) => {
 					</Button>
 				</Form>
 				<center style={{ fontSize: '30px', margin: '10px' }}>OR</center>
-				<center style={{ fontSize: '20px', marginBottom: '5px' }}>Sign in using</center>
+				<center style={{ fontSize: '20px', marginBottom: '5px' }}>Sign up using</center>
 				<div className="d-flex justify-content-around">
 					<GoogleLogin />
 					<FacebookLogin />

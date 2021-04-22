@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { userMyProfileAction } from '../actions/userActions';
 import { Row, Col, Image, Nav } from 'react-bootstrap';
@@ -12,11 +12,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Place from '../components/Place';
+import Place from '../components/PlaceProfile';
 import UserFollow from '../components/UserFollow';
 import Accounts from '../components/Accounts';
 import { Facebook } from 'react-content-loader';
-
+import io from 'socket.io-client';
+import getUserInfo from '../utils/getUserInfo';
+import MessageNotificationModal from '../components/ModalPopUp';
+import newMsgReceived from '../utils/newMsgSound';
 function TabPanel(props) {
 	const { profile, children, value, index, ...other } = props;
 
@@ -174,6 +177,43 @@ const ProfileScreen = ({ history }) => {
 	const { success: facebookLinkSuccess } = facebookLinkStore;
 	const { success: facebookUnLinkSuccess } = facebookUnLinkStore;
 
+	const socket = useRef();
+	const [newMessageReceived, setNewMessageReceived] = useState();
+	const [newMessageModal, showNewMessageModal] = useState(false);
+
+	//SOCKETS
+	useEffect(() => {
+		if (userInfo && userInfo.user) {
+			if (!socket.current) {
+				socket.current = io('http://localhost:5000');
+			}
+			if (socket.current) {
+				socket.current.emit('join', { userId: userInfo.user._id });
+
+				socket.current.on('newMsgReceived', async ({ newMsg }) => {
+					const { name, profilePic } = await getUserInfo(newMsg.sender);
+
+					if (userInfo.user.newMessagePopUp) {
+						setNewMessageReceived({
+							...newMsg,
+							senderName: name,
+							senderProfilePic: profilePic,
+						});
+						showNewMessageModal(true);
+					}
+					newMsgReceived(name);
+				});
+			}
+
+			return () => {
+				if (socket.current) {
+					socket.current.emit('disconnect');
+					socket.current.off(); //removes the event listener
+				}
+			};
+		}
+	}, [userInfo]);
+
 	useEffect(() => {
 		if (!isLoggedIn) {
 			history.push('/signin?redirect=/my-profile');
@@ -182,6 +222,15 @@ const ProfileScreen = ({ history }) => {
 	}, [googleLinkSuccess, googleUnLinkSuccess, facebookLinkSuccess, facebookUnLinkSuccess]);
 	return (
 		<>
+			{newMessageModal && newMessageReceived !== null && (
+				<MessageNotificationModal
+					socket={socket}
+					showNewMessageModal={showNewMessageModal}
+					newMessageModal={newMessageModal}
+					newMessageReceived={newMessageReceived}
+					user={userInfo.user}
+				/>
+			)}
 			{loading ? (
 				<Facebook />
 			) : (

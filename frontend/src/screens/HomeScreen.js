@@ -18,6 +18,7 @@ import io from 'socket.io-client';
 import getUserInfo from '../utils/getUserInfo';
 import MessageNotificationModal from '../components/ModalPopUp';
 import newMsgReceived from '../utils/newMsgSound';
+
 const HomeScreen = ({ history, match }) => {
 	const dispatch = useDispatch();
 

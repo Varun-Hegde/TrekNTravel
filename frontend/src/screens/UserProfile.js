@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { profile } from '../actions/userActions';
 import Loader from '../components/Loader';
@@ -10,11 +10,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Place from '../components/Place';
+import Place from '../components/PlaceProfile';
 import { Row, Col, Image, Nav, Button } from 'react-bootstrap';
 import Fade from 'react-reveal/Fade';
 import { Facebook } from 'react-content-loader';
-
+import io from 'socket.io-client';
+import getUserInfo from '../utils/getUserInfo';
+import MessageNotificationModal from '../components/ModalPopUp';
+import newMsgReceived from '../utils/newMsgSound';
 function TabPanel(props) {
 	const { profile, children, value, index, ...other } = props;
 
@@ -130,8 +133,54 @@ const UserProfile = ({ match, history }) => {
 		dispatch(profile(username));
 	}, [username, match, dispatch]);
 
+	const socket = useRef();
+	const [newMessageReceived, setNewMessageReceived] = useState();
+	const [newMessageModal, showNewMessageModal] = useState(false);
+
+	//SOCKETS
+	useEffect(() => {
+		if (userInfo && userInfo.user) {
+			if (!socket.current) {
+				socket.current = io('http://localhost:5000');
+			}
+			if (socket.current) {
+				socket.current.emit('join', { userId: userInfo.user._id });
+
+				socket.current.on('newMsgReceived', async ({ newMsg }) => {
+					const { name, profilePic } = await getUserInfo(newMsg.sender);
+
+					if (userInfo.user.newMessagePopUp) {
+						setNewMessageReceived({
+							...newMsg,
+							senderName: name,
+							senderProfilePic: profilePic,
+						});
+						showNewMessageModal(true);
+					}
+					newMsgReceived(name);
+				});
+			}
+
+			return () => {
+				if (socket.current) {
+					socket.current.emit('disconnect');
+					socket.current.off(); //removes the event listener
+				}
+			};
+		}
+	}, [userInfo]);
+
 	return (
 		<div>
+			{newMessageModal && newMessageReceived !== null && (
+				<MessageNotificationModal
+					socket={socket}
+					showNewMessageModal={showNewMessageModal}
+					newMessageModal={newMessageModal}
+					newMessageReceived={newMessageReceived}
+					user={userInfo.user}
+				/>
+			)}
 			{loading ? (
 				<Facebook />
 			) : error ? (
