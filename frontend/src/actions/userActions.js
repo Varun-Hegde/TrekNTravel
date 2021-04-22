@@ -200,6 +200,10 @@ export const googleOauth = (token) => async (dispatch) => {
 			type: USER_SIGNIN_SUCCESS,
 			payload: data,
 		});
+		dispatch({
+			type: USER_SIGNUP_SUCCESS,
+			payload: data,
+		});
 	} catch (error) {
 		dispatch({
 			type: USER_GOOGLE_FAIL,
@@ -226,6 +230,10 @@ export const facebookOauth = (token) => async (dispatch) => {
 		});
 		dispatch({
 			type: USER_SIGNIN_SUCCESS,
+			payload: data,
+		});
+		dispatch({
+			type: USER_SIGNUP_SUCCESS,
 			payload: data,
 		});
 	} catch (error) {

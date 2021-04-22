@@ -23,5 +23,6 @@ router.post('/oauth/link/facebook', passportJWT, passportFacebook, UserControlle
 router.post('/oauth/unlink/google', passportJWT, UserController.unLinkGoogle); //UnLink google
 router.post('/oauth/unlink/facebook', passportJWT, UserController.unLinkFacebook); //UnLink facebook
 router.patch('/edit', passportJWT, UserController.editProfile);
+router.patch('/messages-read', passportJWT, UserController.updateMessageNotification);
 
 module.exports = router;

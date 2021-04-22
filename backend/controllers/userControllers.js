@@ -215,3 +215,16 @@ module.exports.editProfile = asyncHandler(async (req, res) => {
 		throw new Error('User not found');
 	}
 });
+
+module.exports.updateMessageNotification = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.user._id);
+	if (!user) {
+		res.status(404);
+		throw new Error('No user fund with this user id');
+	}
+	user.unreadMessage = false;
+	await user.save();
+
+	res.json({ success: true });
+	return;
+});

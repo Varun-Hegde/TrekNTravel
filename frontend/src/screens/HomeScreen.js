@@ -103,6 +103,7 @@ const HomeScreen = ({ history, match }) => {
 			)}
 
 			<div>
+				{process.env.REACT_APP_TITLE}
 				{isLoggedIn && (
 					<Button
 						onClick={() => setFeed('myfeed')}

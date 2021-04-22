@@ -32,9 +32,9 @@ const SidebarChat = ({ data, connectedUsers, history }) => {
 						roundedCircle
 					/>
 				)}
-				<div className="sidebarChat__info">
+				<div className="sidebarChat__info ml-4">
 					<div className="sidebarChatHeader">
-						<div>
+						<div className="d-flex justify-content-between">
 							<p style={{ fontSize: '18px', fontWeight: 800 }}>{data.name}</p>
 							{isOnline && <FiberManualRecordIcon style={{ color: '81b214', fontSize: '15px' }} />}
 						</div>

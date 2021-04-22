@@ -34,11 +34,11 @@ const SignUpScreen = ({ location, history }) => {
 		dispatch(signup(email, password, username));
 	};
 
-	useEffect(async () => {
+	useEffect(() => {
 		if (isLoggedIn) {
 			history.push(redirect);
 		} else if (userInfo || userStatus || success || isLoggedIn) {
-			await dispatch(status());
+			dispatch(status());
 			dispatch({ type: USER_SIGNUP_RESET });
 			history.push(redirect);
 		}

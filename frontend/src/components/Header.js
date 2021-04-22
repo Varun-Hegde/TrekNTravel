@@ -9,6 +9,9 @@ import moment from 'moment';
 import ChatIcon from '@material-ui/icons/Chat';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Badge from '@material-ui/core/Badge';
+import axios from 'axios';
+import { USER_STATUS_SUCCESS } from '../constants/userConstants';
+
 function dropdown(username, text, date) {
 	return (
 		<>
@@ -38,6 +41,22 @@ const Header = () => {
 		notifications,
 	} = allNotifications;
 
+	const setMsgToRead = async () => {
+		try {
+			await axios.patch('/api/users/messages-read');
+		} catch (err) {
+			console.log(err);
+		}
+
+		const newUser = userInfo;
+		newUser.user.unreadMessage = false;
+
+		dispatch({
+			type: USER_STATUS_SUCCESS,
+			payload: newUser,
+		});
+	};
+
 	useEffect(() => {
 		dispatch(status());
 	}, [success, error, dispatch]);
@@ -48,6 +67,12 @@ const Header = () => {
 
 	const logoutHandler = () => {
 		dispatch(signout());
+	};
+
+	const msgClicked = () => {
+		if (userInfo && userInfo.user && userInfo.user.unreadMessage) {
+			setMsgToRead();
+		}
 	};
 
 	return (
@@ -149,7 +174,7 @@ const Header = () => {
 										)}
 									</NavDropdown>
 
-									<LinkContainer to="/chats">
+									<LinkContainer onClick={msgClicked} to="/chats">
 										<Nav.Link>
 											{userInfo.user.unreadMessage ? (
 												<Badge color="secondary" variant="dot">
