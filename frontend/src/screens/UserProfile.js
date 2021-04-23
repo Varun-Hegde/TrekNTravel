@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { profile } from '../actions/userActions';
-import Loader from '../components/Loader';
 import Message from '../components/Message';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +10,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Place from '../components/PlaceProfile';
-import { Row, Col, Image, Nav, Button } from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 import Fade from 'react-reveal/Fade';
 import { Facebook } from 'react-content-loader';
 import io from 'socket.io-client';
@@ -126,10 +125,7 @@ const UserProfile = ({ match, history }) => {
 	const { loading, profile: userProfile, error } = profileData;
 
 	const userStatus = useSelector((state) => state.status);
-	const { isLoggedIn, userInfo } = userStatus;
-
-	const followUserStatus = useSelector((state) => state.followUserStatus);
-	const { loading: followUserLoading, error: followUserError, follow: followUserFollowing } = followUserStatus;
+	const { userInfo } = userStatus;
 
 	useEffect(() => {
 		dispatch(profile(username));
@@ -142,6 +138,12 @@ const UserProfile = ({ match, history }) => {
 	const [newNotification, setNewNotification] = useState(null);
 	const [notificationPopUp, setNotificationPopUp] = useState(false);
 	const [open, setOpen] = useState(false);
+
+	const [newNotificationComment, setNewNotificationComment] = useState(null);
+	const [notificationCommentPopUp, setNotificationCommentPopup] = useState(false);
+
+	const [newNotificationFollower, setNewNotificationFollower] = useState(null);
+	const [notificationFollowerPopUp, setNotificationFollowerPopup] = useState(false);
 
 	//SOCKETS
 	useEffect(() => {
@@ -172,6 +174,21 @@ const UserProfile = ({ match, history }) => {
 					setNotificationPopUp(true);
 					setOpen(true);
 				});
+
+				//COMMENT NOTIFICATION
+				socket.current.on('newCommentNotificationReceived', ({ username, postId }) => {
+					console.log('receiver event ');
+					setNewNotificationComment({ username, postId });
+					setNotificationCommentPopup(true);
+					setOpen(true);
+				});
+
+				//FOLLOWER NOTIFICATION
+				socket.current.on('newFollowerNotificationReceived', ({ username }) => {
+					setNewNotificationFollower({ username });
+					setNotificationFollowerPopup(true);
+					setOpen(true);
+				});
 			}
 
 			return () => {
@@ -192,8 +209,31 @@ const UserProfile = ({ match, history }) => {
 					newNotification={newNotification}
 					notificationPopUp={notificationPopUp}
 					showNotificationPopUp={setNotificationPopUp}
+					msg={`${newNotification.username} liked your post`}
 				/>
 			)}
+			{notificationFollowerPopUp && newNotificationFollower != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationFollower}
+					notificationPopUp={notificationFollowerPopUp}
+					showNotificationPopUp={setNotificationFollowerPopup}
+					msg={`${newNotificationFollower.username} started following you`}
+				/>
+			)}
+
+			{notificationCommentPopUp && newNotificationComment != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationComment}
+					notificationPopUp={notificationCommentPopUp}
+					showNotificationPopUp={setNotificationCommentPopup}
+					msg={`${newNotificationComment.username} commented on your post`}
+				/>
+			)}
+
 			{newMessageModal && newMessageReceived !== null && (
 				<MessageNotificationModal
 					socket={socket}

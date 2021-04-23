@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Avatar, IconButton } from '@material-ui/core';
-import { ChevronLeftTwoTone, SearchOutlined } from '@material-ui/icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { Avatar } from '@material-ui/core';
+import { SearchOutlined } from '@material-ui/icons';
+
 import './ChatSidebar.css';
 import SidebarChat from './SidebarChat';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Image } from 'react-bootstrap';
-import { allChats } from '../actions/chatActions';
-import { ALL_CHATS_SUCCESS } from '../constants/chatConstants';
 
 const ChatSidebar = ({ history, chats, setChats, user, connectedUsers }) => {
 	let cancelToken;
-
-	const dispatch = useDispatch();
 
 	//const [searchText, setSearchText] = useState([]);
 	const [searchData, setSearchData] = useState('');

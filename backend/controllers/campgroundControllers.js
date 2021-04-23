@@ -8,6 +8,7 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const Tag = require('../models/tagModel');
+
 const {
 	newLikeNotification,
 	removeLikeNotification,
@@ -141,6 +142,7 @@ module.exports.postNewReview = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new Error('You already added a review');
 	}
+
 	const review = new Review(req.body);
 	review.author = req.user;
 	campground.reviews.push(review);

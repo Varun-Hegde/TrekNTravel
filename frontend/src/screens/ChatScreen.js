@@ -5,8 +5,8 @@ import getUserInfo from '../utils/getUserInfo';
 import ChatSidebar from '../components/ChatSidebar';
 import { Button } from 'react-bootstrap';
 import SendIcon from '@material-ui/icons/Send';
-import { Avatar, IconButton } from '@material-ui/core';
-import { Message } from '@material-ui/icons';
+import { Avatar } from '@material-ui/core';
+
 import { LinkContainer } from 'react-router-bootstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
 import './Chats.css';
@@ -17,6 +17,7 @@ const scrollDivToBottom = (divRef) => divRef.current !== null && divRef.current.
 
 const ChatScreen = ({ history, location }) => {
 	const [chats, setChats] = useState({});
+	// eslint-disable-next-line
 	const [chatsErr, setChatsErr] = useState('');
 
 	const [user, setUser] = useState({});
@@ -203,6 +204,7 @@ const ChatScreen = ({ history, location }) => {
 				});
 			}
 		}
+		// eslint-disable-next-line
 	}, [user]);
 
 	useEffect(() => {

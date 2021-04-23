@@ -23,7 +23,7 @@ const TagCampgrounds = ({ history, match }) => {
 	}, [dispatch, match.params.tagname]);
 
 	const userStatus = useSelector((state) => state.status);
-	const { isLoggedIn, userInfo } = userStatus;
+	const { userInfo } = userStatus;
 
 	const socket = useRef();
 	const [newMessageReceived, setNewMessageReceived] = useState();
@@ -32,6 +32,12 @@ const TagCampgrounds = ({ history, match }) => {
 	const [newNotification, setNewNotification] = useState(null);
 	const [notificationPopUp, setNotificationPopUp] = useState(false);
 	const [open, setOpen] = useState(false);
+
+	const [newNotificationComment, setNewNotificationComment] = useState(null);
+	const [notificationCommentPopUp, setNotificationCommentPopup] = useState(false);
+
+	const [newNotificationFollower, setNewNotificationFollower] = useState(null);
+	const [notificationFollowerPopUp, setNotificationFollowerPopup] = useState(false);
 
 	//SOCKETS
 	useEffect(() => {
@@ -62,6 +68,21 @@ const TagCampgrounds = ({ history, match }) => {
 					setNotificationPopUp(true);
 					setOpen(true);
 				});
+
+				//COMMENT NOTIFICATION
+				socket.current.on('newCommentNotificationReceived', ({ username, postId }) => {
+					console.log('receiver event ');
+					setNewNotificationComment({ username, postId });
+					setNotificationCommentPopup(true);
+					setOpen(true);
+				});
+
+				//FOLLOWER NOTIFICATION
+				socket.current.on('newFollowerNotificationReceived', ({ username }) => {
+					setNewNotificationFollower({ username });
+					setNotificationFollowerPopup(true);
+					setOpen(true);
+				});
 			}
 
 			return () => {
@@ -82,8 +103,32 @@ const TagCampgrounds = ({ history, match }) => {
 					newNotification={newNotification}
 					notificationPopUp={notificationPopUp}
 					showNotificationPopUp={setNotificationPopUp}
+					msg={`${newNotification.username} liked your post`}
 				/>
 			)}
+
+			{notificationFollowerPopUp && newNotificationFollower != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationFollower}
+					notificationPopUp={notificationFollowerPopUp}
+					showNotificationPopUp={setNotificationFollowerPopup}
+					msg={`${newNotificationFollower.username} started following you`}
+				/>
+			)}
+
+			{notificationCommentPopUp && newNotificationComment != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationComment}
+					notificationPopUp={notificationCommentPopUp}
+					showNotificationPopUp={setNotificationCommentPopup}
+					msg={`${newNotificationComment.username} commented on your post`}
+				/>
+			)}
+
 			{newMessageModal && newMessageReceived !== null && (
 				<MessageNotificationModal
 					socket={socket}
@@ -103,20 +148,22 @@ const TagCampgrounds = ({ history, match }) => {
 				<Row>
 					{places[0].places.length > 0 ? (
 						places[0].places.map((place) => (
-							<>
-								<Col key={place._id} sm={12}>
+							<div key={place._id}>
+								<Col sm={12}>
 									<Fade bottom>
 										<Place place={place} history={history} />
 									</Fade>
 								</Col>
-							</>
+							</div>
 						))
 					) : !loading ? (
-						<Message variant="info">No places found. </Message>
+						<Message variant="info">No places found with this tag :( </Message>
 					) : null}
 				</Row>
 			) : (
-				<p>No places found with this tag:(</p>
+				<p>
+					<Message variant="info">No places found with this tag :( </Message>
+				</p>
 			)}
 		</>
 	);

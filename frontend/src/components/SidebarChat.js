@@ -2,7 +2,6 @@ import React from 'react';
 import './SidebarChat.css';
 import { Image } from 'react-bootstrap';
 import moment from 'moment';
-import { LinkContainer } from 'react-router-bootstrap';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const SidebarChat = ({ data, connectedUsers, history }) => {

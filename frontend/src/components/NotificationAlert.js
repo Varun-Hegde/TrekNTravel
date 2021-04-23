@@ -3,7 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import useStyles from './notificationStyles';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-const NotificationAlert = ({ open, setOpen, newNotification, notificationPopUp, showNotificationPopUp }) => {
+const NotificationAlert = ({ msg, open, setOpen, newNotification, notificationPopUp, showNotificationPopUp }) => {
 	const classes = useStyles();
 
 	const handleClose = (event, reason) => {
@@ -28,7 +28,7 @@ const NotificationAlert = ({ open, setOpen, newNotification, notificationPopUp, 
 					elevation={6}
 					variant="filled"
 				>
-					{newNotification.username} liked your post
+					{msg}
 				</MuiAlert>
 			</Snackbar>
 		</div>

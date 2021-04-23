@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { userMyProfileAction } from '../actions/userActions';
-import { Row, Col, Image, Nav } from 'react-bootstrap';
-import Loader from '../components/Loader';
+import { Row, Col, Image } from 'react-bootstrap';
 import Fade from 'react-reveal/Fade';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -162,7 +161,7 @@ function SimpleTabs(props) {
 
 const ProfileScreen = ({ history }) => {
 	const myProfile = useSelector((state) => state.myProfile);
-	const { loading, profile, error } = myProfile;
+	const { loading, profile } = myProfile;
 
 	const dispatch = useDispatch();
 
@@ -186,6 +185,12 @@ const ProfileScreen = ({ history }) => {
 	const [newNotification, setNewNotification] = useState(null);
 	const [notificationPopUp, setNotificationPopUp] = useState(false);
 	const [open, setOpen] = useState(false);
+
+	const [newNotificationComment, setNewNotificationComment] = useState(null);
+	const [notificationCommentPopUp, setNotificationCommentPopup] = useState(false);
+
+	const [newNotificationFollower, setNewNotificationFollower] = useState(null);
+	const [notificationFollowerPopUp, setNotificationFollowerPopup] = useState(false);
 
 	//SOCKETS
 	useEffect(() => {
@@ -215,6 +220,21 @@ const ProfileScreen = ({ history }) => {
 					setNotificationPopUp(true);
 					setOpen(true);
 				});
+
+				//COMMENT NOTIFICATION
+				socket.current.on('newCommentNotificationReceived', ({ username, postId }) => {
+					console.log('receiver event ');
+					setNewNotificationComment({ username, postId });
+					setNotificationCommentPopup(true);
+					setOpen(true);
+				});
+
+				//FOLLOWER NOTIFICATION
+				socket.current.on('newFollowerNotificationReceived', ({ username }) => {
+					setNewNotificationFollower({ username });
+					setNotificationFollowerPopup(true);
+					setOpen(true);
+				});
 			}
 
 			return () => {
@@ -231,6 +251,7 @@ const ProfileScreen = ({ history }) => {
 			history.push('/signin?redirect=/my-profile');
 		}
 		dispatch(userMyProfileAction());
+		// eslint-disable-next-line
 	}, [googleLinkSuccess, googleUnLinkSuccess, facebookLinkSuccess, facebookUnLinkSuccess]);
 	return (
 		<>
@@ -241,6 +262,29 @@ const ProfileScreen = ({ history }) => {
 					newNotification={newNotification}
 					notificationPopUp={notificationPopUp}
 					showNotificationPopUp={setNotificationPopUp}
+					msg={`${newNotification.username} liked your post`}
+				/>
+			)}
+
+			{notificationCommentPopUp && newNotificationComment != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationComment}
+					notificationPopUp={notificationCommentPopUp}
+					showNotificationPopUp={setNotificationCommentPopup}
+					msg={`${newNotificationComment.username} commented on your post`}
+				/>
+			)}
+
+			{notificationFollowerPopUp && newNotificationFollower != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationFollower}
+					notificationPopUp={notificationFollowerPopUp}
+					showNotificationPopUp={setNotificationFollowerPopup}
+					msg={`${newNotificationFollower.username} started following you`}
 				/>
 			)}
 			{newMessageModal && newMessageReceived !== null && (

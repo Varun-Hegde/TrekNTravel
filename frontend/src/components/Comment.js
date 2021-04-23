@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Row, Col, Card, Accordion, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import ReactStars from 'react-rating-stars-component';
-import { Form, FormGroup, Label, Input, FormFeedback, FormText } from 'reactstrap';
+import { FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { editReviewAction, deleteReviewAction } from '../actions/campgroundActions';
 import Loader from './Loader';
@@ -12,7 +12,7 @@ const Comment = ({ review, reviewAuthor }) => {
 	const id = place._id;
 
 	const editReviewPlace = useSelector((state) => state.editReview);
-	const { loading, success, error } = editReviewPlace;
+	const { loading } = editReviewPlace;
 
 	const dispatch = useDispatch();
 	const [editReview, setEditReview] = useState(false);
@@ -24,8 +24,6 @@ const Comment = ({ review, reviewAuthor }) => {
 		setEditReview((prev) => !prev);
 	};
 	const [touchedComment, setTouchedComment] = useState(false);
-	const userStatus = useSelector((state) => state.status);
-	const { isLoggedIn, userInfo } = userStatus;
 
 	const ratingChanged = (newRating) => {
 		setRating(newRating);

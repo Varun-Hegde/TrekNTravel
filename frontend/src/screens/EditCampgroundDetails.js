@@ -15,17 +15,18 @@ import axios from 'axios';
 
 const EditCampgroundDetails = ({ history, match }) => {
 	const placeId = match.params.id;
+	// eslint-disable-next-line
 	let currentTags = [];
 
 	const placeDetail = useSelector((state) => state.placeDetail);
-	const { place, loading: loadingPlace } = placeDetail;
+	const { place } = placeDetail;
 	const dispatch = useDispatch();
 
 	const placeEdit = useSelector((state) => state.placeEdit);
 	const { loading: loadingEdit, success: successEdit, error: errorEdit } = placeEdit;
 
 	const statusState = useSelector((state) => state.status);
-	const { userInfo: userStatus, isLoggedIn } = statusState;
+	const { isLoggedIn } = statusState;
 	console.log(statusState);
 	const [title, setTitle] = useState('');
 	const [price, setPrice] = useState();
@@ -41,8 +42,11 @@ const EditCampgroundDetails = ({ history, match }) => {
 	const [touchedPrice, setTouchedPrice] = useState(false);
 	const [touchedDescription, setTouchedDescription] = useState(false);
 	const [touchedLocation, setTouchedLocation] = useState(false);
+	// eslint-disable-next-line
 	const [touchedImage, setTouchedImage] = useState(false);
+	// eslint-disable-next-line
 	const [touchedUpload, setTouchedUpload] = useState(false);
+
 	const [numOfDeletedImages, setNumofDeletedImages] = useState(0);
 
 	useEffect(() => {
@@ -65,6 +69,7 @@ const EditCampgroundDetails = ({ history, match }) => {
 		setPrice(place.price);
 		setLocation(place.location);
 		setDeleteImages(new Array(image.length));
+		// eslint-disable-next-line
 	}, [dispatch, match, history, placeId, place, successEdit, isLoggedIn]);
 
 	function validate() {
@@ -157,7 +162,7 @@ const EditCampgroundDetails = ({ history, match }) => {
 	const displayPic = (pic) => {
 		return pic.replace('/upload', '/upload/w_300');
 	};
-
+	// eslint-disable-next-line
 	const onTagsChange = (e, values) => {
 		console.log(values);
 	};

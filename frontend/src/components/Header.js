@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Navbar, Nav, Container, NavDropdown, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { signout, status } from '../actions/userActions';
+import { signOut, status } from '../actions/userActions';
 import { getNotifications } from '../actions/notificationActions';
 import AutoSearch from './AutoSearch';
 import moment from 'moment';
@@ -34,12 +34,7 @@ const Header = () => {
 	const { success, error } = signOutDetails;
 
 	const allNotifications = useSelector((state) => state.getNotificationReducer);
-	const {
-		loading: loadingNotificaton,
-		success: successNotificaton,
-		error: errorNotificaton,
-		notifications,
-	} = allNotifications;
+	const { notifications } = allNotifications;
 
 	const setMsgToRead = async () => {
 		try {
@@ -66,7 +61,7 @@ const Header = () => {
 	}, [dispatch, isLoggedIn]);
 
 	const logoutHandler = () => {
-		dispatch(signout());
+		dispatch(signOut());
 	};
 
 	const msgClicked = () => {

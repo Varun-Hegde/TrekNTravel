@@ -213,8 +213,8 @@ export const likeAction = (id) => async (dispatch) => {
 		dispatch({
 			type: PLACE_LIKE_REQUEST,
 		});
-
-		const data = await axios.post(`/api/campgrounds/${id}/like`);
+		// eslint-disable-next-line
+		const { data } = await axios.post(`/api/campgrounds/${id}/like`);
 
 		dispatch({
 			type: PLACE_LIKE_SUCCESS,

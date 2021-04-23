@@ -32,7 +32,9 @@ const AddNewCampground = ({ history, match }) => {
 	const [touchedPrice, setTouchedPrice] = useState(false);
 	const [touchedDescription, setTouchedDescription] = useState(false);
 	const [touchedLocation, setTouchedLocation] = useState(false);
+	// eslint-disable-next-line
 	const [touchedImage, setTouchedImage] = useState(false);
+	// eslint-disable-next-line
 	const [touchedUpload, setTouchedUpload] = useState(false);
 
 	const placeAdd = useSelector((state) => state.placeAdd);
@@ -40,7 +42,7 @@ const AddNewCampground = ({ history, match }) => {
 	const dispatch = useDispatch();
 
 	const getAllTags = useSelector((state) => state.getTags);
-	const { loading: tagLoading, error: errorLoading, tags } = getAllTags;
+	const { tags } = getAllTags;
 
 	const statusState = useSelector((state) => state.status);
 	const { userInfo: userStatus, isLoggedIn } = statusState;
@@ -211,7 +213,7 @@ const AddNewCampground = ({ history, match }) => {
 							)}
 						/>
 					)}
-					{allTags.length == 0 ? <p>Atleast add 1 tag</p> : null}
+					{allTags.length === 0 ? <p>Atleast add 1 tag</p> : null}
 					<FormGroup>
 						<Label htmlFor="desc" id="desc">
 							Description

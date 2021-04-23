@@ -4,7 +4,7 @@ import { placeDetails, likeAction, deletePlace } from '../actions/campgroundActi
 import { Link } from 'react-router-dom';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { Row, Col, Image, Carousel, CarouselItem, ListGroup, Accordion, Button } from 'react-bootstrap';
+import { Row, Col, Image, Carousel, ListGroup, Button } from 'react-bootstrap';
 import ReactStars from 'react-rating-stars-component';
 import Map from '../components/Map';
 import Comment from '../components/Comment';
@@ -21,8 +21,6 @@ import newMsgReceived from '../utils/newMsgSound';
 import Notification from '../components/NotificationAlert';
 
 const PlaceDetailScreen = ({ match, history }) => {
-	const campId = match.params.id;
-
 	const dispatch = useDispatch();
 
 	const placeDetail = useSelector((state) => state.placeDetail);
@@ -38,36 +36,37 @@ const PlaceDetailScreen = ({ match, history }) => {
 	const { isLoggedIn, userInfo } = userStatus;
 
 	const newReview = useSelector((state) => state.newReview);
-	const { loading: loadingNewReview, error: errorNewReview, success: successNewReview } = newReview;
+	const { success: successNewReview } = newReview;
 
 	const followUserStatus = useSelector((state) => state.followUserStatus);
-	const { loading: followUserLoading, error: followUserError, follow: followUserFollowing } = followUserStatus;
+	const { follow: followUserFollowing } = followUserStatus;
 
 	const followUserReducer = useSelector((state) => state.followUser);
-	const { loading: fuLoading, error: fuError, success: fuSuccess } = followUserReducer;
+	const { success: fuSuccess } = followUserReducer;
 
 	const unfollowUserReducer = useSelector((state) => state.unfollowUser);
-	const { loading: ufuLoading, error: ufuError, success: ufuSuccess } = unfollowUserReducer;
-
-	const like = useSelector((state) => state.like);
-	const { success: successLike } = like;
+	const { success: ufuSuccess } = unfollowUserReducer;
 
 	const deletedPlace = useSelector((state) => state.placeDelete);
-	const { loading: loadingDelete, success: successDelete, error: errorDelete } = deletedPlace;
+	const { success: successDelete } = deletedPlace;
 
+	// eslint-disable-next-line
 	const [rating, setRating] = useState(0);
+	// eslint-disable-next-line
 	const [comment, setComment] = useState('');
 
 	const [newNotification, setNewNotification] = useState(null);
 	const [notificationPopUp, setNotificationPopUp] = useState(false);
 	const [open, setOpen] = useState(false);
 
+	const [newNotificationComment, setNewNotificationComment] = useState(null);
+	const [notificationCommentPopUp, setNotificationCommentPopup] = useState(false);
+
+	const [newNotificationFollower, setNewNotificationFollower] = useState(null);
+	const [notificationFollowerPopUp, setNotificationFollowerPopup] = useState(false);
+
 	const ratingChanged = (newRating) => {
 		console.log(newRating);
-	};
-
-	const displayPic = (pic) => {
-		return pic.replace('/upload', '/upload/w_550');
 	};
 
 	let showEdit = false;
@@ -119,15 +118,61 @@ const PlaceDetailScreen = ({ match, history }) => {
 	useEffect(() => {
 		if (userInfo && userInfo.user) {
 			if (socket.current) {
+				//LIKE NOTIFICATION
 				socket.current.on('newNotificationReceived', ({ username, profilePic, postId }) => {
 					setNewNotification({ username, profilePic, postId });
 
 					setNotificationPopUp(true);
 					setOpen(true);
 				});
+
+				//COMMENT NOTIFICATION
+				socket.current.on('newCommentNotificationReceived', ({ username, postId }) => {
+					setNewNotificationComment({ username, postId });
+					setNotificationCommentPopup(true);
+					setOpen(true);
+				});
+
+				//FOLLOWER NOTIFICATION
+				socket.current.on('newFollowerNotificationReceived', ({ username }) => {
+					setNewNotificationFollower({ username });
+					setNotificationFollowerPopup(true);
+					setOpen(true);
+				});
 			}
 		}
 	}, [userInfo]);
+
+	//Send new notification on comment added
+	useEffect(() => {
+		if (place && place.author && userInfo) {
+			if (successNewReview === true) {
+				if (socket.current) {
+					socket.current.emit('newComment', {
+						postId: place._id,
+						userId: userInfo.user._id,
+						postAuthor: place.author._id,
+						username: userInfo.user.username,
+					});
+				}
+			}
+		}
+	}, [successNewReview, userInfo, place]);
+
+	//Send new notification on follow
+	useEffect(() => {
+		if (place && place.author && userInfo) {
+			if (fuSuccess) {
+				if (socket.current) {
+					socket.current.emit('newFollower', {
+						userId: userInfo.user._id,
+						userToFollow: place.author._id,
+						username: userInfo.user.username,
+					});
+				}
+			}
+		}
+	}, [fuSuccess, userInfo, place]);
 
 	useEffect(() => {
 		setUserLiked(false);
@@ -156,6 +201,7 @@ const PlaceDetailScreen = ({ match, history }) => {
 		if (place && place.likes) {
 			setTotalLikes(place.likes.length);
 		}
+		// eslint-disable-next-line
 	}, [match, dispatch, match.params.id, place, isLoggedIn, successNewReview]);
 
 	useEffect(() => {
@@ -205,20 +251,6 @@ const PlaceDetailScreen = ({ match, history }) => {
 		}
 	};
 
-	/* const likePlace = () => {
-		if (userLiked) {
-			setTotalLikes((prev) => prev - 1);
-		} else {
-			setTotalLikes((prev) => prev + 1);
-		}
-		dispatch(likeAction(match.params.id));
-		if (userLiked) {
-			setUserLiked(false);
-		} else {
-			setUserLiked(true);
-		}
-	}; */
-
 	const followUserHandler = () => {
 		dispatch(followUserAction(place.author.username));
 	};
@@ -241,6 +273,29 @@ const PlaceDetailScreen = ({ match, history }) => {
 						newNotification={newNotification}
 						notificationPopUp={notificationPopUp}
 						showNotificationPopUp={setNotificationPopUp}
+						msg={`${newNotification.username} liked your post`}
+					/>
+				)}
+
+				{notificationCommentPopUp && newNotificationComment != null && (
+					<Notification
+						open={open}
+						setOpen={setOpen}
+						newNotification={newNotificationComment}
+						notificationPopUp={notificationCommentPopUp}
+						showNotificationPopUp={setNotificationCommentPopup}
+						msg={`${newNotificationComment.username} commented on your post`}
+					/>
+				)}
+
+				{notificationFollowerPopUp && newNotificationFollower != null && (
+					<Notification
+						open={open}
+						setOpen={setOpen}
+						newNotification={newNotificationFollower}
+						notificationPopUp={notificationFollowerPopUp}
+						showNotificationPopUp={setNotificationFollowerPopup}
+						msg={`${newNotificationFollower.username} started following you`}
 					/>
 				)}
 
@@ -418,7 +473,9 @@ const PlaceDetailScreen = ({ match, history }) => {
 						<Row className="pt-4">
 							<Col>
 								<h2>Reviews</h2>
-								{!userReviewAdded() && <AddReview id={match.params.id} />}
+								{!userReviewAdded() && (
+									<AddReview socket={socket} id={match.params.id} author={place.author._id} />
+								)}
 								{place.reviews && place.reviews.length === 0 && <Message>No Reviews</Message>}
 								<ListGroup variant="flush">
 									{place.reviews.length > 0 ? (

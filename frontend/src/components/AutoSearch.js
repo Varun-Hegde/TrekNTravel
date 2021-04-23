@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Button, Modal, Image } from 'react-bootstrap';
+import { Modal, Image } from 'react-bootstrap';
 import { Input } from 'reactstrap';
 
 export default function AutoSearch() {

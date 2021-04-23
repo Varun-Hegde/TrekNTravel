@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Button, Badge } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Place from '../components/Place';
 import { listPlaces, listMyFeed } from '../actions/campgroundActions';
-import { Link } from 'react-router-dom';
+
 import Fade from 'react-reveal/Fade';
-import Loader from '../components/Loader';
+
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
 import { listTags } from '../actions/tagActions';
@@ -34,7 +34,7 @@ const HomeScreen = ({ history, match }) => {
 	const { isLoggedIn, userInfo } = userStatus;
 
 	const allTags = useSelector((state) => state.getTags);
-	const { loading: loadingTags, tags, error: errorTags } = allTags;
+	const { loading: loadingTags, tags } = allTags;
 
 	const pageNumber = match.params.pageNumber ? match.params.pageNumber : '1';
 
@@ -45,6 +45,12 @@ const HomeScreen = ({ history, match }) => {
 	const [newNotification, setNewNotification] = useState(null);
 	const [notificationPopUp, setNotificationPopUp] = useState(false);
 	const [open, setOpen] = useState(false);
+
+	const [newNotificationComment, setNewNotificationComment] = useState(null);
+	const [notificationCommentPopUp, setNotificationCommentPopup] = useState(false);
+
+	const [newNotificationFollower, setNewNotificationFollower] = useState(null);
+	const [notificationFollowerPopUp, setNotificationFollowerPopup] = useState(false);
 
 	//SOCKETS
 	useEffect(() => {
@@ -72,6 +78,21 @@ const HomeScreen = ({ history, match }) => {
 					setNewNotification({ username, profilePic, postId });
 
 					setNotificationPopUp(true);
+					setOpen(true);
+				});
+
+				//COMMENT NOTIFICATION
+				socket.current.on('newCommentNotificationReceived', ({ username, postId }) => {
+					console.log('receiver event ');
+					setNewNotificationComment({ username, postId });
+					setNotificationCommentPopup(true);
+					setOpen(true);
+				});
+
+				//FOLLOWER NOTIFICATION
+				socket.current.on('newFollowerNotificationReceived', ({ username }) => {
+					setNewNotificationFollower({ username });
+					setNotificationFollowerPopup(true);
 					setOpen(true);
 				});
 			}
@@ -109,6 +130,27 @@ const HomeScreen = ({ history, match }) => {
 					newNotification={newNotification}
 					notificationPopUp={notificationPopUp}
 					showNotificationPopUp={setNotificationPopUp}
+					msg={`${newNotification.username} liked your post`}
+				/>
+			)}
+			{notificationCommentPopUp && newNotificationComment != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationComment}
+					notificationPopUp={notificationCommentPopUp}
+					showNotificationPopUp={setNotificationCommentPopup}
+					msg={`${newNotificationComment.username} commented on your post`}
+				/>
+			)}
+			{notificationFollowerPopUp && newNotificationFollower != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotificationFollower}
+					notificationPopUp={notificationFollowerPopUp}
+					showNotificationPopUp={setNotificationFollowerPopup}
+					msg={`${newNotificationFollower.username} started following you`}
 				/>
 			)}
 			{newMessageModal && newMessageReceived !== null && (
@@ -120,7 +162,6 @@ const HomeScreen = ({ history, match }) => {
 					user={userInfo.user}
 				/>
 			)}
-
 			<div>
 				{process.env.REACT_APP_TITLE}
 				{isLoggedIn && (
@@ -141,7 +182,6 @@ const HomeScreen = ({ history, match }) => {
 					Global Feed
 				</Button>
 			</div>
-
 			<Row>
 				<Col sm={12} md={9}>
 					{feed === 'globalfeed' ? (
@@ -155,13 +195,13 @@ const HomeScreen = ({ history, match }) => {
 									<Row>
 										{allPlaces.length > 0 ? (
 											allPlaces.map((place) => (
-												<>
-													<Col key={place._id} sm={12}>
+												<div key={place._id}>
+													<Col sm={12}>
 														<Fade bottom>
 															<Place place={place} history={history} />
 														</Fade>
 													</Col>
-												</>
+												</div>
 											))
 										) : (
 											<Message variant="info">No places found. </Message>

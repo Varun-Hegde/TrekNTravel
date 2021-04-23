@@ -127,6 +127,28 @@ io.on('connection', async (socket) => {
 		}
 	});
 
+	//Comment Notifications
+	socket.on('newComment', async ({ postId, userId, postAuthor, username }) => {
+		if (postAuthor.toString() != userId.toString()) {
+			const receiverSocket = findConnectedUser(postAuthor);
+
+			if (receiverSocket) {
+				io.to(receiverSocket.socketId).emit('newCommentNotificationReceived', { username, postId });
+			}
+		}
+	});
+
+	//Follower Notification
+	socket.on('newFollower', async ({ userId, userToFollow, username }) => {
+		if (userId.toString() != userToFollow.toString()) {
+			const receiverSocket = findConnectedUser(userToFollow);
+
+			if (receiverSocket) {
+				io.to(receiverSocket.socketId).emit('newFollowerNotificationReceived', { username });
+			}
+		}
+	});
+
 	//Send previous chat history with a particular user
 	socket.on('loadMessages', async ({ userId, messagesWith }) => {
 		const { chat, error } = await loadMessages(userId, messagesWith);

@@ -172,7 +172,7 @@ export const profileReducer = (state = {}, action) => {
 				error: action.payload,
 			};
 		default:
-			return {};
+			return state;
 	}
 };
 

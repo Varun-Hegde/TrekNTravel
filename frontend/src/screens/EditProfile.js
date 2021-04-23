@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import FormContainer from '../components/FormContainer';
 import { Link } from 'react-router-dom';
-import { Button, Image } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Form, FormGroup, Label, Input, FormFeedback, FormText } from 'reactstrap';
 import { editProfile } from '../actions/userActions';
 import axios from 'axios';
@@ -22,9 +22,12 @@ const EditProfile = ({ history }) => {
 	const [dp, setDp] = useState('');
 	const [pass1, setPass1] = useState('');
 	const [pass2, setPass2] = useState('');
+
+	// eslint-disable-next-line
 	const [uploadedImages, setUploadedImages] = useState(null);
 
 	const [touchedDesc, setTouchedDesc] = useState(false);
+	// eslint-disable-next-line
 	const [touchedDp, setTouchedDp] = useState(false);
 	const [touchedPass1, setTouchedPass1] = useState(false);
 	const [touchedPass2, setTouchedPass2] = useState(false);

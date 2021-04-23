@@ -135,7 +135,7 @@ export const signin = (email, password) => async (dispatch) => {
 };
 
 //SIGN OUT
-export const signout = () => async (dispatch) => {
+export const signOut = () => async (dispatch) => {
 	try {
 		dispatch({
 			type: USER_SIGNOUT_REQUEST,
