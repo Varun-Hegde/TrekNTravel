@@ -203,12 +203,12 @@ module.exports.deleteReview = asyncHandler(async (req, res) => {
 module.exports.like = asyncHandler(async (req, res) => {
 	const { id } = req.params;
 	const campground = await Campground.findById(id);
+
 	if (!campground) {
 		res.status(404);
 		throw new Error('Campground not found');
 	}
-	var foundUserLike = campground.likes.some((like) => like.toString() === req.user._id.toString());
-	console.log(foundUserLike);
+	let foundUserLike = campground.likes.some((like) => like.toString() === req.user._id.toString());
 
 	if (!foundUserLike) {
 		campground.likes.push(req.user._id);
@@ -232,7 +232,7 @@ module.exports.like = asyncHandler(async (req, res) => {
 	}
 
 	const updatedCampground = await campground.save();
-
+	//console.log(updatedCampground);
 	res.json({ success: 'true' });
 });
 

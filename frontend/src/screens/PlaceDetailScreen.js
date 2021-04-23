@@ -18,6 +18,8 @@ import io from 'socket.io-client';
 import getUserInfo from '../utils/getUserInfo';
 import MessageNotificationModal from '../components/ModalPopUp';
 import newMsgReceived from '../utils/newMsgSound';
+import Notification from '../components/NotificationAlert';
+
 const PlaceDetailScreen = ({ match, history }) => {
 	const campId = match.params.id;
 
@@ -55,6 +57,10 @@ const PlaceDetailScreen = ({ match, history }) => {
 
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState('');
+
+	const [newNotification, setNewNotification] = useState(null);
+	const [notificationPopUp, setNotificationPopUp] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	const ratingChanged = (newRating) => {
 		console.log(newRating);
@@ -109,6 +115,20 @@ const PlaceDetailScreen = ({ match, history }) => {
 		}
 	}, [userInfo]);
 
+	//NOTIFICATIONS
+	useEffect(() => {
+		if (userInfo && userInfo.user) {
+			if (socket.current) {
+				socket.current.on('newNotificationReceived', ({ username, profilePic, postId }) => {
+					setNewNotification({ username, profilePic, postId });
+
+					setNotificationPopUp(true);
+					setOpen(true);
+				});
+			}
+		}
+	}, [userInfo]);
+
 	useEffect(() => {
 		setUserLiked(false);
 		dispatch(placeDetails(match.params.id));
@@ -118,7 +138,7 @@ const PlaceDetailScreen = ({ match, history }) => {
 		if (isLoggedIn && place && place.author) {
 			dispatch(followUserStatusAction(place.author.username));
 		}
-	}, [place, ufuSuccess, fuSuccess]);
+	}, [place, ufuSuccess, fuSuccess, dispatch, isLoggedIn]);
 
 	useEffect(() => {
 		if (successNewReview) {
@@ -136,14 +156,14 @@ const PlaceDetailScreen = ({ match, history }) => {
 		if (place && place.likes) {
 			setTotalLikes(place.likes.length);
 		}
-	}, [match, dispatch, match.params.id, place]);
+	}, [match, dispatch, match.params.id, place, isLoggedIn, successNewReview]);
 
 	useEffect(() => {
 		if (successDelete) {
 			dispatch({ type: PLACE_DELETE_RESET });
 			history.push('/campgrounds');
 		}
-	}, [successDelete]);
+	}, [successDelete, dispatch, history]);
 
 	const userReviewAdded = () => {
 		if (!isLoggedIn) return false;
@@ -161,13 +181,43 @@ const PlaceDetailScreen = ({ match, history }) => {
 		} else {
 			setTotalLikes((prev) => prev + 1);
 		}
+		if (socket.current) {
+			socket.current.emit('likePost', {
+				postId: place._id,
+				userId: userInfo.user._id,
+				like: userLiked ? false : true,
+			});
+
+			socket.current.on('postLiked', () => {
+				if (userLiked) {
+					setUserLiked(false);
+				} else {
+					setUserLiked(true);
+				}
+			});
+		} else {
+			dispatch(likeAction(match.params.id));
+			if (userLiked) {
+				setUserLiked(false);
+			} else {
+				setUserLiked(true);
+			}
+		}
+	};
+
+	/* const likePlace = () => {
+		if (userLiked) {
+			setTotalLikes((prev) => prev - 1);
+		} else {
+			setTotalLikes((prev) => prev + 1);
+		}
 		dispatch(likeAction(match.params.id));
 		if (userLiked) {
 			setUserLiked(false);
 		} else {
 			setUserLiked(true);
 		}
-	};
+	}; */
 
 	const followUserHandler = () => {
 		dispatch(followUserAction(place.author.username));
@@ -184,6 +234,16 @@ const PlaceDetailScreen = ({ match, history }) => {
 	return (
 		<Fade bottom>
 			<div>
+				{notificationPopUp && newNotification != null && (
+					<Notification
+						open={open}
+						setOpen={setOpen}
+						newNotification={newNotification}
+						notificationPopUp={notificationPopUp}
+						showNotificationPopUp={setNotificationPopUp}
+					/>
+				)}
+
 				{newMessageModal && newMessageReceived !== null && (
 					<MessageNotificationModal
 						socket={socket}

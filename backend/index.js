@@ -13,6 +13,8 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const { addUser, removeUser, findConnectedUser } = require('./sockets/roomActions');
 const { loadMessages, sendMsg, setMsgToUnread } = require('./sockets/messageActions');
+const { likeOrUnlikePost } = require('./sockets/likeOrUnlikePost');
+
 dotenv.config();
 connectDb();
 const app = express();
@@ -106,6 +108,23 @@ io.on('connection', async (socket) => {
 				users: users.filter((user) => user.userId !== userId),
 			});
 		}, 10000);
+	});
+
+	//Like posts
+	socket.on('likePost', async ({ postId, userId, like }) => {
+		const { success, error, username, profilePic, postByUserId } = await likeOrUnlikePost(postId, userId, like);
+
+		if (success) {
+			socket.emit('postLiked');
+			if (postByUserId != userId) {
+				const receiverSocket = findConnectedUser(postByUserId);
+
+				if (receiverSocket && like) {
+					console.log('Emitting now');
+					io.to(receiverSocket.socketId).emit('newNotificationReceived', { username, profilePic, postId });
+				}
+			}
+		}
 	});
 
 	//Send previous chat history with a particular user

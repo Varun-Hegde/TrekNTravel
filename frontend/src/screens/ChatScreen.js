@@ -230,9 +230,10 @@ const ChatScreen = ({ history, location }) => {
 					history={history}
 					user={user}
 				/>
+
 				<div className="chat">
 					<div className="chat__header">
-						{bannerData ? (
+						{queryMsg && bannerData ? (
 							<>
 								{bannerData.profilePic ? (
 									<Avatar style={{ fontSize: '20px' }} src={bannerData.profilePic} />
@@ -276,21 +277,23 @@ const ChatScreen = ({ history, location }) => {
 						</Scrollbars>
 					</div>
 
-					<div className="chat__footer">
-						<form onSubmit={(e) => submitHandler(e)}>
-							<input
-								placeholder="Type a message"
-								type="text"
-								value={msgText}
-								onChange={(e) => setMsgText(e.target.value)}
-							/>
-							{showIcon ? (
-								<Button type="submit" variant="outline-link" size="sm">
-									<SendIcon style={{ color: 'black', alignSelf: 'center' }} />
-								</Button>
-							) : null}
-						</form>
-					</div>
+					{queryMsg && (
+						<div className="chat__footer">
+							<form onSubmit={(e) => submitHandler(e)}>
+								<input
+									placeholder="Type a message"
+									type="text"
+									value={msgText}
+									onChange={(e) => setMsgText(e.target.value)}
+								/>
+								{showIcon ? (
+									<Button type="submit" variant="outline-link" size="sm">
+										<SendIcon style={{ color: 'black', alignSelf: 'center' }} />
+									</Button>
+								) : null}
+							</form>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

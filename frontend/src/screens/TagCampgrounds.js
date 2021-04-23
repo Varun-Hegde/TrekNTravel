@@ -11,6 +11,7 @@ import io from 'socket.io-client';
 import getUserInfo from '../utils/getUserInfo';
 import MessageNotificationModal from '../components/ModalPopUp';
 import newMsgReceived from '../utils/newMsgSound';
+import Notification from '../components/NotificationAlert';
 const TagCampgrounds = ({ history, match }) => {
 	const dispatch = useDispatch();
 
@@ -27,6 +28,10 @@ const TagCampgrounds = ({ history, match }) => {
 	const socket = useRef();
 	const [newMessageReceived, setNewMessageReceived] = useState();
 	const [newMessageModal, showNewMessageModal] = useState(false);
+
+	const [newNotification, setNewNotification] = useState(null);
+	const [notificationPopUp, setNotificationPopUp] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	//SOCKETS
 	useEffect(() => {
@@ -50,6 +55,13 @@ const TagCampgrounds = ({ history, match }) => {
 					}
 					newMsgReceived(name);
 				});
+
+				socket.current.on('newNotificationReceived', ({ username, profilePic, postId }) => {
+					setNewNotification({ username, profilePic, postId });
+
+					setNotificationPopUp(true);
+					setOpen(true);
+				});
 			}
 
 			return () => {
@@ -63,6 +75,15 @@ const TagCampgrounds = ({ history, match }) => {
 
 	return (
 		<>
+			{notificationPopUp && newNotification != null && (
+				<Notification
+					open={open}
+					setOpen={setOpen}
+					newNotification={newNotification}
+					notificationPopUp={notificationPopUp}
+					showNotificationPopUp={setNotificationPopUp}
+				/>
+			)}
 			{newMessageModal && newMessageReceived !== null && (
 				<MessageNotificationModal
 					socket={socket}
