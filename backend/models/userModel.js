@@ -68,6 +68,12 @@ const UserSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		resetToken: {
+			type: String,
+		},
+		expireToken: {
+			type: Date,
+		},
 	},
 	{
 		timestamps: true,

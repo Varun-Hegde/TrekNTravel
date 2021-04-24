@@ -100,7 +100,11 @@ const SignInScreen = ({ location, history }) => {
 							invalid={errors.password !== ''}
 						/>
 						<FormFeedback>{errors.password}</FormFeedback>
+						<Link className="pt-3" to="/reset-password">
+							Forgot password?
+						</Link>
 					</FormGroup>
+
 					{loading && <Loader />}
 					{error && <Message variant="danger">Invalid email or password</Message>}
 					<Button

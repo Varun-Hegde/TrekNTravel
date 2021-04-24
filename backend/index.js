@@ -28,6 +28,7 @@ const tagRoutes = require('./routes/tagRoutes');
 const searchRoutes = require('./routes/searchRoute');
 const notificationRoute = require('./routes/notificationRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const resetPassword = require('./routes/resetPassword');
 
 //MIDDLEWARE
 app.use(express.json());
@@ -77,6 +78,9 @@ app.use('/api/notifications', notificationRoute);
 
 //CHAT ROUTES
 app.use('/api/chats', chatRoutes);
+
+//RESET PASSWORD
+app.use('/api/reset-password', resetPassword);
 
 //PAGE NOT FOUND
 app.use(notFound);
