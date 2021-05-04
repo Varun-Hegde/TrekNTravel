@@ -328,7 +328,7 @@ const PlaceDetailScreen = ({ match, history }) => {
 				{loading ? (
 					<Loader />
 				) : error ? (
-					<Message variant="danger">{error}</Message>
+					<Message variant="danger">No Information found</Message>
 				) : (
 					<Fade bottom>
 						<Row>
@@ -386,7 +386,9 @@ const PlaceDetailScreen = ({ match, history }) => {
 											value={place.price}
 										/>
 									</ListGroup.Item>
-									<ListGroup.Item>{moment(place.createdAt, 'YYYYMMDD').fromNow()}</ListGroup.Item>
+									<ListGroup.Item>
+										{moment(place.createdAt).format('MMMM Do YYYY, h:mm a')}
+									</ListGroup.Item>
 									<ListGroup.Item>
 										<b style={{ fontSize: '20px', fontWeight: 'bold' }}>Description:</b>{' '}
 										{place.description}

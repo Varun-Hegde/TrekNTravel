@@ -5,6 +5,7 @@ import moment from 'moment';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const SidebarChat = ({ data, connectedUsers, history }) => {
+	console.log(data);
 	const getQueryParams = () => {
 		const params = new URLSearchParams(window.location.search);
 		if (params.get('message'))
@@ -40,8 +41,7 @@ const SidebarChat = ({ data, connectedUsers, history }) => {
 					</div>
 					<div style={{ fontSize: '14px' }} className=" d-flex justify-content-between">
 						{data.lastMessage.length > 15 ? data.lastMessage.substring(0, 15) + ' ...' : data.lastMessage}
-
-						<p className="ml-5"> {moment(data.date, 'YYYYMMDD').fromNow()}</p>
+						{!isOnline && <p className="ml-5"> {moment(data.date).format('MMMM Do, h:mm a')}</p>}
 					</div>
 				</div>
 			</div>

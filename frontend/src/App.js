@@ -19,6 +19,7 @@ import TagCampground from './screens/TagCampgrounds';
 import ChatScreen from './screens/ChatScreen';
 import ForgotPassword from './screens/ForgotPassword';
 import ResetPassword from './screens/PasswordResetScreen';
+import PageNotFound from './screens/PageNotFound';
 
 import {
 	USER_SIGNEDIN_RESET,
@@ -133,6 +134,7 @@ function App() {
 								<Route exact path="/chats" component={ChatScreen} />
 								<Route exact path="/reset-password" component={ForgotPassword} />
 								<Route exact path="/reset-password/:token" component={ResetPassword} />
+								<Route component={PageNotFound} />
 							</Switch>
 						</div>
 					</main>

@@ -6,7 +6,7 @@ import ChatSidebar from '../components/ChatSidebar';
 import { Button } from 'react-bootstrap';
 import SendIcon from '@material-ui/icons/Send';
 import { Avatar } from '@material-ui/core';
-
+import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
 import './Chats.css';
@@ -223,82 +223,87 @@ const ChatScreen = ({ history, location }) => {
 	};
 
 	return (
-		<div className="app">
-			<div className="app__body">
-				<ChatSidebar
-					connectedUsers={connectedUsers}
-					chats={chats}
-					setChats={setChats}
-					history={history}
-					user={user}
-				/>
+		<>
+			<Link className="btn btn-light my-3" to="/campgrounds">
+				Go Back
+			</Link>
+			<div className="app">
+				<div className="app__body">
+					<ChatSidebar
+						connectedUsers={connectedUsers}
+						chats={chats}
+						setChats={setChats}
+						history={history}
+						user={user}
+					/>
 
-				<div className="chat">
-					<div className="chat__header">
-						{queryMsg && bannerData ? (
-							<>
-								{bannerData.profilePic ? (
-									<Avatar style={{ fontSize: '20px' }} src={bannerData.profilePic} />
-								) : (
-									<Avatar
-										src={`https://avatars.dicebear.com/4.5/api/bottts/${bannerData.name}.svg`}
-									/>
-								)}
-								<div className="chat__headerInfo">
-									<LinkContainer
-										style={{ cursor: 'pointer' }}
-										to={`/user-profile/${bannerData.name}`}
-									>
-										<h4>{bannerData.name}</h4>
-									</LinkContainer>
-								</div>
-							</>
-						) : null}
-					</div>
-
-					<div className="chat__body">
-						<Scrollbars>
-							{messages && messages.length > 0
-								? messages.map((msg) => {
-										const isSender = user && user.user._id.toString() === msg.sender.toString();
-										return (
-											<>
-												<p
-													ref={divRef}
-													className={`chat__message ${isSender && 'chat__receiver'}`}
-												>
-													{msg.msg}
-													<span className="chat__time">
-														{moment(msg.date).format('llll')}
-													</span>
-												</p>
-											</>
-										);
-								  })
-								: null}
-						</Scrollbars>
-					</div>
-
-					{queryMsg && (
-						<div className="chat__footer">
-							<form onSubmit={(e) => submitHandler(e)}>
-								<input
-									placeholder="Type a message"
-									type="text"
-									value={msgText}
-									onChange={(e) => setMsgText(e.target.value)}
-								/>
-								{showIcon ? (
-									<Button type="submit" variant="outline-link" size="sm">
-										<SendIcon style={{ color: 'black', alignSelf: 'center' }} />
-									</Button>
-								) : null}
-							</form>
+					<div className="chat">
+						<div className="chat__header">
+							{queryMsg && bannerData ? (
+								<>
+									{bannerData.profilePic ? (
+										<Avatar style={{ fontSize: '20px' }} src={bannerData.profilePic} />
+									) : (
+										<Avatar
+											src={`https://avatars.dicebear.com/4.5/api/bottts/${bannerData.name}.svg`}
+										/>
+									)}
+									<div className="chat__headerInfo">
+										<LinkContainer
+											style={{ cursor: 'pointer' }}
+											to={`/user-profile/${bannerData.name}`}
+										>
+											<h4>{bannerData.name}</h4>
+										</LinkContainer>
+									</div>
+								</>
+							) : null}
 						</div>
-					)}
+
+						<div className="chat__body">
+							<Scrollbars>
+								{messages && messages.length > 0
+									? messages.map((msg) => {
+											const isSender = user && user.user._id.toString() === msg.sender.toString();
+											return (
+												<>
+													<p
+														ref={divRef}
+														className={`chat__message ${isSender && 'chat__receiver'}`}
+													>
+														{msg.msg}
+														<span className="chat__time">
+															{moment(msg.date).format('llll')}
+														</span>
+													</p>
+												</>
+											);
+									  })
+									: null}
+							</Scrollbars>
+						</div>
+
+						{queryMsg && (
+							<div className="chat__footer">
+								<form onSubmit={(e) => submitHandler(e)}>
+									<input
+										placeholder="Type a message"
+										type="text"
+										value={msgText}
+										onChange={(e) => setMsgText(e.target.value)}
+									/>
+									{showIcon ? (
+										<Button type="submit" variant="outline-link" size="sm">
+											<SendIcon style={{ color: 'black', alignSelf: 'center' }} />
+										</Button>
+									) : null}
+								</form>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

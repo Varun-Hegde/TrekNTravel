@@ -28,7 +28,8 @@ const Place = ({ place, history }) => {
 							<p className="place__loc">
 								<i class="fas fa-map-marker-alt"></i> {place.location}
 							</p>
-							<p>{moment(place.createdAt, 'YYYYMMDD').fromNow()}</p>
+							{/* <p>{moment(place.createdAt, 'YYYYMMDD').fromNow()}</p> */}
+							<p>{moment(place.createdAt).format('MMMM Do YYYY')}</p>
 						</div>
 						<hr />
 					</Col>
