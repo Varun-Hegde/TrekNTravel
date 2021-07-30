@@ -6,7 +6,6 @@ const Footer = () => {
 		<footer>
 			<Container>
 				<Row className="d-flex flex-column">
-					<Col className="text-center py-3">Copyright &copy; TrekNTravel</Col>
 					<Col className="text-center pb-3">
 						<a
 							style={{ textDecoration: 'none' }}
@@ -14,7 +13,7 @@ const Footer = () => {
 							target="_blank"
 							href="https://github.com/Varun-Hegde"
 						>
-							Built with <i style={{ color: 'red' }} className="fas fa-heart"></i> by Varun
+							Crafted & Developed by Varun with <i style={{ color: 'red' }} className="fas fa-heart"></i>{' '}
 						</a>
 					</Col>
 				</Row>
