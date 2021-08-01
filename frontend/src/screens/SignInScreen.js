@@ -11,6 +11,7 @@ import { signin, status } from "../actions/userActions";
 import Fade from "react-reveal/Fade";
 import GoogleLogin from "../components/GoogleLoginButton";
 import FacebookLogin from "../components/FacebookLoginButton";
+import Meta from "../components/Meta";
 
 const SignInScreen = ({ location, history }) => {
   const redirect = location.search
@@ -68,6 +69,7 @@ const SignInScreen = ({ location, history }) => {
   const errors = validate();
   return (
     <Fade bottom>
+      <Meta title="Sign In" />
       <Link to={redirect} className="btn btn-light my-3">
         Go Back
       </Link>

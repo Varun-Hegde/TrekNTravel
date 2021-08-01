@@ -1,7 +1,7 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-	baseURL: 'http://localhost:5000'
+  baseURL: "https://trek-n-travel.herokuapp.com",
 });
 export default instance;

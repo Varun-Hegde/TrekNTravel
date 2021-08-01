@@ -14,6 +14,7 @@ import newMsgReceived from "../utils/newMsgSound";
 import moment from "moment";
 import { USER_LOGIN_REQUIRED } from "../constants/appConstants";
 import { useSelector, useDispatch } from "react-redux";
+import Meta from "../components/Meta";
 
 const scrollDivToBottom = (divRef) =>
   divRef.current !== null &&
@@ -252,6 +253,7 @@ const ChatScreen = ({ history, location }) => {
 
   return (
     <>
+      <Meta title="Chats" />
       <Link className="btn btn-light my-3" to="/campgrounds">
         Go Back
       </Link>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button } from "react-bootstrap";
 import Place from "../components/Place";
 import { listPlaces, listMyFeed } from "../actions/campgroundActions";
+import Meta from "../components/Meta";
 
 import Fade from "react-reveal/Fade";
 
@@ -137,6 +138,7 @@ const HomeScreen = ({ history, match }) => {
 
   return (
     <div>
+      <Meta title="Trek-N-Travel" />
       {notificationPopUp && newNotification != null && (
         <Notification
           open={open}
